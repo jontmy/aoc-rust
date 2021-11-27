@@ -1,3 +1,4 @@
+#[allow(unused_imports)]
 use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
 
@@ -38,7 +39,28 @@ pub fn solve_part_one(input: &String) -> i32 {
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    0
+    let robo = input.chars()
+        .enumerate()
+        .filter(|i| i.0 % 2 == 1)
+        .map(|p| p.1) // discard the enumeration index
+        .scan(House { x: 0, y: 0 }, |state, c: char| {
+            *state = state.next(c);
+            Some(*state)
+        });
+
+    let santa = input.chars()
+        .enumerate()
+        .filter(|i| i.0 % 2 == 0)
+        .map(|p| p.1) // discard the enumeration index
+        .scan(House { x: 0, y: 0 }, |state, c: char| {
+            *state = state.next(c);
+            Some(*state)
+        });
+
+    // De-duplicated via a HashSet, and add the initial house at (0, 0);
+    let mut visited: HashSet<House> = HashSet::from_iter(robo.chain(santa)); // combines their efforts
+    visited.insert(House {x: 0, y: 0});
+    visited.len() as i32
 }
 
 #[derive(Hash, Copy, Clone)]
@@ -87,11 +109,11 @@ mod tests {
         assert_eq!(expected, solve_part_one(&input))
     }
 
-    /*
     #[rstest]
-    #[case(")", 1)]
+    #[case("^v", 3)]
+    #[case("^>v<", 3)]
+    #[case("^v^v^v^v^v", 11)]
     fn test_part_two(#[case] input: String, #[case] expected: i32) {
         assert_eq!(expected, solve_part_two(&input))
     }
-     */
 }
