@@ -1,13 +1,18 @@
 use crate::utils::io;
 use crate::utils::io::read;
 
-pub mod day01;
+mod day01;
+mod day02;
 
-pub fn run() {
+fn run_day(day: u32) {
+    let input = read(day, 2015);
+    io::write(day, 2015,
+              day01::solve_part_one(&input),
+              day01::solve_part_two(&input));
+}
 
-    // There's probably a better way to do this without duplicating code, but it works for now.
-    let day01 = read(01, 2015);
-    io::write(1, 2015,
-              day01::solve_part_one(&day01),
-              day01::solve_part_two(&day01));
+pub fn run_all_days() {
+    for i in 1..2 {
+        run_day(i);
+    }
 }
