@@ -1,3 +1,6 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 mod utils;
 mod aoc2015;
 mod aoc2021;
