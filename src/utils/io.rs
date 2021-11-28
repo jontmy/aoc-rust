@@ -3,6 +3,7 @@ use std::fs;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
+use ansi_term::Style;
 
 /// Reads to a string the puzzle input for a given day and year.
 pub fn read(day: u32, year: u32) -> String {
@@ -25,4 +26,10 @@ pub fn write<T: Display, U: Display>(day: u32, year: u32, first_part: T, second_
         Err(why) => panic!("Couldn't write the puzzle output for day {} year {}: {}", day, year, why),
         _ => ()
     }
+
+    println!("\n{}\nPart 1: {}\nPart 2: {}",
+             Style::new().bold().paint(format!{"Advent of Code {}, Day {}", year, day}),
+             Style::new().italic().paint(format!("{}", first_part)),
+             Style::new().italic().paint(format!("{}", second_part))
+    );
 }
