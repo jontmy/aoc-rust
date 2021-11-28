@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 md5 = "0.7.0"
+ansi_term = "0.12.1"
 
 [dev-dependencies]
 rstest = "0.11.0"
