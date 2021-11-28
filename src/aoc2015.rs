@@ -4,6 +4,7 @@ use crate::utils::io::read;
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 pub fn run() {
     let input = read(1, 2015);
@@ -20,4 +21,9 @@ pub fn run() {
     io::write(3, 2015,
               day03::solve_part_one(&input),
               day03::solve_part_two(&input));
+
+    let input = read(4, 2015);
+    io::write(4, 2015,
+              day04::solve_part_one(&input),
+              day04::solve_part_two(&input));
 }
