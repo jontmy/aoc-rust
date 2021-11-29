@@ -14,7 +14,7 @@ Currently work-in-progress, starting with 2015 and 2021 (when they are released)
 | S   | M   | T   | W   | T   | F   | S   |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |     |     | [1](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day01.rs) | [2](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day02.rs) | [3](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day03.rs) | [4](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day04.rs) | [5](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day05.rs) |
-| 6   | 7   | 8   | 9   | 10  | 11  | 12  |
+| [6](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day06.rs) | [7](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day07.rs) | 8   | 9   | 10  | 11  | 12  |
 | 13  | 14  | 15  | 16  | 17  | 18  | 19  |
 | 20  | 21  | 22  | 23  | 24  | 25  |     |
 
