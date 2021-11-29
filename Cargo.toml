@@ -9,6 +9,7 @@ edition = "2021"
 md5 = "0.7.0"
 ansi_term = "0.12.1"
 regex = "1.5.4"
+indoc = "1.0.3"
 
 [dev-dependencies]
 rstest = "0.11.0"
