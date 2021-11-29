@@ -105,8 +105,14 @@ pub fn solve_part_one(input: &String) -> u16 {
     machine.get_wire_value("a")
 }
 
-pub fn solve_part_two(input: &String) -> i32 {
-    0
+pub fn solve_part_two(input: &String) -> u16 {
+    let re: Regex = Regex::new(r"(?m)^[\d]+ -> b$").unwrap();
+    let input = re.replace(input, format!("{} -> b", solve_part_one(input)))
+        .lines()
+        .map(|x| format!("{}\n", x))
+        .collect::<String>();
+    // dbg!(&input);
+    solve_part_one(&input)
 }
 
 #[cfg(test)]
