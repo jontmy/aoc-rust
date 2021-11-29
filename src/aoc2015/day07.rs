@@ -1,7 +1,6 @@
 use std::collections::HashMap;
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::{Debug, Formatter};
 
-use indoc::indoc;
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -52,7 +51,7 @@ impl Machine {
         Machine { wires: HashMap::new() }
     }
 
-    fn perform_operation(&mut self, op: Operation) {
+    fn perform_operation(&mut self, op: &Operation) {
         let result: u16 = match op.op {
             "NOP" => self.get_wire_value(op.ic),
             "AND" => self.get_wire_value(op.io.unwrap()) & self.get_wire_value(op.ic),
@@ -76,10 +75,33 @@ impl Machine {
 
 pub fn solve_part_one(input: &String) -> u16 {
     let mut machine = Machine::new();
-    input.lines()
+    let operations = input.lines()
         .map(Operation::parse)
-        .map(|op| dbg!(op))
+        .fold(HashMap::new(), |mut acc, op| {
+            acc.insert(op.o, op);
+            acc
+        });
+
+    // Wires are connected in reverse alphabetical order.
+    let mut wires = operations.keys()
+        .map(|w| *w)
+        .collect::<Vec<&str>>();
+    wires.sort();
+
+    // Wires with one letter are connected before those with two letters.
+    let singular = wires.iter()
+        .filter(|w| w.len() == 1)
+        .map(|w| operations.get(w).unwrap());
+
+    let plural = wires.iter()
+        .filter(|w| w.len() == 2)
+        .map(|w| operations.get(w).unwrap());
+
+    singular.chain(plural)
+        .skip(1) // skip the connection of wire 'a' till the end
         .for_each(|op| machine.perform_operation(op));
+
+    machine.perform_operation(operations.get("a").unwrap());
     machine.get_wire_value("a")
 }
 
@@ -91,7 +113,7 @@ pub fn solve_part_two(input: &String) -> i32 {
 mod tests {
     use rstest::rstest;
 
-    use super::{solve_part_one, solve_part_two};
+    use super::solve_part_one;
 
     #[rstest]
     #[case(indoc::indoc ! {"
@@ -125,12 +147,5 @@ mod tests {
     "}.to_string(), 65079)]
     fn test_part_one(#[case] input: String, #[case] expected: u16) {
         assert_eq!(expected, solve_part_one(&input))
-    }
-
-    #[rstest]
-    #[case("turn on 0,0 through 0,0", 1)]
-    #[case("toggle 0,0 through 999,999", 2_000_000)]
-    fn test_part_two(#[case] input: String, #[case] expected: i32) {
-        assert_eq!(expected, solve_part_two(&input))
     }
 }
