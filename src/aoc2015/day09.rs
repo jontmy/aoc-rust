@@ -12,29 +12,29 @@ pub fn solve_part_one(input: &String) -> i32 {
     // Construct the undirected graph of distances between any two valid locations:
     // HashMap<<location1: &str, location2: &str>, distance: i32>.
     let distances = input.lines()
-        .map(|line| RE.captures(line).unwrap())
-        .map(|capture| (capture.get(1).unwrap().as_str(),
-                        capture.get(2).unwrap().as_str(),
-                        capture.get(3).unwrap().as_str().parse().unwrap()))
-        .flat_map(|(l1, l2, d)| [((l1, l2), d), ((l2, l1), d)]) // the graph is undirected, so add edges in both directions
-        .collect::<HashMap<(&str, &str), i32>>();
+                         .map(|line| RE.captures(line).unwrap())
+                         .map(|capture| (capture.get(1).unwrap().as_str(),
+                                         capture.get(2).unwrap().as_str(),
+                                         capture.get(3).unwrap().as_str().parse().unwrap()))
+                         .flat_map(|(l1, l2, d)| [((l1, l2), d), ((l2, l1), d)]) // the graph is undirected, so add edges in both directions
+                         .collect::<HashMap<(&str, &str), i32>>();
 
     // Find all unique locations.
     let locations = distances.keys()
-        .map(|(l, _)| *l)
-        .collect::<HashSet<&str>>();
+                             .map(|(l, _)| *l)
+                             .collect::<HashSet<&str>>();
 
     // Construct all routes and accept the shortest one.
     locations.iter()
-        .permutations(locations.len())
-        .map(|route| { // map each route permutation to the total distance for the route
-            (0..route.len() - 1).into_iter()
-                .map(|i| (*route[i], *route[i + 1]))
-                .filter_map(|edge| distances.get(&edge)) // discard invalid routes
-                .sum::<i32>()
-        })
-        .min()
-        .unwrap()
+             .permutations(locations.len())
+             .map(|route| { // map each route permutation to the total distance for the route
+                 (0..route.len() - 1).into_iter()
+                                     .map(|i| (*route[i], *route[i + 1]))
+                                     .filter_map(|edge| distances.get(&edge)) // discard invalid routes
+                                     .sum::<i32>()
+             })
+             .min()
+             .unwrap()
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
@@ -45,29 +45,29 @@ pub fn solve_part_two(input: &String) -> i32 {
     // Construct the undirected graph of distances between any two valid locations:
     // HashMap<<location1: &str, location2: &str>, distance: i32>.
     let distances = input.lines()
-        .map(|line| RE.captures(line).unwrap())
-        .map(|capture| (capture.get(1).unwrap().as_str(),
-                        capture.get(2).unwrap().as_str(),
-                        capture.get(3).unwrap().as_str().parse().unwrap()))
-        .flat_map(|(l1, l2, d)| [((l1, l2), d), ((l2, l1), d)]) // the graph is undirected, so add edges in both directions
-        .collect::<HashMap<(&str, &str), i32>>();
+                         .map(|line| RE.captures(line).unwrap())
+                         .map(|capture| (capture.get(1).unwrap().as_str(),
+                                         capture.get(2).unwrap().as_str(),
+                                         capture.get(3).unwrap().as_str().parse().unwrap()))
+                         .flat_map(|(l1, l2, d)| [((l1, l2), d), ((l2, l1), d)]) // the graph is undirected, so add edges in both directions
+                         .collect::<HashMap<(&str, &str), i32>>();
 
     // Find all unique locations.
     let locations = distances.keys()
-        .map(|(l, _)| *l)
-        .collect::<HashSet<&str>>();
+                             .map(|(l, _)| *l)
+                             .collect::<HashSet<&str>>();
 
-    // Construct all routes and accept the shortest one.
+    // Construct all routes and accept the longest one.
     locations.iter()
-        .permutations(locations.len())
-        .map(|route| { // map each route permutation to the total distance for the route
-            (0..route.len() - 1).into_iter()
-                .map(|i| (*route[i], *route[i + 1]))
-                .filter_map(|edge| distances.get(&edge)) // discard invalid routes
-                .sum::<i32>()
-        })
-        .max()
-        .unwrap()
+             .permutations(locations.len())
+             .map(|route| { // map each route permutation to the total distance for the route
+                 (0..route.len() - 1).into_iter()
+                                     .map(|i| (*route[i], *route[i + 1]))
+                                     .filter_map(|edge| distances.get(&edge)) // discard invalid routes
+                                     .sum::<i32>()
+             })
+             .max()
+             .unwrap()
 }
 
 #[cfg(test)]
