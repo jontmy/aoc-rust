@@ -57,7 +57,7 @@ pub fn solve_part_two(input: &String) -> i32 {
         .map(|(l, _)| *l)
         .collect::<HashSet<&str>>();
 
-    // Construct all routes and accept the shortest one.
+    // Construct all routes and accept the longest one.
     locations.iter()
         .permutations(locations.len())
         .map(|route| { // map each route permutation to the total distance for the route
