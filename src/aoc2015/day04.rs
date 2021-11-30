@@ -20,7 +20,7 @@ pub fn solve_part_two(input: &String) -> i32 {
 
 #[cfg(test)]
 mod tests {
-    use crate::aoc2015::day04::{solve_part_one, solve_part_two};
+    use crate::aoc2015::day04::{solve_part_one};
     use rstest::rstest;
 
     #[rstest]
