@@ -28,8 +28,14 @@ fn count_skipped_chars(str: &str) -> i32 {
     skipped
 }
 
-pub fn solve_part_two(input: &String) -> u16 {
-    0
+pub fn solve_part_two(input: &String) -> i32 {
+    input.lines()
+        .map(|s| {
+            s.chars()
+                .filter(|c| *c == '\\' || *c == '"')
+                .count() as i32 + 2
+        })
+        .sum()
 }
 
 // no tests written for 2015.08 because escaped strings are a pain to type out correctly
