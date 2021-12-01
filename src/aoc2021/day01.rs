@@ -1,15 +1,28 @@
-// use std::collections::HashMap;
-// use std::fmt::{Debug, Formatter};
-
-// use lazy_static::lazy_static;
-// use regex::Regex;
-
 pub fn solve_part_one(input: &String) -> i32 {
-    0
+    let vals = input.lines()
+        .map(|s| s.parse().unwrap())
+        .collect::<Vec<i32>>();
+    vals.iter()
+        .zip(vals.iter().skip(1))
+        .filter(|(prev, curr)| *curr > *prev)
+        .count() as i32
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    0
+    let vals = input.lines()
+        .map(|s| s.parse().unwrap())
+        .collect::<Vec<i32>>();
+
+    let vals = vals.iter()
+        .enumerate()
+        .take(vals.len() - 2)
+        .map(|(i, c)| c + vals[i + 1] + vals[i + 2])
+        .collect::<Vec<i32>>();
+
+    vals.iter()
+        .zip(vals.iter().skip(1))
+        .filter(|(prev, curr)| *curr > *prev)
+        .count() as i32
 }
 
 #[cfg(test)]
