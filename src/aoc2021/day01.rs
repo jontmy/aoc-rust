@@ -1,28 +1,19 @@
-pub fn solve_part_one(input: &String) -> i32 {
-    let vals = input.lines()
+use itertools::Itertools;
+
+pub fn solve_part_one(input: &String) -> usize {
+    input.lines()
         .map(|s| s.parse().unwrap())
-        .collect::<Vec<i32>>();
-    vals.iter()
-        .zip(vals.iter().skip(1))
+        .tuple_windows::<(i32, i32)>()
         .filter(|(prev, curr)| *curr > *prev)
-        .count() as i32
+        .count()
 }
 
-pub fn solve_part_two(input: &String) -> i32 {
-    let vals = input.lines()
+pub fn solve_part_two(input: &String) -> usize {
+    input.lines()
         .map(|s| s.parse().unwrap())
-        .collect::<Vec<i32>>();
-
-    let vals = vals.iter()
-        .enumerate()
-        .take(vals.len() - 2)
-        .map(|(i, c)| c + vals[i + 1] + vals[i + 2])
-        .collect::<Vec<i32>>();
-
-    vals.iter()
-        .zip(vals.iter().skip(1))
-        .filter(|(prev, curr)| *curr > *prev)
-        .count() as i32
+        .tuple_windows::<(i32, _, _, i32)>()
+        .filter(|(prev, _, _, curr)| *curr > *prev)
+        .count()
 }
 
 #[cfg(test)]
@@ -33,15 +24,35 @@ mod tests {
 
     #[rstest]
     #[case(indoc::indoc ! {"
-        123 -> a
-    "}.to_string(), 123)]
-    fn test_part_one(#[case] input: String, #[case] expected: i32) {
+        199
+        200
+        208
+        210
+        200
+        207
+        240
+        269
+        260
+        263
+    "}.to_string(), 7)]
+    fn test_part_one(#[case] input: String, #[case] expected: usize) {
         assert_eq!(expected, solve_part_one(&input))
     }
 
     #[rstest]
-    #[case("str", 0)]
-    fn test_part_two(#[case] input: String, #[case] expected: i32) {
+    #[case(indoc::indoc ! {"
+        199
+        200
+        208
+        210
+        200
+        207
+        240
+        269
+        260
+        263
+    "}.to_string(), 5)]
+    fn test_part_two(#[case] input: String, #[case] expected: usize) {
         assert_eq!(expected, solve_part_two(&input))
     }
 }
