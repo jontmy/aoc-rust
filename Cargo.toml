@@ -12,6 +12,7 @@ regex = "1.5.4"
 indoc = "1.0.3" # multi-line indented strings
 lazy_static = "1.4.0" # avoid re-compiling regex
 itertools = "0.10.1" # combinatorics
+json = "0.12.4"
 
 [dev-dependencies]
 rstest = "0.11.0"
