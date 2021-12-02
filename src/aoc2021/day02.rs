@@ -1,18 +1,47 @@
-use itertools::Itertools;
+use regex::Regex;
 
 pub fn solve_part_one(input: &String) -> i32 {
-    input.lines()
-        .map(|s| s.parse().unwrap());
+    let mut horizontal = 0;
+    let mut depth = 0;
 
-    0
+    Regex::new(r"(up|down|forward) (\d+)").unwrap()
+        .captures_iter(input)
+        .for_each(|capture| {
+            let delta = capture.get(2).unwrap().as_str().parse::<i32>().unwrap();
+            match capture.get(1).unwrap().as_str() {
+                "forward" => horizontal += delta,
+                "down" => depth += delta,
+                "up" => depth -= delta,
+                _ => unreachable!()
+            }
+        });
+
+    horizontal * depth
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    input.lines()
-        .map(|s| s.parse().unwrap());
+    let mut horizontal = 0;
+    let mut depth = 0;
+    let mut aim = 0;
 
-    0
+    Regex::new(r"(up|down|forward) (\d+)").unwrap()
+        .captures_iter(input)
+        .for_each(|capture| {
+            let delta = capture.get(2).unwrap().as_str().parse::<i32>().unwrap();
+            match capture.get(1).unwrap().as_str() {
+                "forward" => {
+                    horizontal += delta;
+                    depth += aim * delta;
+                }
+                "down" => aim += delta,
+                "up" => aim -= delta,
+                _ => unreachable!()
+            }
+        });
+
+    horizontal * depth
 }
+
 
 #[cfg(test)]
 mod tests {
@@ -22,17 +51,27 @@ mod tests {
 
     #[rstest]
     #[case(indoc::indoc ! {"
-
-    "}.to_string(), 0)]
-    fn test_part_one(#[case] input: String, #[case] expected: usize) {
+        forward 5
+        down 5
+        forward 8
+        up 3
+        down 8
+        forward 2
+    "}.to_string(), 150)]
+    fn test_part_one(#[case] input: String, #[case] expected: i32) {
         assert_eq!(expected, solve_part_one(&input))
     }
 
     #[rstest]
     #[case(indoc::indoc ! {"
-
-    "}.to_string(), 0)]
-    fn test_part_two(#[case] input: String, #[case] expected: usize) {
+        forward 5
+        down 5
+        forward 8
+        up 3
+        down 8
+        forward 2
+    "}.to_string(), 900)]
+    fn test_part_two(#[case] input: String, #[case] expected: i32) {
         assert_eq!(expected, solve_part_two(&input))
     }
 }
