@@ -12,8 +12,8 @@ pub fn run() {
               day01::solve_part_two(&input));
     */
 
-    let input = read(2, 2015);
-    io::write(2, 2015,
+    let input = read(2, 2021);
+    io::write(2, 2021,
               day02::solve_part_one(&input),
               day02::solve_part_two(&input));
 }
