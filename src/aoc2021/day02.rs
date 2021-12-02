@@ -1,0 +1,38 @@
+use itertools::Itertools;
+
+pub fn solve_part_one(input: &String) -> i32 {
+    input.lines()
+        .map(|s| s.parse().unwrap());
+
+    0
+}
+
+pub fn solve_part_two(input: &String) -> i32 {
+    input.lines()
+        .map(|s| s.parse().unwrap());
+
+    0
+}
+
+#[cfg(test)]
+mod tests {
+    use rstest::rstest;
+
+    use super::{solve_part_one, solve_part_two};
+
+    #[rstest]
+    #[case(indoc::indoc ! {"
+
+    "}.to_string(), 0)]
+    fn test_part_one(#[case] input: String, #[case] expected: usize) {
+        assert_eq!(expected, solve_part_one(&input))
+    }
+
+    #[rstest]
+    #[case(indoc::indoc ! {"
+
+    "}.to_string(), 0)]
+    fn test_part_two(#[case] input: String, #[case] expected: usize) {
+        assert_eq!(expected, solve_part_two(&input))
+    }
+}
