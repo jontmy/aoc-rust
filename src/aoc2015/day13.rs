@@ -9,14 +9,30 @@ pub fn solve_part_one(input: &String) -> i32 {
         .flat_map(|(a, b)| [*a, *b])
         .collect::<HashSet<&str>>();
 
-    people.iter().permutations(people.len())
-        .map(|perm| calculate_happiness(perm, &relations))
-        .max()
-        .unwrap()
+    // What is the total change in happiness for the optimal seating arrangement of
+    // the actual guest list?
+    best_happiness(people, relations)
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    0
+    let mut relations = parse_input(input);
+    let mut people = relations.keys()
+        .flat_map(|(a, b)| [*a, *b])
+        .collect::<HashSet<&str>>();
+
+    // Give all happiness relationships that involve you a score of 0.
+    people.iter()
+        .flat_map(|&person| [(person, "Dummy"), ("Dummy", person)])
+        .for_each(|k| {
+            relations.insert(k, 0);
+        });
+
+    // Add yourself to the list.
+    people.insert("Dummy");
+
+    // What is the total change in happiness for the optimal seating arrangement that
+    // actually includes yourself?
+    best_happiness(people, relations)
 }
 
 fn parse_input(input: &String) -> HashMap<(&str, &str), i32> {
@@ -36,13 +52,20 @@ fn parse_input(input: &String) -> HashMap<(&str, &str), i32> {
         .collect::<HashMap<(&str, &str), i32>>()
 }
 
-fn calculate_happiness(perm: Vec<&&str>, relations: &HashMap<(&str, &str), i32>) -> i32 {
+fn permutation_happiness(perm: Vec<&&str>, relations: &HashMap<(&str, &str), i32>) -> i32 {
     perm.iter()
         .circular_tuple_windows::<(_, _, _)>()
         .map(|(l, c, r)| {
             relations.get(&(**c, **l)).unwrap() + relations.get(&(**c, **r)).unwrap()
         })
         .sum()
+}
+
+fn best_happiness(people: HashSet<&str>, relations: HashMap<(&str, &str), i32>) -> i32 {
+    people.iter().permutations(people.len())
+        .map(|perm| permutation_happiness(perm, &relations))
+        .max()
+        .unwrap()
 }
 
 #[cfg(test)]
