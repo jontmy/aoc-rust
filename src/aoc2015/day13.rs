@@ -92,10 +92,4 @@ mod tests {
     fn test_part_one(#[case] input: String, #[case] expected: i32) {
         assert_eq!(expected, solve_part_one(&input))
     }
-
-    #[rstest]
-    #[case("str", 0)]
-    fn test_part_two(#[case] input: String, #[case] expected: i32) {
-        assert_eq!(expected, solve_part_two(&input))
-    }
 }
