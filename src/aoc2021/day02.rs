@@ -1,17 +1,14 @@
 use regex::Regex;
 
 pub fn solve_part_one(input: &String) -> i32 {
-    let mut horizontal = 0;
-    let mut depth = 0;
-
-    Regex::new(r"(up|down|forward) (\d+)").unwrap()
-        .captures_iter(input)
-        .for_each(|capture| {
+    let re = Regex::new(r"(up|down|forward) (\d+)").unwrap();
+    let (horizontal, depth) = re.captures_iter(input)
+        .fold((0, 0), |(horizontal, depth), capture| {
             let delta = capture.get(2).unwrap().as_str().parse::<i32>().unwrap();
             match capture.get(1).unwrap().as_str() {
-                "forward" => horizontal += delta,
-                "down" => depth += delta,
-                "up" => depth -= delta,
+                "forward" => (horizontal + delta, depth),
+                "down" => (horizontal, depth + delta),
+                "up" => (horizontal, depth - delta),
                 _ => unreachable!()
             }
         });
@@ -20,28 +17,20 @@ pub fn solve_part_one(input: &String) -> i32 {
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    let mut horizontal = 0;
-    let mut depth = 0;
-    let mut aim = 0;
-
-    Regex::new(r"(up|down|forward) (\d+)").unwrap()
-        .captures_iter(input)
-        .for_each(|capture| {
+    let re = Regex::new(r"(up|down|forward) (\d+)").unwrap();
+    let (horizontal, depth, _) = re.captures_iter(input)
+        .fold((0, 0, 0), |(horizontal, depth, aim), capture| {
             let delta = capture.get(2).unwrap().as_str().parse::<i32>().unwrap();
             match capture.get(1).unwrap().as_str() {
-                "forward" => {
-                    horizontal += delta;
-                    depth += aim * delta;
-                }
-                "down" => aim += delta,
-                "up" => aim -= delta,
+                "forward" => (horizontal + delta, depth + aim * delta, aim),
+                "down" => (horizontal, depth, aim + delta),
+                "up" => (horizontal, depth, aim - delta),
                 _ => unreachable!()
             }
         });
 
     horizontal * depth
 }
-
 
 #[cfg(test)]
 mod tests {
