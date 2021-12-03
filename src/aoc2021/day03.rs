@@ -96,16 +96,38 @@ mod tests {
 
     #[rstest]
     #[case(indoc::indoc ! {"
-
-    "}.to_string(), 150)]
+        00100
+        11110
+        10110
+        10111
+        10101
+        01111
+        00111
+        11100
+        10000
+        11001
+        00010
+        01010
+    "}.to_string(), 198)]
     fn test_part_one(#[case] input: String, #[case] expected: i32) {
         assert_eq!(expected, solve_part_one(&input))
     }
 
     #[rstest]
     #[case(indoc::indoc ! {"
-
-    "}.to_string(), 900)]
+        00100
+        11110
+        10110
+        10111
+        10101
+        01111
+        00111
+        11100
+        10000
+        11001
+        00010
+        01010
+    "}.to_string(), 230)]
     fn test_part_two(#[case] input: String, #[case] expected: i32) {
         assert_eq!(expected, solve_part_two(&input))
     }
