@@ -7,10 +7,10 @@ pub fn solve_part_one(input: &String) -> i32 {
 
     // Pick the board that can be won in the least number of numbers drawn.
     let (winning_board, winning_draws) = boards.iter()
-        .map(|board| (board, board.numbers_to_win(&numbers)))
-        .filter(|(_, draws)| draws.is_some())
-        .map(|(board, draws)| (board, draws.unwrap()))
-        .sorted_by(|(_, this), (_, that)| this.len().cmp(&that.len()))
+        .filter_map(|board| board
+            .numbers_to_win(&numbers)
+            .map(|winning_draws| (board, winning_draws)))
+        .sorted_by(|(_, x), (_, y)| x.len().cmp(&y.len()))
         .next()
         .unwrap();
 
@@ -20,12 +20,12 @@ pub fn solve_part_one(input: &String) -> i32 {
 pub fn solve_part_two(input: &String) -> i32 {
     let (numbers, boards) = parse_input(input);
 
-    // Pick the board that can be won in the least number of numbers drawn.
+    // Pick the board that can be won in the most number of numbers drawn.
     let (winning_board, winning_draws) = boards.iter()
-        .map(|board| (board, board.numbers_to_win(&numbers)))
-        .filter(|(_, draws)| draws.is_some())
-        .map(|(board, draws)| (board, draws.unwrap()))
-        .sorted_by(|(_, this), (_, that)| this.len().cmp(&that.len()))
+        .filter_map(|board| board
+            .numbers_to_win(&numbers)
+            .map(|winning_draws| (board, winning_draws)))
+        .sorted_by(|(_, x), (_, y)| x.len().cmp(&y.len()))
         .last()
         .unwrap();
 
