@@ -1,94 +1,88 @@
 use itertools::Itertools;
 
+static BOARD_SIZE: usize = 5;
+
 pub fn solve_part_one(input: &String) -> i32 {
     let (numbers, boards) = parse_input(input);
 
-    for i in 0..numbers.len() {
-        let drawn = &numbers[0..=i];
-        let sum = boards.iter()
-            .filter(|board| board.is_won(drawn))
-            .map(|board| board.unmarked(drawn))
-            .next();
+    // Pick the board that can be won in the least number of numbers drawn.
+    let (winning_board, winning_draws) = boards.iter()
+        .map(|board| (board, board.numbers_to_win(&numbers)))
+        .filter(|(_, draws)| draws.is_some())
+        .map(|(board, draws)| (board, draws.unwrap()))
+        .sorted_by(|(_, this), (_, that)| this.len().cmp(&that.len()))
+        .next()
+        .unwrap();
 
-        match sum {
-            Some(sum) => {
-                return sum.iter().sum::<i32>() * numbers[i]
-            },
-            None => continue
-        }
-    }
-    unreachable!()
+    winning_board.checksum(winning_draws)
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
     let (numbers, boards) = parse_input(input);
 
-    let (i, last) = boards.iter()
-        .map(|board| {
-            for i in 0..numbers.len() {
-                let drawn = &numbers[0..=i];
-                if board.is_won(drawn) {
-                    return (i as i32, board);
-                }
-            }
-            (-1, board)
-        })
-        .sorted_by(|(i, _), (j, _)| i.cmp(j))
+    // Pick the board that can be won in the least number of numbers drawn.
+    let (winning_board, winning_draws) = boards.iter()
+        .map(|board| (board, board.numbers_to_win(&numbers)))
+        .filter(|(_, draws)| draws.is_some())
+        .map(|(board, draws)| (board, draws.unwrap()))
+        .sorted_by(|(_, this), (_, that)| this.len().cmp(&that.len()))
         .last()
         .unwrap();
 
-    return last.unmarked(&numbers[0..(i as usize + 1)]).iter().sum::<i32>() * numbers[i as usize]
-
+    winning_board.checksum(winning_draws)
 }
 
 struct Board {
-    grid: Vec<Vec<i32>>
+    grid: Vec<i32>,
 }
 
 impl Board {
     fn parse(chunk: &[&str]) -> Board {
-        let grid = chunk.iter()
-            .map(|&row | {
-                row.split_whitespace()
-                    .map(|s| s.parse::<i32>().unwrap())
-                    .collect::<Vec<i32>>()
-            })
-            .collect::<Vec<_>>();
-
         Board {
-            grid
+            grid: chunk.iter()
+                .flat_map(|&row| row.split_whitespace())
+                .map(|tile| tile.parse().unwrap())
+                .collect::<Vec<i32>>()
         }
     }
 
+    // Returns true if the board is won given a slice of numbers are drawn, or false otherwise.
     fn is_won(&self, drawn: &[i32]) -> bool {
         let matches = self.grid.iter()
-            .map(|row| {
-                row.iter()
-                    .map(|i| drawn.contains(i))
-                    .collect_vec()
-            })
+            .map(|tile| drawn.contains(tile))
             .collect_vec();
 
+        let any_row_won = *&matches.chunks(BOARD_SIZE)
+            .map(|row| row.iter().all(|tile| *tile))
+            .any(|row| row);
 
-        for row in &matches {
-            if row.iter().all(|i| *i) {
-                return true;
-            }
-        }
-        for col in 0..5 {
-            if (0..5).all(|row| matches[row][col]) {
-                return true;
-            }
-        }
-        false
+        let any_col_won = (0..BOARD_SIZE).into_iter()
+            .map(|offset| {
+                matches.iter()
+                    .skip(offset)
+                    .step_by(BOARD_SIZE)
+                    .all(|tile| *tile)
+            })
+            .any(|col| col);
+
+        any_row_won || any_col_won
     }
 
-    fn unmarked(&self, drawn: &[i32]) -> Vec<i32> {
+    // Returns the slice of numbers that need to be drawn in order for the board to be won,
+    // if and only if the board can be won.
+    fn numbers_to_win<'a>(&self, drawn: &'a [i32]) -> Option<&'a [i32]> {
+        (0..drawn.len()).into_iter()
+            .map(|i| &drawn[0..=i])
+            .skip_while(|drawn| !self.is_won(drawn))
+            .next()
+    }
+
+    // Returns the sum of all unmarked numbers that are unmarked (not drawn),
+    // multiplied by the last number drawn.
+    fn checksum(&self, drawn: &[i32]) -> i32 {
         self.grid.iter()
-            .flat_map(|row| row)
-            .filter(|i| !drawn.contains(i))
-            .map(|i| *i)
-            .collect_vec()
+            .filter(|tile| !drawn.contains(tile))
+            .sum::<i32>() * drawn.last().unwrap()
     }
 }
 
@@ -103,7 +97,7 @@ fn parse_input(input: &String) -> (Vec<i32>, Vec<Board>) {
         .filter(|l| !l.is_empty())
         .collect_vec()
         .chunks(5)
-        .map(|ch|Board::parse(ch))
+        .map(|chunk| Board::parse(chunk))
         .collect_vec();
 
     (numbers, boards)
