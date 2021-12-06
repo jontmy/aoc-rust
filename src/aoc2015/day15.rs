@@ -19,7 +19,17 @@ pub fn solve_part_one(input: &String) -> i64 {
 }
 
 pub fn solve_part_two(input: &String) -> i64 {
-    0
+    input.lines().into_iter()
+        .map(|l| l.parse::<Ingredient>())
+        .combinations_with_replacement(100).into_iter()
+        .map(|combination| {
+            combination.into_iter()
+                .map(|ingredient| ingredient.unwrap())
+                .reduce(|cookie, ingredient| cookie + ingredient).unwrap()
+        })
+        .filter(|cookie| cookie.calories == 500)
+        .map(|cookie| cookie.total_score())
+        .max().unwrap()
 }
 
 #[derive(Debug, Clone)]
