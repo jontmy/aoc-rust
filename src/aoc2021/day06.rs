@@ -1,5 +1,5 @@
 use std::cmp::{max, min};
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::iter;
 
 use itertools::Itertools;
@@ -21,7 +21,7 @@ pub fn solve_part_one(input: &String) -> i64 {
 
         let fish = (0..=8).into_iter()
             .map(|days| *fish.get(&days).or(Some(&0)).unwrap())
-            .collect_vec();
+            .collect::<VecDeque<_>>();
 
         (0..n).into_iter()
             .fold(fish, |mut fish, _| {
