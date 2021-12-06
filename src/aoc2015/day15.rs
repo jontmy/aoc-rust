@@ -102,8 +102,11 @@ mod tests {
     }
 
     #[rstest]
-    #[case("str", 0)]
-    fn test_part_two(#[case] input: String, #[case] expected: i32) {
+    #[case(indoc::indoc ! {"
+        Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8
+        Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3
+    "}.to_string(), 57600000)]
+    fn test_part_two(#[case] input: String, #[case] expected: i64) {
         assert_eq!(expected, solve_part_two(&input))
     }
 }
