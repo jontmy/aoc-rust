@@ -19,11 +19,9 @@ pub fn solve_part_one(input: &String) -> i32 {
         .map(|i| {
             crabs.iter()
                 .map(|crab| (*crab - i).abs())
-                .map(|n| n * (n + 1) / 2)
                 .sum()
         })
-        .min()
-        .unwrap()
+        .min().unwrap()
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
@@ -39,10 +37,10 @@ pub fn solve_part_two(input: &String) -> i32 {
         .map(|i| {
             crabs.iter()
                 .map(|crab| (*crab - i).abs())
+                .map(|n| n * (n + 1) / 2)
                 .sum()
         })
-        .min()
-        .unwrap()
+        .min().unwrap()
 }
 
 
@@ -53,17 +51,13 @@ mod tests {
     use super::{solve_part_one, solve_part_two};
 
     #[rstest]
-    #[case(indoc::indoc ! {"
-
-    "}.to_string(), 0)]
+    #[case("16,1,2,0,4,2,7,1,2,14", 37)]
     fn test_part_one(#[case] input: String, #[case] expected: i32) {
         assert_eq!(expected, solve_part_one(&input))
     }
 
     #[rstest]
-    #[case(indoc::indoc ! {"
-
-    "}.to_string(), 0)]
+    #[case("16,1,2,0,4,2,7,1,2,14", 168)]
     fn test_part_two(#[case] input: String, #[case] expected: i32) {
         assert_eq!(expected, solve_part_two(&input))
     }
