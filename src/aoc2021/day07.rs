@@ -1,13 +1,7 @@
-use std::cmp::{max, min};
-use std::collections::{HashMap, VecDeque};
-use std::iter;
-
 use itertools::Itertools;
-use itertools::MinMaxResult::MinMax;
-use regex::Regex;
 
 pub fn solve_part_one(input: &String) -> i32 {
-    let crabs =input.split(',').into_iter()
+    let crabs = input.split(',').into_iter()
         .map(|i| i.parse::<i32>().unwrap())
         .collect_vec();
 
@@ -25,7 +19,7 @@ pub fn solve_part_one(input: &String) -> i32 {
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    let crabs =input.split(',').into_iter()
+    let crabs = input.split(',').into_iter()
         .map(|i| i.parse::<i32>().unwrap())
         .collect_vec();
 
