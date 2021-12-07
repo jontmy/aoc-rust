@@ -20,17 +20,19 @@ pub fn solve_part_one(input: &String) -> usize {
     // Determine the dimensions of the 2D vector to be allocated.
     let (x_min, x_max) = hv_lines.iter()
         .flat_map(|(x1, _, x2, _)| [x1, x2])
-        .minmax().into_option().unwrap();
+        .minmax().into_option()
+        .map(|(min, max)| (min.clone(), max.clone())).unwrap();
     let (y_min, y_max) = hv_lines.iter()
         .flat_map(|(_, y1, _, y2)| [y1, y2])
-        .minmax().into_option().unwrap();
+        .minmax().into_option()
+        .map(|(min, max)| (min.clone(), max.clone())).unwrap();
     let (height, width) = (x_max - x_min + 1, y_max - y_min + 1);
 
     // Populate the grid with horizontal and vertical lines only.
-    let grid = hv_lines.iter()
+    let grid = hv_lines.into_iter()
         .fold(vec![vec![0; height]; width], |mut grid, (x1, y1, x2, y2)| {
-            for y in *y1..=*y2 {
-                for x in *x1..=*x2 {
+            for y in y1..=y2 {
+                for x in x1..=x2 {
                     grid[y - y_min][x - x_min] += 1;
                 }
             }
@@ -38,9 +40,9 @@ pub fn solve_part_one(input: &String) -> usize {
         });
 
     // Count the number of points on the grid at which two or more lines overlap.
-    grid.iter()
+    grid.into_iter()
         .flat_map(|row| row)
-        .filter(|&freq| *freq >= 2)
+        .filter(|freq| *freq >= 2)
         .count()
 }
 
@@ -58,11 +60,13 @@ pub fn solve_part_two(input: &String) -> usize {
 
     // Determine the dimensions of the 2D vector to be allocated.
     let (x_min, x_max) = lines.iter()
-        .flat_map(|(x1, _, x2, _)| [*x1, *x2])
-        .minmax().into_option().unwrap();
-    let (y_min, y_max)= lines.iter()
-        .flat_map(|(_, y1, _, y2)| [*y1, *y2])
-        .minmax().into_option().unwrap();
+        .flat_map(|(x1, _, x2, _)| [x1, x2])
+        .minmax().into_option()
+        .map(|(min, max)| (min.clone(), max.clone())).unwrap();
+    let (y_min, y_max) = lines.iter()
+        .flat_map(|(_, y1, _, y2)| [y1, y2])
+        .minmax().into_option()
+        .map(|(min, max)| (min.clone(), max.clone())).unwrap();
     let (height, width) = (x_max - x_min + 1, y_max - y_min + 1);
 
     // Partition the lines into horizontal/vertical lines and diagonal lines.
@@ -70,10 +74,10 @@ pub fn solve_part_two(input: &String) -> usize {
         .partition(|(x1, y1, x2, y2)| x1 == x2 || y1 == y2);
 
     // Populate the grid with horizontal and vertical lines only.
-    let grid = hv_lines.iter()
+    let grid = hv_lines.into_iter()
         .fold(vec![vec![0; height]; width], |mut grid, (x1, y1, x2, y2)| {
-            for y in *y1.min(y2)..=*y1.max(y2) {
-                for x in *x1.min(x2)..=*x1.max(x2) {
+            for y in y1.min(y2)..=y1.max(y2) {
+                for x in x1.min(x2)..=x1.max(x2) {
                     grid[y - y_min][x - x_min] += 1;
                 }
             }
@@ -81,21 +85,20 @@ pub fn solve_part_two(input: &String) -> usize {
         });
 
     // Populate the grid with the remaining diagonal lines.
-    let grid = diag_lines.iter()
+    let grid = diag_lines.into_iter()
         .flat_map(|(x1, y1, x2, y2)| {
             let xs = if x1 <= x2 {
-                (*min(x1, x2)..=*max(x1, x2)).collect_vec()
+                (min(x1, x2)..=max(x1, x2)).collect_vec()
             } else {
-                (*min(x1, x2)..=*max(x1, x2)).rev().collect_vec()
+                (min(x1, x2)..=max(x1, x2)).rev().collect_vec()
             };
             let ys = if y1 <= y2 {
-                (*min(y1, y2)..=*max(y1, y2)).collect_vec()
+                (min(y1, y2)..=max(y1, y2)).collect_vec()
             } else {
-                (*min(y1, y2)..=*max(y1, y2)).rev().collect_vec()
+                (min(y1, y2)..=max(y1, y2)).rev().collect_vec()
             };
-            xs.iter()
-                .zip(ys.iter())
-                .map(|(x, y)| (*x, *y))
+            xs.into_iter()
+                .zip(ys.into_iter())
                 .collect_vec()
         })
         .fold(grid, |mut grid, (x, y)| {
@@ -104,9 +107,9 @@ pub fn solve_part_two(input: &String) -> usize {
         });
 
     // Count the number of points on the grid at which two or more lines overlap.
-    grid.iter()
+    grid.into_iter()
         .flat_map(|row| row)
-        .filter(|&freq| *freq >= 2)
+        .filter(|freq| *freq >= 2)
         .count()
 }
 
