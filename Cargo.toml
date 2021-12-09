@@ -16,3 +16,8 @@ json = "0.12.4"
 
 [dev-dependencies]
 rstest = "0.11.0"
+criterion = "0.3"
+
+[[bench]]
+name = "aoc_benchmark"
+harness = false
