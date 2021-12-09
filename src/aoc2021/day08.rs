@@ -14,7 +14,7 @@ pub fn solve_part_two(input: &String) -> i32 {
     input.lines()
         .map(|line| line.parse::<Entry>().unwrap())
         .map(|entry| entry.value())
-        .map(|x| dbg!(x))
+        .map(|x| x)
         .sum()
 }
 
