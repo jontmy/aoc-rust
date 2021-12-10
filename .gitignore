@@ -1,3 +1,6 @@
+.vscode/
+benches/
+
 # =====================================================================================================================
 # Rust .gitignore rules
 # Source: https://github.com/github/gitignore/blob/master/Rust.gitignore
