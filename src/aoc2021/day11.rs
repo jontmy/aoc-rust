@@ -9,7 +9,6 @@ use crate::utils::coordinates;
 
 pub fn solve_part_one(input: &String) -> i32 {
     let mut grid = input.parse::<Grid>().unwrap();
-    dbg!(&grid);
 
     let mut flashes = 0;
     for _ in 0..100 {
@@ -21,43 +20,42 @@ pub fn solve_part_one(input: &String) -> i32 {
 
 pub fn solve_part_two(input: &String) -> i32 {
     let mut grid = input.parse::<Grid>().unwrap();
-    dbg!(&grid);
-
-    let mut flashes = 0;
-    for i in 0..i32::MAX {
-        flashes += grid.increment();
-
+    for i in 1..i32::MAX {
+        grid.increment();
         if grid.octopuses.values().all(|i| *i == 0) {
-            return i
+            return i;
         }
     }
-
     unreachable!();
 }
 
 struct Grid {
     octopuses: HashMap<(i32, i32), i32>,
     width: i32,
-    height: i32
+    height: i32,
 }
 
 impl FromStr for Grid {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let octopuses = s.lines()
+        let octopuses = s
+            .lines()
             .enumerate()
             .flat_map(|(r, line)| {
-                line.chars()
-                    .enumerate()
-                    .map(move |(c, val)| ((r as i32, c as i32), val.to_string().parse::<i32>().unwrap()))
+                line.chars().enumerate().map(move |(c, val)| {
+                    (
+                        (r as i32, c as i32),
+                        val.to_string().parse::<i32>().unwrap(),
+                    )
+                })
             })
             .collect::<HashMap<(i32, i32), i32>>();
 
         Ok(Grid {
             octopuses,
             width: s.lines().next().unwrap().len() as i32,
-            height: s.lines().count() as i32
+            height: s.lines().count() as i32,
         })
     }
 }
@@ -84,7 +82,6 @@ impl Grid {
         }
 
         let mut flashed: HashSet<(i32, i32)> = HashSet::new();
-        let mut flashes = 0;
         let mut threshold = 8;
 
         while self.octopuses.values().any(|i| *i > threshold) {
@@ -104,9 +101,8 @@ impl Grid {
                 let val = *self.octopuses.get(&(*r, *c)).unwrap();
                 let origin = vec![*r as usize, *c as usize];
                 for adj in coordinates::offset_by(&origin, 1) {
-                    let coords: (i32, i32) = adj.into_iter()
-                                                .map(|i| i as i32)
-                                                .collect_tuple().unwrap();
+                    let coords: (i32, i32) =
+                        adj.into_iter().map(|i| i as i32).collect_tuple().unwrap();
                     self.octopuses.entry(coords).and_modify(|i| {
                         if *i != 0 {
                             *i += 1;
@@ -114,13 +110,11 @@ impl Grid {
                     });
                 }
             }
-            dbg!(&flash);
             for (r, c) in flash {
                 self.octopuses.insert((r, c), 0);
                 flashed.insert((r, c));
             }
         }
-        dbg!(&self);
         flashed.len() as i32
     }
 }
