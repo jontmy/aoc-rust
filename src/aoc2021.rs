@@ -59,10 +59,15 @@ pub fn run() {
     io::write(9, 2021,
               day09::solve_part_one(&input),
               day09::solve_part_two(&input));
-    */
 
     let input = read(10, 2021);
     io::write(10, 2021,
               day10::solve_part_one(&input),
               day10::solve_part_two(&input));
+    */
+
+    let input = read(11, 2021);
+    io::write(11, 2021,
+              day11::solve_part_one(&input),
+              day11::solve_part_two(&input));
 }
