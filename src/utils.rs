@@ -1,4 +1,3 @@
 pub mod io;
 pub mod grid;
-pub mod coords;
 pub mod coordinates;
