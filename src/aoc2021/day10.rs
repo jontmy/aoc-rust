@@ -4,17 +4,16 @@ use itertools::Itertools;
 use self::PairedDelimiter::{Close, Open};
 
 pub fn solve_part_one(input: &String) -> i64 {
-    input.lines()
-         .map(self::corrupt)
-         .sum()
+    input.lines().map(self::corrupt).sum()
 }
 
 pub fn solve_part_two(input: &String) -> i64 {
-    let scores = input.lines()
-                      .filter(|l| corrupt(l) == 0)
-                      .map(self::complete)
-                      .sorted()
-                      .collect_vec();
+    let scores = input
+        .lines()
+        .filter(|l| corrupt(l) == 0)
+        .map(self::complete)
+        .sorted()
+        .collect_vec();
 
     scores[scores.len() / 2] // always odd
 }
@@ -76,56 +75,62 @@ impl PairedDelimiter {
 }
 
 fn corrupt(s: &str) -> i64 {
-    let (_, illegal) = s.chars().into_iter()
-                        .map(PairedDelimiter::wrap)
-                        .fold_while((Vec::new(), None), |(mut stack, illegal), current| {
-                            let previous = stack.last();
-                            let expected = previous.map(PairedDelimiter::invert);
+    let (_, illegal) = s
+        .chars()
+        .into_iter()
+        .map(PairedDelimiter::wrap)
+        .fold_while((Vec::new(), None), |(mut stack, illegal), current| {
+            let previous = stack.last();
+            let expected = previous.map(PairedDelimiter::invert);
 
-                            match (previous, &current) {
-                                (Some(previous), Open(_)) => {
-                                    stack.push(current);
-                                    Continue((stack, None))
-                                }
-                                (Some(previous), Close(_)) => {
-                                    stack.pop();
-                                    if expected.unwrap() == current {
-                                        Continue((stack, None))
-                                    } else {
-                                        Done((stack, Some(current)))
-                                    }
-                                }
-                                (None, _) => {
-                                    stack.push(current);
-                                    Continue((stack, None))
-                                }
-                            }
-                        }).into_inner();
+            match (previous, &current) {
+                (Some(previous), Open(_)) => {
+                    stack.push(current);
+                    Continue((stack, None))
+                }
+                (Some(previous), Close(_)) => {
+                    stack.pop();
+                    if expected.unwrap() == current {
+                        Continue((stack, None))
+                    } else {
+                        Done((stack, Some(current)))
+                    }
+                }
+                (None, _) => {
+                    stack.push(current);
+                    Continue((stack, None))
+                }
+            }
+        })
+        .into_inner();
 
     illegal.map(PairedDelimiter::corrupted_score).unwrap_or(0)
 }
 
 fn complete(s: &str) -> i64 {
-    s.chars().into_iter()
-     .map(PairedDelimiter::wrap)
-     .fold(Vec::new(), |mut stack, current| {
-         match (stack.last(), &current) {
-             (Some(previous), Open(_)) => {
-                 stack.push(current);
-             }
-             (Some(previous), Close(_)) => {
-                 stack.pop();
-             }
-             (None, _) => stack.push(current),
-         };
-         stack
-     }).iter().rev()
-     .map(PairedDelimiter::invert)
-     .fold(0, |mut score, delimiter| {
-         score *= 5;
-         score += delimiter.completed_score();
-         score
-     })
+    s.chars()
+        .into_iter()
+        .map(PairedDelimiter::wrap)
+        .fold(Vec::new(), |mut stack, current| {
+            match (stack.last(), &current) {
+                (Some(previous), Open(_)) => {
+                    stack.push(current);
+                }
+                (Some(previous), Close(_)) => {
+                    stack.pop();
+                }
+                (None, _) => stack.push(current),
+            };
+            stack
+        })
+        .iter()
+        .rev()
+        .map(PairedDelimiter::invert)
+        .fold(0, |mut score, delimiter| {
+            score *= 5;
+            score += delimiter.completed_score();
+            score
+        })
 }
 
 #[cfg(test)]
