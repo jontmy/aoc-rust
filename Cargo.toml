@@ -17,6 +17,8 @@ priority-queue = "1.1.1"
 ndarray = "0.15.4"
 gcd = "2.0.2"
 statrs = "0.15.0"
+petgraph = "0.6.0" # graphs
+bimap = "0.6.1" # bijective maps
 
 [dev-dependencies]
 rstest = "0.11.0"
