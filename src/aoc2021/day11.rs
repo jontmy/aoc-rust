@@ -1,121 +1,100 @@
 use std::collections::{HashMap, HashSet};
-use std::fmt::{Debug, Formatter};
 use std::str::FromStr;
 
 use itertools::Itertools;
-use ndarray::{Array2, ArrayBase};
 
-use crate::utils::coordinates;
+use crate::utils::coordinates::dim_2::Coordinates;
 
-pub fn solve_part_one(input: &String) -> i32 {
-    let mut grid = input.parse::<Grid>().unwrap();
-
+pub fn solve_part_one(input: &String) -> usize {
+    let mut cavern = Cavern::from_str(input).unwrap();
     let mut flashes = 0;
     for _ in 0..100 {
-        flashes += grid.increment();
+        flashes += cavern.step();
     }
-
     flashes
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    let mut grid = input.parse::<Grid>().unwrap();
+    let mut cavern = Cavern::from_str(input).unwrap();
     for i in 1..i32::MAX {
-        grid.increment();
-        if grid.octopuses.values().all(|i| *i == 0) {
+        cavern.step();
+        if cavern.is_synchronized() {
             return i;
         }
     }
     unreachable!();
 }
 
-struct Grid {
-    octopuses: HashMap<(i32, i32), i32>,
-    width: i32,
+struct Cavern {
+    octopuses: HashMap<Coordinates, u32>,
     height: i32,
+    width: i32,
 }
 
-impl FromStr for Grid {
+impl FromStr for Cavern {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let octopuses = s
+        let height = s.lines().count() as i32;
+        let width = s.lines().next().unwrap().chars().count() as i32;
+        let energies = s
             .lines()
-            .enumerate()
-            .flat_map(|(r, line)| {
-                line.chars().enumerate().map(move |(c, val)| {
-                    (
-                        (r as i32, c as i32),
-                        val.to_string().parse::<i32>().unwrap(),
-                    )
-                })
-            })
-            .collect::<HashMap<(i32, i32), i32>>();
+            .flat_map(&str::chars)
+            .map(|c| char::to_digit(c, 10).unwrap());
 
-        Ok(Grid {
+        let octopuses = Coordinates::in_area(0..width, 0..height)
+            .zip(energies)
+            .collect::<HashMap<Coordinates, u32>>();
+
+        Ok(Cavern {
             octopuses,
-            width: s.lines().next().unwrap().len() as i32,
-            height: s.lines().count() as i32,
+            height,
+            width,
         })
     }
 }
 
-impl Debug for Grid {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let mut sb = String::from("\n");
-        for r in 0..self.height {
-            for c in 0..self.width {
-                sb.push_str(&*format!("{}", self.octopuses.get(&(r, c)).unwrap()))
-            }
-            sb.push_str("\n");
+impl Cavern {
+    fn step(&mut self) -> usize {
+        // First, the energy level of each octopus increases by 1.
+        for c in Coordinates::in_area(0..self.width, 0..self.height) {
+            self.octopuses.entry(c).and_modify(|e| *e += 1);
         }
-        write!(f, "{}", sb)
+        let mut flashed = HashSet::new();
+        loop {
+            // Then, any octopus with an energy level greater than 9 flashes.
+            let flashes = Coordinates::in_area(0..self.width, 0..self.height)
+                .filter(|c| *self.octopuses.get(c).unwrap() > 9)
+                .filter(|c| !flashed.contains(c))
+                .collect::<HashSet<Coordinates>>();
+
+            // This increases the energy level of all adjacent octopuses by 1,
+            // including octopuses that are diagonally adjacent.
+            for c in flashes.iter().flat_map(|c| c.all_offset_by(1)) {
+                self.octopuses.entry(c).and_modify(|e| *e += 1);
+            }
+
+            // If this causes an octopus to have an energy level greater than 9, it also flashes.
+            // This process continues as long as new octopuses keep having their energy level
+            // increased beyond 9.
+            if flashes.is_empty() {
+                break;
+            }
+            flashed.extend(flashes);
+        }
+
+        // Finally, any octopus that flashed during this step has its energy level set to 0,
+        // as it used all of its energy to flash.
+        for c in flashed.iter() {
+            self.octopuses.entry(*c).and_modify(|e| *e = 0);
+        }
+
+        // How many total flashes are there after this step?
+        flashed.len()
     }
-}
 
-impl Grid {
-    fn increment(&mut self) -> i32 {
-        for r in 0..self.height {
-            for c in 0..self.width {
-                self.octopuses.entry((r, c)).and_modify(|val| *val += 1);
-            }
-        }
-
-        let mut flashed: HashSet<(i32, i32)> = HashSet::new();
-        let mut threshold = 8;
-
-        while self.octopuses.values().any(|i| *i > threshold) {
-            if threshold == 8 {
-                threshold += 1
-            }
-            let mut flash = Vec::new();
-            for r in 0..self.height {
-                for c in 0..self.width {
-                    let val = *self.octopuses.get(&(r, c)).unwrap();
-                    if val > 9 {
-                        flash.push((r, c));
-                    }
-                }
-            }
-            for (r, c) in &flash {
-                let val = *self.octopuses.get(&(*r, *c)).unwrap();
-                let origin = vec![*r as usize, *c as usize];
-                for adj in coordinates::offset_by(&origin, 1) {
-                    let coords: (i32, i32) =
-                        adj.into_iter().map(|i| i as i32).collect_tuple().unwrap();
-                    self.octopuses.entry(coords).and_modify(|i| {
-                        if *i != 0 {
-                            *i += 1;
-                        }
-                    });
-                }
-            }
-            for (r, c) in flash {
-                self.octopuses.insert((r, c), 0);
-                flashed.insert((r, c));
-            }
-        }
-        flashed.len() as i32
+    fn is_synchronized(&self) -> bool {
+        self.octopuses.values().all(|e| *e == 0)
     }
 }
 
@@ -138,7 +117,7 @@ mod tests {
         4846848554
         5283751526
     "}.to_string(), 1656)]
-    fn test_part_one(#[case] input: String, #[case] expected: i32) {
+    fn test_part_one(#[case] input: String, #[case] expected: usize) {
         assert_eq!(expected, solve_part_one(&input))
     }
 
