@@ -62,29 +62,27 @@ impl Paper {
     }
 
     fn fold(dots: HashSet<Coordinates>, fold: Fold) -> HashSet<Coordinates> {
-        match fold.axis {
-            'x' => dots
-                .into_iter()
-                .map(|dot| {
-                    if dot.0 < fold.line {
-                        dot
-                    } else {
-                        Coordinates::from((2 * fold.line - dot.0, dot.1))
+        dots.into_iter()
+            .map(|dot| {
+                match fold.axis {
+                    'x' => {
+                        if dot.0 < fold.line {
+                            dot
+                        } else {
+                            Coordinates::from((2 * fold.line - dot.0, dot.1))
+                        }
+                    },
+                    'y' => {
+                        if dot.1 < fold.line {
+                            dot
+                        } else {
+                            Coordinates::from((dot.0, 2 * fold.line - dot.1))
+                        }
                     }
-                })
-                .collect::<HashSet<_>>(),
-            'y' => dots
-                .into_iter()
-                .map(|dot| {
-                    if dot.1 < fold.line {
-                        dot
-                    } else {
-                        Coordinates::from((dot.0, 2 * fold.line - dot.1))
-                    }
-                })
-                .collect::<HashSet<_>>(),
-            _ => panic!(),
-        }
+                    _ => panic!(),
+                }
+            })
+            .collect::<HashSet<_>>()
     }
 }
 
