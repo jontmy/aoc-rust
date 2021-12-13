@@ -35,8 +35,8 @@ impl FromStr for Paper {
         let dots = dots
             .lines()
             .map(|l| {
-                let (a, b): (i32, i32) = scan!("{},{}" <- l).unwrap();
-                Coordinates::from((a, b))
+                let (x, y): (i32, i32) = scan!("{},{}" <- l).unwrap();
+                Coordinates::at(x, y)
             })
             .collect::<HashSet<_>>();
 
@@ -68,14 +68,14 @@ impl Paper {
                     if dot.x() < fold.line {
                         dot
                     } else {
-                        Coordinates::from((2 * fold.line - dot.x(), dot.y()))
+                        Coordinates::at(2 * fold.line - dot.x(), dot.y())
                     }
                 }
                 'y' => {
                     if dot.y() < fold.line {
                         dot
                     } else {
-                        Coordinates::from((dot.x(), 2 * fold.line - dot.y()))
+                        Coordinates::at(dot.x(), 2 * fold.line - dot.y())
                     }
                 }
                 _ => panic!(),
@@ -107,7 +107,7 @@ pub fn solve_part_two(input: &String) -> String {
     let mut sb = String::from("\n");
     for y in y_min..=y_max {
         for x in x_min..=x_max {
-            if dots.contains(&Coordinates::from((x, y))) {
+            if dots.contains(&Coordinates::at(x, y)) {
                 sb.push('#');
             } else {
                 sb.push('.');
