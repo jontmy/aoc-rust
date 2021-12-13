@@ -24,7 +24,7 @@ Currently a work-in-progress, solving puzzles from 2021 and 2015 concurrently. I
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |     |     |     | [1](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day01.rs) | [2](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day02.rs) | [3](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day03.rs) | [4](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day04.rs) |
 | [5](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day05.rs) | [6](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day06.rs) | [7](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day07.rs) | [8](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day08.rs) | [9](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day09.rs) | [10](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day10.rs) | [11](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day11.rs) |
-| 12  | 13  | 14  | 15  | 16  | 17  | 18  |
+| [12](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day12.rs) | [13](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2021/day13.rs) | 14  | 15  | 16  | 17  | 18  |
 | 19  | 20  | 21  | 22  | 23  | 24  | 25  |
 
 ## Useful Links
