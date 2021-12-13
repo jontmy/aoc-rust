@@ -11,7 +11,7 @@ ansi_term = "0.12.1" # console font formatting
 regex = "1.5.4"
 indoc = "1.0.3" # multi-line indented strings
 lazy_static = "1.4.0" # avoid re-compiling regex
-itertools = "0.10.1" # combinatorics
+itertools = "0.10.1" # combinatorics and more
 json = "0.12.4"
 priority-queue = "1.1.1"
 ndarray = "0.15.4"
@@ -19,6 +19,7 @@ gcd = "2.0.2"
 statrs = "0.15.0"
 petgraph = "0.6.0" # graphs
 bimap = "0.6.1" # bijective maps
+serde_scan = "0.4.1" # alternative to regex for parsing of AoC input files
 
 [dev-dependencies]
 rstest = "0.11.0"
