@@ -40,14 +40,14 @@ pub mod dim_2 {
         ///
         /// Equivalent to `self + Coordinates::at(dx, dy)`, by which it is implemented.
         pub fn translate(&self, dx: i32, dy: i32) -> Self {
-            self + Coordinates::at(dx, dy)
+            *self + Coordinates::at(dx, dy)
         }
 
         /// Returns a new instance of `Coordinates` multiplied by a scalar `k` component-wise.
         ///
         /// Equivalent to `self * Coordinates::at(k, k)`, by which it is implemented.
         pub fn scale(&self, k: i32) -> Self {
-            self * Coordinates::at(k, k)
+            *self * Coordinates::at(k, k)
         }
 
         /**
