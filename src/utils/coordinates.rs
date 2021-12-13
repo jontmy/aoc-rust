@@ -9,56 +9,6 @@ pub mod dim_2 {
     #[derive(Clone, Copy, Hash, PartialEq, Eq)]
     pub struct Coordinates(i32, i32);
 
-    impl From<(i32, i32)> for Coordinates {
-        fn from(c: (i32, i32)) -> Self {
-            Coordinates(c.0, c.1)
-        }
-    }
-
-    impl Add for Coordinates {
-        type Output = Self;
-
-        fn add(self, rhs: Self) -> Self::Output {
-            Coordinates(self.0 + rhs.0, self.1 + rhs.1)
-        }
-    }
-
-    impl Sub for Coordinates {
-        type Output = Self;
-
-        fn sub(self, rhs: Self) -> Self::Output {
-            Coordinates(self.0 - rhs.0, self.1 - rhs.1)
-        }
-    }
-
-    impl Mul for Coordinates {
-        type Output = Self;
-
-        fn mul(self, rhs: Self) -> Self::Output {
-            Coordinates(self.0 * rhs.0, self.1 * rhs.1)
-        }
-    }
-
-    impl Div for Coordinates {
-        type Output = Coordinates;
-
-        fn div(self, rhs: Self) -> Self::Output {
-            Coordinates(self.0 / rhs.0, self.1 / rhs.1)
-        }
-    }
-
-    impl Debug for Coordinates {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "({}, {})", self.0, self.1)
-        }
-    }
-
-    impl Display for Coordinates {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "({}, {})", self.0, self.1)
-        }
-    }
-
     impl Coordinates {
         /**
         Returns an iterator of all coordinates in a 2D area, range-bound on both axes.
@@ -68,6 +18,36 @@ pub mod dim_2 {
             y_range: Range<i32>,
         ) -> impl Iterator<Item = Coordinates> {
             x_range.cartesian_product(y_range).map(Coordinates::from)
+        }
+
+        /// Returns a new instance of `Coordinates` given its `x`- and `y`-components.
+        pub fn at(x: i32, y: i32) -> Self {
+            Coordinates(x, y)
+        }
+
+        /// Returns the `x`-component of this `Coordinates`.
+        pub fn x(&self) -> i32 {
+            self.0
+        }
+
+        /// Returns the `y`-component of this `Coordinates`.
+        pub fn y(&self) -> i32 {
+            self.1
+        }
+
+        /// Returns a new instance of `Coordinates` offset by `dx` on the `x`-axis and `dy` on the
+        /// `y`-axis.
+        ///
+        /// Equivalent to `self + Coordinates::at(dx, dy)`, by which it is implemented.
+        pub fn translate(&self, dx: i32, dy: i32) -> Self {
+            self + Coordinates::at(dx, dy)
+        }
+
+        /// Returns a new instance of `Coordinates` multiplied by a scalar `k` component-wise.
+        ///
+        /// Equivalent to `self * Coordinates::at(k, k)`, by which it is implemented.
+        pub fn scale(&self, k: i32) -> Self {
+            self * Coordinates::at(k, k)
         }
 
         /**
@@ -143,6 +123,56 @@ pub mod dim_2 {
         }
     }
 
+    impl From<(i32, i32)> for Coordinates {
+        fn from(c: (i32, i32)) -> Self {
+            Coordinates(c.0, c.1)
+        }
+    }
+
+    impl Add for Coordinates {
+        type Output = Self;
+
+        fn add(self, rhs: Self) -> Self::Output {
+            Coordinates(self.0 + rhs.0, self.1 + rhs.1)
+        }
+    }
+
+    impl Sub for Coordinates {
+        type Output = Self;
+
+        fn sub(self, rhs: Self) -> Self::Output {
+            Coordinates(self.0 - rhs.0, self.1 - rhs.1)
+        }
+    }
+
+    impl Mul for Coordinates {
+        type Output = Self;
+
+        fn mul(self, rhs: Self) -> Self::Output {
+            Coordinates(self.0 * rhs.0, self.1 * rhs.1)
+        }
+    }
+
+    impl Div for Coordinates {
+        type Output = Coordinates;
+
+        fn div(self, rhs: Self) -> Self::Output {
+            Coordinates(self.0 / rhs.0, self.1 / rhs.1)
+        }
+    }
+
+    impl Debug for Coordinates {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "({}, {})", self.0, self.1)
+        }
+    }
+
+    impl Display for Coordinates {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "({}, {})", self.0, self.1)
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         use std::collections::HashSet;
@@ -191,9 +221,7 @@ pub mod dim_2 {
             #[case] expected: Vec<(i32, i32)>,
         ) {
             assert_eq!(
-                Coordinates::from(origin)
-                    .axial_offset_by(delta)
-                    .count(),
+                Coordinates::from(origin).axial_offset_by(delta).count(),
                 expected.len()
             );
             assert_eq!(
@@ -220,9 +248,7 @@ pub mod dim_2 {
             #[case] expected: Vec<(i32, i32)>,
         ) {
             assert_eq!(
-                Coordinates::from(origin)
-                    .diagonal_offset_by(delta)
-                    .count(),
+                Coordinates::from(origin).diagonal_offset_by(delta).count(),
                 expected.len()
             );
             assert_eq!(
@@ -249,7 +275,8 @@ pub mod dim_2 {
                     .all_offset_by(delta)
                     .collect::<HashSet<Coordinates>>(),
                 Coordinates::from(origin)
-                    .axial_offset_by(delta).into_iter()
+                    .axial_offset_by(delta)
+                    .into_iter()
                     .chain(Coordinates::from(origin).diagonal_offset_by(delta))
                     .map(Coordinates::from)
                     .collect::<HashSet<Coordinates>>()
