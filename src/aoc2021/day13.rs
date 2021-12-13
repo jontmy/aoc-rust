@@ -1,105 +1,115 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::HashSet;
 use std::str::FromStr;
 
-use crate::utils::coordinates::dim_2::Coordinates;
 use itertools::Itertools;
 use serde_scan::scan;
 
-fn parse_input(input: &String) -> (HashSet<Coordinates>, Vec<(char, i32)>) {
-    let (dots, folds): (&str, &str) = input.split("\n\n").collect_tuple().unwrap();
+use crate::utils::coordinates::dim_2::Coordinates;
 
-    let dots = dots
-        .lines()
-        .map(|l| {
-            let (a, b): (i32, i32) = scan!("{},{}" <- l).unwrap();
-            Coordinates::from((a, b))
-        })
-        .collect::<HashSet<_>>();
+#[derive(Copy, Clone)]
+struct Fold {
+    axis: char,
+    line: i32,
+}
 
-    let folds = folds
-        .lines()
-        .map(|l| scan!("fold along {}={}" <- l).unwrap())
-        .collect::<Vec<(char, i32)>>();
+impl FromStr for Fold {
+    type Err = ();
 
-    (dots, folds)
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let (axis, line) = scan!("fold along {}={}" <- s).unwrap();
+        Ok(Fold { axis, line })
+    }
+}
+
+struct Paper {
+    dots: HashSet<Coordinates>,
+    folds: Vec<Fold>,
+}
+
+impl FromStr for Paper {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let (dots, folds) = s.split("\n\n").collect_tuple().unwrap();
+
+        let dots = dots
+            .lines()
+            .map(|l| {
+                let (a, b): (i32, i32) = scan!("{},{}" <- l).unwrap();
+                Coordinates::from((a, b))
+            })
+            .collect::<HashSet<_>>();
+
+        let folds = folds
+            .lines()
+            .map(Fold::from_str)
+            .map(Result::unwrap)
+            .collect_vec();
+
+        Ok(Paper { dots, folds })
+    }
+}
+
+impl Paper {
+    fn dots_after_one_fold(self) -> HashSet<Coordinates> {
+        Paper::fold(self.dots, self.folds[0])
+    }
+
+    fn dots_after_all_folds(self) -> HashSet<Coordinates> {
+        self.folds
+            .into_iter()
+            .fold(self.dots, |dots, fold| Paper::fold(dots, fold))
+    }
+
+    fn fold(dots: HashSet<Coordinates>, fold: Fold) -> HashSet<Coordinates> {
+        match fold.axis {
+            'x' => dots
+                .into_iter()
+                .map(|dot| {
+                    if dot.0 < fold.line {
+                        dot
+                    } else {
+                        Coordinates::from((2 * fold.line - dot.0, dot.1))
+                    }
+                })
+                .collect::<HashSet<_>>(),
+            'y' => dots
+                .into_iter()
+                .map(|dot| {
+                    if dot.1 < fold.line {
+                        dot
+                    } else {
+                        Coordinates::from((dot.0, 2 * fold.line - dot.1))
+                    }
+                })
+                .collect::<HashSet<_>>(),
+            _ => panic!(),
+        }
+    }
 }
 
 pub fn solve_part_one(input: &String) -> usize {
-    let (mut dots, folds) = parse_input(input);
-    for (axis, fold) in folds.into_iter().take(1) {
-        match axis {
-            'x' => {
-                let (untouched, mut folded): (Vec<Coordinates>, Vec<Coordinates>) =
-                    dots.iter().partition(|c| c.0 < fold);
-                for dot in folded.iter_mut() {
-                    dot.0 = fold - (dot.0 - fold).abs();
-                }
-                dots = untouched
-                    .into_iter()
-                    .chain(folded.into_iter())
-                    .collect::<HashSet<Coordinates>>();
-            }
-            'y' => {
-                let (untouched, mut folded): (Vec<Coordinates>, Vec<Coordinates>) =
-                    dots.iter().partition(|c| c.1 < fold);
-                for dot in folded.iter_mut() {
-                    dot.1 = fold - (dot.1 - fold).abs();
-                }
-                dots = untouched
-                    .into_iter()
-                    .chain(folded.into_iter())
-                    .collect::<HashSet<Coordinates>>();
-            }
-            _ => panic!(),
-        }
-    }
-
-    dots.len()
+    Paper::from_str(input).unwrap().dots_after_one_fold().len()
 }
 
-pub fn solve_part_two(input: &String) -> i32 {
-    let (mut dots, folds) = parse_input(input);
+pub fn solve_part_two(input: &String) -> String {
+    let dots = Paper::from_str(input).unwrap().dots_after_all_folds();
 
-    for (axis, fold) in folds {
-        match axis {
-            'x' => {
-                let (untouched, mut folded): (Vec<Coordinates>, Vec<Coordinates>) =
-                    dots.iter().partition(|c| c.0 < fold);
-                for dot in folded.iter_mut() {
-                    dot.0 = (fold) - (dot.0 - fold).abs();
-                }
-                dots = untouched
-                    .into_iter()
-                    .chain(folded.into_iter())
-                    .collect::<HashSet<Coordinates>>();
-            }
-            'y' => {
-                let (untouched, mut folded): (Vec<Coordinates>, Vec<Coordinates>) =
-                    dots.iter().partition(|c| c.1 < fold);
-                for dot in folded.iter_mut() {
-                    dot.1 = (fold) - (dot.1 - fold).abs();
-                }
-                dots = untouched
-                    .into_iter()
-                    .chain(folded.into_iter())
-                    .collect::<HashSet<Coordinates>>();
-            }
-            _ => panic!(),
-        }
-    }
+    let (x_min, x_max) = dots.iter().map(|c| c.0).minmax().into_option().unwrap();
+    let (y_min, y_max) = dots.iter().map(|c| c.1).minmax().into_option().unwrap();
 
-    for y in 0..10 {
-        for x in 0..20 {
+    let mut sb = String::from("\n");
+    for y in y_min..=y_max {
+        for x in x_min..=x_max {
             if dots.contains(&Coordinates::from((x, y))) {
-                print!("#")
+                sb.push('#');
             } else {
-                print!(".")
+                sb.push('.');
             }
         }
-        println!();
+        sb.push('\n');
     }
-
-    dots.len() as i32
+    sb
 }
 
 #[cfg(test)]
@@ -134,13 +144,5 @@ mod tests {
     "}.to_string(), 17)]
     fn test_part_one(#[case] input: String, #[case] expected: usize) {
         assert_eq!(expected, solve_part_one(&input))
-    }
-
-    #[rstest]
-    #[case(indoc::indoc ! {"
-
-    "}.to_string(), 0)]
-    fn test_part_two(#[case] input: String, #[case] expected: i32) {
-        assert_eq!(expected, solve_part_two(&input))
     }
 }
