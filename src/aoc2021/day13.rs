@@ -63,24 +63,22 @@ impl Paper {
 
     fn fold(dots: HashSet<Coordinates>, fold: Fold) -> HashSet<Coordinates> {
         dots.into_iter()
-            .map(|dot| {
-                match fold.axis {
-                    'x' => {
-                        if dot.0 < fold.line {
-                            dot
-                        } else {
-                            Coordinates::from((2 * fold.line - dot.0, dot.1))
-                        }
-                    },
-                    'y' => {
-                        if dot.1 < fold.line {
-                            dot
-                        } else {
-                            Coordinates::from((dot.0, 2 * fold.line - dot.1))
-                        }
+            .map(|dot| match fold.axis {
+                'x' => {
+                    if dot.x() < fold.line {
+                        dot
+                    } else {
+                        Coordinates::from((2 * fold.line - dot.x(), dot.y()))
                     }
-                    _ => panic!(),
                 }
+                'y' => {
+                    if dot.y() < fold.line {
+                        dot
+                    } else {
+                        Coordinates::from((dot.x(), 2 * fold.line - dot.y()))
+                    }
+                }
+                _ => panic!(),
             })
             .collect::<HashSet<_>>()
     }
@@ -93,8 +91,18 @@ pub fn solve_part_one(input: &String) -> usize {
 pub fn solve_part_two(input: &String) -> String {
     let dots = Paper::from_str(input).unwrap().dots_after_all_folds();
 
-    let (x_min, x_max) = dots.iter().map(|c| c.0).minmax().into_option().unwrap();
-    let (y_min, y_max) = dots.iter().map(|c| c.1).minmax().into_option().unwrap();
+    let (x_min, x_max) = dots
+        .iter()
+        .map(Coordinates::x)
+        .minmax()
+        .into_option()
+        .unwrap();
+    let (y_min, y_max) = dots
+        .iter()
+        .map(Coordinates::y)
+        .minmax()
+        .into_option()
+        .unwrap();
 
     let mut sb = String::from("\n");
     for y in y_min..=y_max {
