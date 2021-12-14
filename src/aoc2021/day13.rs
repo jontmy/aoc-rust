@@ -108,9 +108,9 @@ pub fn solve_part_two(input: &String) -> String {
     for y in y_min..=y_max {
         for x in x_min..=x_max {
             if dots.contains(&Coordinates::at(x, y)) {
-                sb.push('#');
+                sb.push('█');
             } else {
-                sb.push('.');
+                sb.push(' ');
             }
         }
         sb.push('\n');
