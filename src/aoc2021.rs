@@ -14,6 +14,7 @@ mod day11;
 mod day10;
 mod day12;
 mod day13;
+mod day14;
 
 pub fn run() {
     /*
@@ -76,10 +77,14 @@ pub fn run() {
     io::write(12, 2021,
               day12::solve_part_one(&input),
               day12::solve_part_two(&input));
-    */
 
     let input = read(13, 2021);
     io::write(13, 2021,
               day13::solve_part_one(&input),
               day13::solve_part_two(&input));
+     */
+    let input = read(14, 2021);
+    io::write(14, 2021,
+              day14::solve_part_one(&input),
+              day14::solve_part_two(&input));
 }
