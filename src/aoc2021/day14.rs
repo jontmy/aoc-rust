@@ -33,8 +33,6 @@ pub fn solve_part_one(input: &String) -> usize {
             })
             .chain([last])
             .collect_vec();
-
-        // dbg!(&initial);
     }
     let freq = initial.into_iter().counts();
     let (min, max) = freq.values().into_iter().minmax().into_option().unwrap();
@@ -42,8 +40,10 @@ pub fn solve_part_one(input: &String) -> usize {
     *max - *min
 }
 
-pub fn solve_part_two(input: &String) -> i64 {
-    let initial = input.lines().next().unwrap().chars().collect_vec();
+pub fn solve_part_two(input: &String) -> u64 {
+    let polymer = input.lines().next().unwrap().chars().collect_vec();
+
+    // Parse each rule by regex: {char}{char} -> {char}.
     let rules = Regex::new(r"(\w)(\w) -> (\w)")
         .unwrap()
         .captures_iter(input)
@@ -55,48 +55,61 @@ pub fn solve_part_two(input: &String) -> i64 {
         })
         .collect::<HashMap<(char, char), char>>();
 
-    let last = initial.last().unwrap().clone();
+    // Keep track of the last element since no other element can be added after it -
+    // we'll need it later.
+    let last_element = polymer.last().unwrap().clone();
 
-    let pairs = initial.into_iter().tuple_windows::<(char, char)>().counts();
-
-    let mut pairs = pairs
-        .into_iter()
-        .map(|(k, v)| (k, v as i64))
+    // Get the frequency table of all elements pairwise, casting usize to u64.
+    let mut element_pairs = polymer.into_iter()
+        .tuple_windows::<(char, char)>()
+        .counts().into_iter()
+        .map(|(k, v)| (k, v as u64))
         .collect::<HashMap<_, _>>();
 
+    // Repeat the pair insertions 40 times.
     for _ in 0..40 {
         let mut next = HashMap::new();
-
-        for ((x, y), c) in pairs.into_iter() {
-            if rules.contains_key(&(x, y)) {
-                let r = *rules.get(&(x, y)).unwrap();
-                *next.entry((x, r)).or_insert(0) += c;
-                *next.entry((r, y)).or_insert(0) += c;
-            } else {
-                next.insert((x, y), c);
+        // Elements `x` and `y` form a pair `xy`, occurring `n` times.
+        for ((x, y), n) in element_pairs.into_iter() {
+            if rules.contains_key(&(x, y)) { // pair insertion occurs: `xy` -> `xzy`
+                let z = *rules.get(&(x, y)).unwrap();
+                *next.entry((x, z)).or_insert(0) += n; // 1. `xy` -> `xz`
+                *next.entry((z, y)).or_insert(0) += n; // 2. `xy` -> `zy`
+            } else { // pair insertion does not occur: `xy` -> `xy`
+                next.insert((x, y), n);
             }
         }
-        pairs = next;
+        element_pairs = next; // this block can be replaced by a `fold`, but it'd be less readable
     }
 
-    let ((a, min), (b, max)) = pairs
+    // Convert `pairs` - currently an (`xy`, `n`) frequency table - to an (`x`, `n`) frequency
+    // table - otherwise double counting of every `y` occurs.
+    let element_frequencies = element_pairs
         .into_iter()
-        .map(|((a, b), c)| (a, c))
+        .map(|((x, y), n)| (x, n)) // the conversion
         .sorted_by_key(|(a, _)| a.clone())
-        .coalesce(|(a, c), (b, d)| {
+        .coalesce(|(a, n), (b, m)| {
+            // Merge if and only if two adjacent elements `a` and `b` are the same,
+            // adding both their frequencies `n` and `m` together.
+            // `a` and `b` are guaranteed to be adjacent if they are the same due to `sorted_by_key`
             if a == b {
-                Ok((a, c + d))
+                Ok((a, n + m))
             } else {
-                Err(((a, c), (b, d)))
+                Err(((a, n), (b, m)))
             }
-        })
+        });
+
+    // We don't need the entire frequency table, rather just the min and max elements
+    // (`a` and `b` respectively) and their frequencies (`min` and `max` respectively).
+    let ((a, min), (b, max)) = element_frequencies
         .minmax_by_key(|(_, c)| c.clone())
         .into_option()
         .unwrap();
 
-    if a == last {
+    // Include the last element if needed, because no pair was formed with it.
+    if a == last_element {
         max - min - 1
-    } else if b == last {
+    } else if b == last_element {
         max - min + 1
     } else {
         max - min
@@ -154,8 +167,8 @@ mod tests {
         BC -> B
         CC -> N
         CN -> C
-    "}.to_string(), 0)]
-    fn test_part_two(#[case] input: String, #[case] expected: i64) {
+    "}.to_string(), 2188189693529)]
+    fn test_part_two(#[case] input: String, #[case] expected: u64) {
         assert_eq!(expected, solve_part_two(&input))
     }
 }
