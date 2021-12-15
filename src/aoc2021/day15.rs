@@ -1,16 +1,6 @@
-use std::collections::{HashMap, HashSet};
-use std::fmt::format;
-use std::ops::Deref;
-use std::str::FromStr;
-
-use itertools::Itertools;
+use std::collections::HashMap;
 use petgraph::algo::dijkstra;
-use petgraph::graph::DiGraph;
-use petgraph::graphmap::DiGraphMap;
-use petgraph::{Directed, Graph};
-use regex::Regex;
-use serde_scan::scan;
-
+use petgraph::prelude::DiGraphMap;
 use crate::utils::coordinates::dim_2::Coordinates;
 
 pub fn solve_part_one(input: &String) -> u32 {
