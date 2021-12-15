@@ -1,6 +1,7 @@
 use itertools::Itertools;
 
 pub mod dim_2 {
+    use std::cmp::Ordering;
     use std::fmt::{Debug, Display, Formatter};
     use std::ops::{Add, Div, Mul, Range, Sub};
 
@@ -170,6 +171,18 @@ pub mod dim_2 {
     impl Display for Coordinates {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(f, "({}, {})", self.0, self.1)
+        }
+    }
+
+    impl PartialOrd for Coordinates {
+        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+            Option::from(self.0.cmp(&other.0).then(self.1.cmp(&other.1)))
+        }
+    }
+
+    impl Ord for Coordinates {
+        fn cmp(&self, other: &Self) -> Ordering {
+            self.partial_cmp(other).unwrap()
         }
     }
 
