@@ -137,8 +137,8 @@ mod tests {
 
     #[rstest]
     #[case(indoc::indoc ! {"
-
-    "}.to_string(), 0)]
+        target area: x=20..30, y=-10..-5
+    "}.to_string(), 112)]
     fn test_part_two(#[case] input: String, #[case] expected: usize) {
         assert_eq!(expected, solve_part_two(&input))
     }
