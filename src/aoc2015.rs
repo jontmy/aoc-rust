@@ -112,10 +112,10 @@ pub fn run() {
     io::write(18, 2015,
               day18::solve_part_one(&input),
               day18::solve_part_two(&input));
-    */
 
     let input = read(19, 2015);
     io::write(19, 2015,
               day19::solve_part_one(&input),
               day19::solve_part_two(&input));
+    */
 }

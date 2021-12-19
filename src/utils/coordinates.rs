@@ -191,7 +191,6 @@ pub mod dim_2 {
         use std::collections::HashSet;
         use std::ops::Range;
 
-        use itertools::Itertools;
         use rstest::rstest;
 
         use super::Coordinates;
