@@ -21,6 +21,13 @@ pub mod dim_2 {
             x_range.cartesian_product(y_range).map(Coordinates::from)
         }
 
+        pub fn in_area_col_major(
+            x_range: Range<i32>,
+            y_range: Range<i32>,
+        ) -> impl Iterator<Item = Coordinates> {
+            y_range.cartesian_product(x_range).map(|(y, x)| Coordinates::at(x, y))
+        }
+
         /// Returns a new instance of `Coordinates` given its `x`- and `y`-components.
         pub fn at(x: i32, y: i32) -> Self {
             Coordinates(x, y)
@@ -31,8 +38,16 @@ pub mod dim_2 {
             self.0
         }
 
+        pub fn row(&self) -> i32 {
+            self.0
+        }
+
         /// Returns the `y`-component of this `Coordinates`.
         pub fn y(&self) -> i32 {
+            self.1
+        }
+
+        pub fn col(&self) -> i32 {
             self.1
         }
 
@@ -95,14 +110,14 @@ pub mod dim_2 {
             match delta {
                 0 => vec![Coordinates(0, 0)],
                 _ => vec![
-                    Coordinates(0, delta),
-                    Coordinates(0, -delta),
-                    Coordinates(delta, 0),
-                    Coordinates(-delta, 0),
-                    Coordinates(delta, delta),
-                    Coordinates(delta, -delta),
-                    Coordinates(-delta, delta),
                     Coordinates(-delta, -delta),
+                    Coordinates(-delta, 0),
+                    Coordinates(-delta, delta),
+                    Coordinates(0, -delta),
+                    Coordinates(0, delta),
+                    Coordinates(delta, -delta),
+                    Coordinates(delta, 0),
+                    Coordinates(delta, delta),
                 ],
             }
             .into_iter()
