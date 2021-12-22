@@ -285,6 +285,108 @@ pub mod dim_2 {
     }
 }
 
+pub mod dim_3 {
+    use itertools::Itertools;
+    use regex::Regex;
+    use std::fmt::{Debug, Display, Formatter};
+    use std::ops::{Add, Mul};
+    use std::str::FromStr;
+    use lazy_static::lazy_static;
+
+    #[derive(Clone, Copy, Hash, PartialEq, Eq)]
+    pub struct Coordinates(i32, i32, i32);
+
+    impl Coordinates {
+        /// Returns a new instance of `Coordinates` given its `x`-, `y`-, and `z`-components.
+        pub fn at(x: i32, y: i32, z: i32) -> Self {
+            Coordinates(x, y, z)
+        }
+
+        /// Returns the `x`-component of this `Coordinates`.
+        pub fn x(&self) -> i32 {
+            self.0
+        }
+
+        /// Returns the `y`-component of this `Coordinates`.
+        pub fn y(&self) -> i32 {
+            self.1
+        }
+
+        /// Returns the `z`-component of this `Coordinates`.
+        pub fn z(&self) -> i32 {
+            self.2
+        }
+
+        /// Returns a new instance of `Coordinates` offset by `dx` on the `x`-axis, `dy` on the
+        /// `y`-axis, and `dz` on the `z`-axis.
+        ///
+        /// Equivalent to `self + Coordinates::at(dx, dy)`, by which it is implemented.
+        pub fn translate(&self, dx: i32, dy: i32, dz: i32) -> Self {
+            *self + Coordinates::at(dx, dy, dz)
+        }
+
+        /// Returns a new instance of `Coordinates` multiplied by a scalar `k` component-wise.
+        ///
+        /// Equivalent to `self * Coordinates::at(k, k)`, by which it is implemented.
+        pub fn scale(&self, k: i32) -> Self {
+            *self * Coordinates::at(k, k, k)
+        }
+    }
+
+    impl FromStr for Coordinates {
+        type Err = ();
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            lazy_static!(
+                static ref RE: Regex = Regex::new(r"(-?\d+).*?(-?\d+).*?(-?\d+)").unwrap();
+            );
+            let coordinates = RE.captures_iter(s)
+                                .flat_map(|captures| {
+                                    (1..=3).map(move |i| captures.get(i).unwrap().as_str().parse().unwrap())
+                                })
+                                .collect_tuple::<(i32, i32, i32)>()
+                                .unwrap()
+                                .into();
+
+            Ok(coordinates)
+        }
+    }
+
+    impl From<(i32, i32, i32)> for Coordinates {
+        fn from(c: (i32, i32, i32)) -> Self {
+            Coordinates(c.0, c.1, c.2)
+        }
+    }
+
+    impl Add for Coordinates {
+        type Output = Self;
+
+        fn add(self, rhs: Self) -> Self::Output {
+            Coordinates(self.0 + rhs.0, self.1 + rhs.1, self.2 + rhs.2)
+        }
+    }
+
+    impl Mul for Coordinates {
+        type Output = Self;
+
+        fn mul(self, rhs: Self) -> Self::Output {
+            Coordinates(self.0 * rhs.0, self.1 * rhs.1, self.2 * rhs.2)
+        }
+    }
+
+    impl Debug for Coordinates {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "({}, {}, {})", self.0, self.1, self.2)
+        }
+    }
+
+    impl Display for Coordinates {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "({}, {}, {})", self.0, self.1, self.2)
+        }
+    }
+}
+
 fn add(i: i32, u: usize) -> Option<usize> {
     if i.is_negative() {
         u.checked_sub(i.wrapping_abs() as u32 as usize)
