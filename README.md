@@ -1,7 +1,6 @@
 # Advent of Code
 
 Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in Rust.
-Currently a work-in-progress, solving puzzles from 2021 and 2015 concurrently. I am using these puzzles to learn Rust, so the solutions here may not always be written entirely in idiomatic Rust.
 
 ## Progress
 
