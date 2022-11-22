@@ -22,6 +22,7 @@ bimap = "0.6.1" # bijective maps
 serde_scan = "0.4.1" # alternative to regex for parsing of AoC input files
 trees = "0.4.2"
 num-integer = "0.1.44"
+once-cell-regex = "0.2.1"
 
 [dev-dependencies]
 rstest = "0.15.0"
