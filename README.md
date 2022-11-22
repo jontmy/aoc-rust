@@ -4,9 +4,9 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 
 ## Progress
 
-| Year | 2021 | 2020 | 2019 | 2018 | 2017 | 2016 | 2015 |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Progress | ```41*``` | ```×``` | ```×``` | ```×``` | ```×``` | ```×``` | ```38*``` |
+| Year | 2022 | 2021 | 2020 | 2019 | 2018 | 2017 | 2016 | 2015 |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Progress | `0*` | `41*` | `×` | `×` | `×` | `×` | `×` | `38*` |
 
 ### 2015
 
@@ -34,5 +34,5 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 
 [**cargo-aoc**](<https://github.com/gobanos/cargo-aoc>)
 
-CLI helper tool for Advent of Code (not used in this project, but worth a mention).
+CLI tools and Rust proc macros for Advent of Code (not used in this project, but worth a mention).
 
