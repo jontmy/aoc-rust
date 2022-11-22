@@ -1,3 +1,7 @@
+# Exclude puzzle inputs and outputs
+input/
+output/
+
 .vscode/
 benches/
 
