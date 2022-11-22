@@ -12,10 +12,12 @@ pub fn read(day: u32, year: u32) -> String {
 }
 
 /// Writes to a file the puzzle output for a given day and year, given the solutions to its two parts.
-pub fn write<T: Display, U: Display>(day: u32, year: u32, first_part: T, second_part: U) {
+pub fn write<T: Display, U: Display>(day: u32, year: u32, part_one: T, part_two: U) {
     let path = format!("output/{}/{:02}.txt", year, day);
     let path = Path::new(&path);
-    let output = format!("{}\n{}", first_part, second_part);
+    let prefix = path.parent().unwrap();
+    std::fs::create_dir_all(prefix).expect("Unable to create output folder");
+    let output = format!("{}\n{}", part_one, part_two);
 
     let mut file = match File::create(&path) {
         Err(why) => panic!("Couldn't create the puzzle output for day {} year {}: {}", day, year, why),
@@ -29,7 +31,7 @@ pub fn write<T: Display, U: Display>(day: u32, year: u32, first_part: T, second_
 
     println!("\n{}\nPart 1: {}\nPart 2: {}",
              Style::new().bold().paint(format!{"Advent of Code {}, Day {}", year, day}),
-             Style::new().italic().paint(format!("{}", first_part)),
-             Style::new().italic().paint(format!("{}", second_part))
+             Style::new().italic().paint(format!("{}", part_one)),
+             Style::new().italic().paint(format!("{}", part_two))
     );
 }
