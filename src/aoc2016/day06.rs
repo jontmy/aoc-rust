@@ -41,7 +41,7 @@ pub fn solve_part_two(input: String) -> String {
                 .unwrap();
             letter
         })
-        .collect() // concatenate the most common letter from each column
+        .collect() // concatenate the least common letter from each column
 }
 
 #[cfg(test)]
