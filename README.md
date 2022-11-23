@@ -8,6 +8,8 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Progress | `0*` | `41*` | `×` | `×` | `×` | `×` | `4*` | `38*` |
 
+> Progress indicated only for solutions in Rust. I haven't written all puzzles solutions in Rust—2019's iteration is written in [Haskell](https://github.com/jontmy/aoc-haskell), 2018's and 2020's in [Java](https://github.com/jontmy/aoc-java).  
+
 ### 2022
 
 | S   | M   | T   | W   | T   | F   | S   |
@@ -50,7 +52,7 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 
 [**Advent of Code**](<https://adventofcode.com/>)
 
-150 puzzles across 6 years, created by Eric Wastl.
+250 puzzles across 8 years, created by Eric Wastl.
 
 [**cargo-aoc**](<https://github.com/gobanos/cargo-aoc>)
 
