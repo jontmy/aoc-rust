@@ -4,7 +4,7 @@ use itertools::Itertools;
 use once_cell_regex::regex;
 
 struct Room {
-    name: HashMap<char, usize>,
+    name: String,
     id: i32,
     checksum: String,
 }
@@ -17,21 +17,17 @@ impl FromStr for Room {
         let captures = regex.captures(s).unwrap();
         let (name, id, checksum) = (&captures["name"], &captures["id"], &captures["checksum"]);
 
-        // Count the letters in the encrypted name.
-        let name = name.chars()
-            .filter(|c| *c != '-')
-            .counts();
-        let id = id.parse().unwrap();
-        let checksum = checksum.to_owned();
-
         assert_eq!(checksum.len(), 5);
-        Ok(Room{ name, id, checksum })
+        Ok(Room{ name: name.to_owned(), id: id.parse().unwrap(), checksum: checksum.to_owned() })
     }
 }
 
 impl Room {
     fn is_real(&self) -> bool {
-        let letters = self.name.iter().collect_vec();
+        // Count the letters in the encrypted name.
+        let letters = self.name.chars()
+            .filter(|c| *c != '-')
+            .counts();
 
         // Sort the letters by frequency then by alphabetical order to compute the checksum.
         let checksum = letters.into_iter()
@@ -40,8 +36,21 @@ impl Room {
             .take(5)
             .collect::<String>();
 
-        println!("{} {}", checksum, self.checksum);
         checksum == self.checksum
+    }
+
+    fn get_decrypted_character(c: char, n: i32) -> char {
+        if c == '-' {
+            return ' ';
+        }
+        let d = (c as u8 - 97 + (n % 26) as u8) % 26 + 97;
+        d as char
+    }
+
+    fn get_decrypted_name(&self) -> String {
+        self.name.chars()
+            .map(|c| Room::get_decrypted_character(c, self.id))
+            .collect()
     }
 }
 
@@ -53,8 +62,12 @@ pub fn solve_part_one(input: String) -> i32 {
         .sum()
 }
 
-pub fn solve_part_two(input: String) -> String {
-    "".to_string()
+pub fn solve_part_two(input: String) -> i32 {
+    input.lines()
+        .map(|line| line.parse::<Room>().unwrap())
+        .find(|room| room.is_real() && room.get_decrypted_name() == "northpole object storage")
+        .map(|room| room.id)
+        .unwrap()
 }
 
 #[cfg(test)]
@@ -70,5 +83,11 @@ mod tests {
     #[case("totally-real-room-200[decoy]".to_string(), false)]
     fn test_room_is_real(#[case] input: String, #[case] expected: bool) {
         assert_eq!(input.parse::<Room>().unwrap().is_real(), expected)
+    }
+
+    #[rstest]
+    #[case("qzmt-zixmtkozy-ivhz-343[fubar]".to_string(), "very encrypted name")]
+    fn test_room_get_decrypted_name(#[case] input: String, #[case] expected: String) {
+        assert_eq!(input.parse::<Room>().unwrap().get_decrypted_name(), expected)
     }
 }
