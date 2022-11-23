@@ -1,3 +1,6 @@
+#![allow(dead_code, unused_variables, unused_imports)]
+#![allow(unstable_name_collisions)]
+
 use crate::utils::io;
 use crate::utils::io::read;
 

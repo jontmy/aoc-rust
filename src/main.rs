@@ -1,6 +1,3 @@
-#![allow(dead_code, unused_variables, unused_imports)]
-#![allow(unstable_name_collisions)] // 2018.18
-
 mod utils;
 mod aoc2015;
 mod aoc2016;
