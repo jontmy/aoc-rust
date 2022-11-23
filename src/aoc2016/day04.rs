@@ -1,4 +1,4 @@
-use std::{str::FromStr, collections::HashMap};
+use std::str::FromStr;
 
 use itertools::Itertools;
 use once_cell_regex::regex;
@@ -18,21 +18,23 @@ impl FromStr for Room {
         let (name, id, checksum) = (&captures["name"], &captures["id"], &captures["checksum"]);
 
         assert_eq!(checksum.len(), 5);
-        Ok(Room{ name: name.to_owned(), id: id.parse().unwrap(), checksum: checksum.to_owned() })
+        Ok(Room { name: name.to_owned(), id: id.parse().unwrap(), checksum: checksum.to_owned() })
     }
 }
 
 impl Room {
     fn is_real(&self) -> bool {
         // Count the letters in the encrypted name.
-        let letters = self.name.chars()
+        let letters = self.name
+            .chars()
             .filter(|c| *c != '-')
             .counts();
 
         // Sort the letters by frequency then by alphabetical order to compute the checksum.
-        let checksum = letters.into_iter()
+        let checksum = letters
+            .into_iter()
             .sorted_by(|(a, b), (c, d)| d.cmp(b).then(a.cmp(c)))
-            .map(|(letter, frequency)| letter)
+            .map(|(letter, _frequency)| letter)
             .take(5)
             .collect::<String>();
 
@@ -43,19 +45,21 @@ impl Room {
         if c == '-' {
             return ' ';
         }
-        let d = (c as u8 - 97 + (n % 26) as u8) % 26 + 97;
+        let d = (((c as u8) - 97 + ((n % 26) as u8)) % 26) + 97;
         d as char
     }
 
     fn get_decrypted_name(&self) -> String {
-        self.name.chars()
+        self.name
+            .chars()
             .map(|c| Room::get_decrypted_character(c, self.id))
             .collect()
     }
 }
 
 pub fn solve_part_one(input: String) -> i32 {
-    input.lines()
+    input
+        .lines()
         .map(|line| line.parse::<Room>().unwrap())
         .filter(|room| room.is_real())
         .map(|room| room.id)
@@ -63,7 +67,8 @@ pub fn solve_part_one(input: String) -> i32 {
 }
 
 pub fn solve_part_two(input: String) -> i32 {
-    input.lines()
+    input
+        .lines()
         .map(|line| line.parse::<Room>().unwrap())
         .find(|room| room.is_real() && room.get_decrypted_name() == "northpole object storage")
         .map(|room| room.id)
@@ -74,7 +79,7 @@ pub fn solve_part_two(input: String) -> i32 {
 mod tests {
     use rstest::rstest;
 
-    use super::{Room, solve_part_one, solve_part_two};
+    use super::Room;
 
     #[rstest]
     #[case("aaaaa-bbb-z-y-x-123[abxyz]".to_string(), true)]

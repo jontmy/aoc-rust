@@ -1,8 +1,8 @@
-use std::{collections::HashMap, fmt::format, str::FromStr};
+use std::{ collections::HashMap };
 
 use itertools::Itertools;
-use md5::compute;
 
+#[allow(dead_code)] // solver takes > 60s
 pub fn solve_part_one(input: String) -> String {
     let input = input.trim();
     (0..)
@@ -14,6 +14,7 @@ pub fn solve_part_one(input: String) -> String {
         .collect()
 }
 
+#[allow(dead_code)] // solver takes > 60s
 pub fn solve_part_two(input: String) -> String {
     let input = input.trim();
     let mut password = HashMap::new();
@@ -32,7 +33,7 @@ pub fn solve_part_two(input: String) -> String {
             }
             let val = hash.chars().nth(6).unwrap();
             password.insert(pos, val);
-            println!("{pos}")
+            println!("{pos}");
         }
         if password.len() == 8 {
             break;
@@ -40,14 +41,18 @@ pub fn solve_part_two(input: String) -> String {
     }
 
     // Reconstruct the password in order.
-    password.into_iter().sorted().map(|(_, val)| val).collect()
+    password
+        .into_iter()
+        .sorted()
+        .map(|(_, val)| val)
+        .collect()
 }
 
 #[cfg(test)]
 mod tests {
     use rstest::rstest;
 
-    use super::{solve_part_one, solve_part_two};
+    use super::{ solve_part_one, solve_part_two };
 
     #[rstest]
     #[case("abc".to_string(), "18f47a30".to_string())]

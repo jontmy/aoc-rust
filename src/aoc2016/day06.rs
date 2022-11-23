@@ -1,5 +1,3 @@
-use std::{ collections::HashMap, fmt::format, str::FromStr };
-
 use itertools::Itertools;
 
 pub fn solve_part_one(input: String) -> String {
@@ -16,7 +14,7 @@ pub fn solve_part_one(input: String) -> String {
                 .counts();
             let (letter, _) = frequencies // find the most common letter in this column and return it
                 .into_iter()
-                .max_by(|(a, a_freq), (b, b_freq)| a_freq.cmp(b_freq))
+                .max_by(|(_a, a_freq), (_b, b_freq)| a_freq.cmp(b_freq))
                 .unwrap();
             letter
         })
@@ -37,7 +35,7 @@ pub fn solve_part_two(input: String) -> String {
                 .counts();
             let (letter, _) = frequencies // find the least common letter in this column and return it
                 .into_iter()
-                .min_by(|(a, a_freq), (b, b_freq)| a_freq.cmp(b_freq))
+                .min_by(|(_a, a_freq), (_b, b_freq)| a_freq.cmp(b_freq))
                 .unwrap();
             letter
         })
