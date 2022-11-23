@@ -52,7 +52,7 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 
 [**Advent of Code**](<https://adventofcode.com/>)
 
-250 puzzles across 8 years, created by Eric Wastl.
+200 puzzles across 8 years, created by Eric Wastl.
 
 [**cargo-aoc**](<https://github.com/gobanos/cargo-aoc>)
 
