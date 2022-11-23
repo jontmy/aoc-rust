@@ -1,12 +1,12 @@
-use std::{str::FromStr, fmt::format};
+use std::{collections::HashMap, fmt::format, str::FromStr};
 
 use itertools::Itertools;
 use md5::compute;
 
 pub fn solve_part_one(input: String) -> String {
     let input = input.trim();
-    println!("{input}");
-    (0..).into_iter()
+    (0..)
+        .into_iter()
         .map(|i| format!("{:x}", md5::compute(format!("{input}{i}"))))
         .filter(|hash| hash.starts_with("00000"))
         .take(8)
@@ -14,8 +14,33 @@ pub fn solve_part_one(input: String) -> String {
         .collect()
 }
 
-pub fn solve_part_two(input: String) -> i32 {
-    0
+pub fn solve_part_two(input: String) -> String {
+    let input = input.trim();
+    let mut password = HashMap::new();
+
+    // Find the character at each position.
+    for i in (0..).into_iter() {
+        let hash = format!("{:x}", md5::compute(format!("{input}{i}")));
+        if !hash.starts_with("00000") {
+            continue;
+        }
+
+        // Add only the first instance of a character in the correct position (between 0 and 7 inclusive).
+        if let Some(pos) = hash.chars().nth(5).unwrap().to_digit(10) {
+            if password.contains_key(&pos) || pos >= 8 {
+                continue;
+            }
+            let val = hash.chars().nth(6).unwrap();
+            password.insert(pos, val);
+            println!("{pos}")
+        }
+        if password.len() == 8 {
+            break;
+        }
+    }
+
+    // Reconstruct the password in order.
+    password.into_iter().sorted().map(|(_, val)| val).collect()
 }
 
 #[cfg(test)]
@@ -26,7 +51,13 @@ mod tests {
 
     #[rstest]
     #[case("abc".to_string(), "18f47a30".to_string())]
-    fn test_room_is_real(#[case] input: String, #[case] expected: String) {
+    fn test_solve_part_one(#[case] input: String, #[case] expected: String) {
         assert_eq!(solve_part_one(input), expected)
+    }
+
+    #[rstest]
+    #[case("abc".to_string(), "05ace8e3".to_string())]
+    fn test_solve_part_two(#[case] input: String, #[case] expected: String) {
+        assert_eq!(solve_part_two(input), expected);
     }
 }
