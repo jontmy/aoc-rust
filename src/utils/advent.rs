@@ -31,8 +31,8 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         fs::create_dir_all(input_dir).expect("Failed to create input folder for {year}");
         if !input_path.exists() {
             println!("Input file for day {day} of {year} does not exist, creating it...");
+            File::create(&input_path).expect("Failed to create input file for day {day} of {year}");
         }
-        File::create(&input_path).expect("Failed to create input file for day {day} of {year}");
 
         // Read the input file.
         let input = fs::read_to_string(input_path).expect("Failed to read input file");
