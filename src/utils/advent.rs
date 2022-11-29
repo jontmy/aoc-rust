@@ -3,10 +3,12 @@ use std::{ fmt::Display, error::Error, path::Path, fs, fs::{ File, OpenOptions }
 use ansi_term::Style;
 
 pub trait Solver<const YEAR: u32, const DAY: u32> {
-    type Error;
-    fn solve_part_one(&self, input: &str) -> String;
-    fn solve_part_two(&self, input: &str) -> String;
-    
+    type Part1: Display;
+    type Part2: Display;
+
+    fn solve_part_one(&self, input: &str) -> Self::Part1;
+    fn solve_part_two(&self, input: &str) -> Self::Part2;
+
     fn solve(&self) {
         // Use const generics to get the details of this puzzle from structs which implement this trait.
         let day = DAY;
@@ -52,7 +54,7 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
 
         // Solve part 1, writing to stdout and the output file.
         print!("Part 1: ");
-        let part_one_solution = self.solve_part_one(&input);
+        let part_one_solution = format!("{}", self.solve_part_one(&input));
         println!("{}", Style::new().italic().paint(format!("{}", part_one_solution)));
         writeln!(file, "{part_one_solution}").expect(
             "Failed to write part 1 solution for day {day} of {year}"
@@ -60,7 +62,7 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
 
         // Solve part 2, writing to stdout and the output file.
         print!("Part 2: ");
-        let part_two_solution = self.solve_part_two(&input);
+        let part_two_solution = format!("{}", self.solve_part_two(&input));
         println!("{}", Style::new().italic().paint(format!("{}", part_two_solution)));
         writeln!(file, "{part_two_solution}").expect(
             "Failed to write part 2 solution for day {day} of {year}"
