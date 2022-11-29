@@ -14,7 +14,7 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         let day = DAY;
         let year = YEAR;
         println!(
-            "\n{}\n",
+            "\n{}",
             Style::new().bold().paint(format!("Advent of Code {}, Day {}", year, day))
         );
 
