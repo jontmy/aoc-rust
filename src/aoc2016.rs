@@ -4,6 +4,7 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
 
 pub fn run() {
     io::write(3, 2016,
@@ -22,5 +23,9 @@ pub fn run() {
     io::write(6, 2016,
         day06::solve_part_one(io::read(6, 2016)),
         day06::solve_part_two(io::read(6, 2016))
+    );
+    io::write(7, 2016,
+        day07::solve_part_one(io::read(7, 2016)),
+        day07::solve_part_two(io::read(7, 2016))
     );
 }
