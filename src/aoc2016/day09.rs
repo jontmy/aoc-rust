@@ -73,7 +73,16 @@ mod tests {
     #[case("A(2x2)BCD(2x2)EFG".to_string(), 11)]
     #[case("(6x1)(1x3)A".to_string(), 6)]
     #[case("X(8x2)(3x3)ABCY".to_string(), 18)]
-    fn test_address_supports_tls(#[case] input: String, #[case] expected: usize) {
-        assert_eq!(crate::utils::advent::Solver::solve_part_one(&super::Solver, &input), expected)
+    fn test_solve_part_one(#[case] input: String, #[case] expected: usize) {
+        assert_eq!(advent::Solver::solve_part_one(&super::Solver, &input), expected)
+    }
+
+    #[rstest]
+    #[case("(3x3)XYZ".to_string(), 9)]
+    #[case("X(8x2)(3x3)ABCY".to_string(), 20)]
+    #[case("(27x12)(20x12)(13x14)(7x10)(1x12)A".to_string(), 241920)]
+    #[case("(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN".to_string(), 445)]
+    fn test_solve_part_two(#[case] input: String, #[case] expected: usize) {
+        assert_eq!(advent::Solver::solve_part_two(&super::Solver, &input), expected)
     }
 }
