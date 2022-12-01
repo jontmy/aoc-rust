@@ -1,6 +1,26 @@
+use std::{ str::FromStr, fmt::Display };
+
 use itertools::Itertools;
 
 use crate::utils::advent;
+
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
+pub struct Elf {
+    food: i32,
+}
+
+impl FromStr for Elf {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let food = s
+            .split("\n")
+            .into_iter()
+            .map(|c| c.parse::<i32>().unwrap())
+            .sum();
+        Ok(Elf { food })
+    }
+}
 
 pub struct Solver;
 
@@ -12,31 +32,23 @@ impl advent::Solver<2022, 1> for Solver {
         input
             .trim()
             .split("\n\n")
-            .map(|l|
-                l
-                    .split("\n")
-                    .into_iter()
-                    .map(|c| c.parse::<i32>().unwrap())
-                    .sum()
-            )
+            .map(|l| l.parse::<Elf>().unwrap())
             .max()
             .unwrap()
+            .food
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        input
+        let elves = input
             .trim()
             .split("\n\n")
-            .map(|l|
-                l
-                    .split("\n")
-                    .into_iter()
-                    .map(|c| c.parse::<i32>().unwrap())
-                    .sum::<i32>()
-            )
+            .map(|l| l.parse::<Elf>().unwrap());
+
+        elves
             .sorted()
             .rev()
             .take(3)
+            .map(|elf| elf.food)
             .sum::<i32>()
     }
 }
