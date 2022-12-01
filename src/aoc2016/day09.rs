@@ -65,6 +65,7 @@ impl advent::Solver<2016, 9> for Solver {
 #[cfg(test)]
 mod tests {
     use rstest::rstest;
+    use crate::utils::advent;
 
     #[rstest]
     #[case("ADVENT".to_string(), 6)]
