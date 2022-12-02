@@ -31,12 +31,39 @@ impl Shape {
             Shape::Scissors => 3,
         }
     }
+
+    fn from_outcome(opponent: &Shape, outcome: &Outcome) -> Self {
+        match (opponent, outcome) {
+            (Shape::Rock, Outcome::Win) => Self::Paper,
+            (Shape::Rock, Outcome::Draw) => Self::Rock,
+            (Shape::Rock, Outcome::Loss) => Self::Scissors,
+            (Shape::Paper, Outcome::Win) => Self::Scissors,
+            (Shape::Paper, Outcome::Draw) => Self::Paper,
+            (Shape::Paper, Outcome::Loss) => Self::Rock,
+            (Shape::Scissors, Outcome::Win) => Self::Rock,
+            (Shape::Scissors, Outcome::Draw) => Self::Scissors,
+            (Shape::Scissors, Outcome::Loss) => Self::Paper,
+        }
+    }
 }
 
 enum Outcome {
     Win,
     Draw,
     Loss,
+}
+
+impl FromStr for Outcome {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "X" => Ok(Self::Loss),
+            "Y" => Ok(Self::Draw),
+            "Z" => Ok(Self::Win),
+            _ => Err(()),
+        }
+    }
 }
 
 impl Outcome {
@@ -83,54 +110,15 @@ impl advent::Solver<2022, 2> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        // X means you need to lose, Y means you need to end the round in a draw, and Z means you need to win
-        let mut score = 0;
-        for line in input.lines() {
-            let (opp, ply): (&str, &str) = line.split_ascii_whitespace().collect_tuple().unwrap();
-            match opp {
-                "A" =>
-                    match ply {
-                        "X" => {
-                            score += 3;
-                        }
-                        "Y" => {
-                            score += 1 + 3;
-                        }
-                        "Z" => {
-                            score += 2 + 6;
-                        }
-                        _ => panic!(),
-                    }
-                "B" =>
-                    match ply {
-                        "X" => {
-                            score += 1;
-                        }
-                        "Y" => {
-                            score += 2 + 3;
-                        }
-                        "Z" => {
-                            score += 3 + 6;
-                        }
-                        _ => panic!(),
-                    }
-                "C" =>
-                    match ply {
-                        "X" => {
-                            score += 2;
-                        }
-                        "Y" => {
-                            score += 3 + 3;
-                        }
-                        "Z" => {
-                            score += 1 + 6;
-                        }
-                        _ => panic!(),
-                    }
-                _ => panic!(),
-            }
-        }
-
-        score
+        input
+        .lines()
+        .filter_map(|l|
+            l
+                .split_ascii_whitespace()
+                .collect_tuple::<(_, _)>()
+        )
+        .map(|(a, b)| (a.parse::<Shape>().unwrap(), b.parse::<Outcome>().unwrap()))
+        .map(|(opponent, outcome)| Shape::from_outcome(&opponent, &outcome).value() + outcome.score())
+        .sum()
     }
 }
