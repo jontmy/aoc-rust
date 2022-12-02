@@ -72,12 +72,11 @@ impl advent::Solver<2022, 2> for Solver {
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
         input
             .lines()
-            .map(|l|
+            .filter_map(|l|
                 l
                     .split_ascii_whitespace()
                     .map(|s| s.parse::<Shape>().unwrap())
                     .collect_tuple::<(_, _)>()
-                    .unwrap()
             )
             .map(|(opponent, player)| Outcome::evaluate(&opponent, &player).score() + player.value())
             .sum()
