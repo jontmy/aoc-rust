@@ -1,8 +1,10 @@
+use std::{ collections::BTreeMap, vec };
+
+use itertools::Itertools;
 use once_cell_regex::regex;
 
 use crate::utils::advent;
 
-#[derive(Debug, Clone)]
 struct Marker { // in the format (<grab>x<repeat>)
     start: usize, // index in the input string of the opening parentheses `(`
     end: usize, // index of the next character after the closing parentheses `)`
@@ -31,11 +33,60 @@ impl Marker {
     }
 }
 
+type Markers = BTreeMap<usize, Marker>;
+
+fn find_parent_markers(markers: &Markers, start: usize, end: usize) -> Vec<&Marker> {
+    let mut parents = vec![];
+    let mut parent = match markers.range(start..end).next() {
+        Some((_, marker)) => marker,
+        None => {
+            return parents;
+        }
+    };
+    parents.push(parent);
+    while let Some((_, marker)) = markers.range(parent.end + parent.grab..end).next() {
+        parents.push(marker);
+        parent = marker;
+    }
+    parents
+}
+
+fn length_recursive_descent(
+    markers: &Markers,
+    multiplicity: usize,
+    start: usize,
+    end: usize
+) -> usize {
+    let children = find_parent_markers(markers, start, end);
+    if children.is_empty() {
+        return (end - start) * multiplicity;
+    }
+    let last = children.last().unwrap();
+    let trailing_len = (end - last.end - last.grab) * multiplicity;
+    let intermarker_len = children
+        .iter()
+        .tuple_windows::<(_, _)>()
+        .map(|(pre, post)| (post.start - pre.end - pre.grab) * multiplicity)
+        .sum::<usize>();
+    let children_len = children
+        .into_iter()
+        .map(|marker|
+            length_recursive_descent(
+                markers,
+                multiplicity * marker.repeat,
+                marker.end,
+                marker.end + marker.grab
+            )
+        )
+        .sum::<usize>();
+    children_len + intermarker_len + trailing_len
+}
+
 pub struct Solver;
 
 impl advent::Solver<2016, 9> for Solver {
     type Part1 = usize;
-    type Part2 = i32;
+    type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
         let input = input.trim();
@@ -57,8 +108,17 @@ impl advent::Solver<2016, 9> for Solver {
         uncompressed_len
     }
 
-    fn solve_part_two(&self, _input: &str) -> Self::Part2 {
-        0
+    fn solve_part_two(&self, input: &str) -> Self::Part2 {
+        let input = input.trim();
+        let markers = Marker::find_all(input)
+            .map(|marker| (marker.start, marker))
+            .collect::<Markers>();
+        let leading_len = match markers.values().next() {
+            Some(marker) => marker.start,
+            None => 0,
+        };
+        let children_len = length_recursive_descent(&markers, 1, 0, input.len());
+        leading_len + children_len
     }
 }
 
@@ -80,9 +140,18 @@ mod tests {
 
     #[rstest]
     #[case("(3x3)XYZ".to_string(), 9)]
+    #[case("(1x14)IXYZ".to_string(), 17)]
     #[case("X(8x2)(3x3)ABCY".to_string(), 20)]
     #[case("(27x12)(20x12)(13x14)(7x10)(1x12)A".to_string(), 241920)]
     #[case("(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN".to_string(), 445)]
+    #[case(
+        "(27x12)(20x12)(13x14)(7x10)(1x12)A(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN".to_string(),
+        242365
+    )]
+    #[case(
+        "(3x3)XYZ(27x12)(20x12)(13x14)(7x10)(1x12)A(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN".to_string(),
+        242374
+    )]
     fn test_solve_part_two(#[case] input: String, #[case] expected: usize) {
         assert_eq!(advent::Solver::solve_part_two(&super::Solver, &input), expected)
     }
