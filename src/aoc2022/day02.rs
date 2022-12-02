@@ -4,21 +4,62 @@ use itertools::Itertools;
 
 use crate::utils::advent;
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Elf {
-    food: i32,
+enum Shape {
+    Rock,
+    Paper,
+    Scissors,
 }
 
-impl FromStr for Elf {
+impl FromStr for Shape {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let food = s
-            .split("\n")
-            .into_iter()
-            .map(|c| c.parse::<i32>().unwrap())
-            .sum();
-        Ok(Elf { food })
+        match s {
+            "A" | "X" => Ok(Self::Rock),
+            "B" | "Y" => Ok(Self::Paper),
+            "C" | "Z" => Ok(Self::Scissors),
+            _ => Err(()),
+        }
+    }
+}
+
+impl Shape {
+    fn value(&self) -> i32 {
+        match self {
+            Shape::Rock => 1,
+            Shape::Paper => 2,
+            Shape::Scissors => 3,
+        }
+    }
+}
+
+enum Outcome {
+    Win,
+    Draw,
+    Loss,
+}
+
+impl Outcome {
+    fn score(&self) -> i32 {
+        match self {
+            Self::Win => 6,
+            Self::Draw => 3,
+            Self::Loss => 0,
+        }
+    }
+
+    fn evaluate(opponent: &Shape, player: &Shape) -> Self {
+        match (opponent, player) {
+            (Shape::Rock, Shape::Rock) => Self::Draw,
+            (Shape::Rock, Shape::Paper) => Self::Win,
+            (Shape::Rock, Shape::Scissors) => Self::Loss,
+            (Shape::Paper, Shape::Rock) => Self::Loss,
+            (Shape::Paper, Shape::Paper) => Self::Draw,
+            (Shape::Paper, Shape::Scissors) => Self::Win,
+            (Shape::Scissors, Shape::Rock) => Self::Win,
+            (Shape::Scissors, Shape::Paper) => Self::Loss,
+            (Shape::Scissors, Shape::Scissors) => Self::Draw,
+        }
     }
 }
 
@@ -29,33 +70,17 @@ impl advent::Solver<2022, 2> for Solver {
     type Part2 = i32;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let mut score = 0;
-        for line in input.lines() {
-            let (opp, ply): (&str, &str) = line.split_ascii_whitespace().collect_tuple().unwrap();
-            match opp {
-                "A" => match ply {
-                    "X" => score += 1 + 3,
-                    "Y" => score += 2 + 6,
-                    "Z" => score += 3,
-                    _ => panic!()
-                },
-                "B" => match ply {
-                    "X" => score += 1,
-                    "Y" => score += 2 + 3,
-                    "Z" => score += 3 + 6,
-                    _ => panic!()
-                },
-                "C" => match ply {
-                    "X" => score += 1 + 6,
-                    "Y" => score += 2,
-                    "Z" => score += 3 + 3,
-                    _ => panic!()
-                },
-                _ => panic!()
-            }
-        }
-
-        score
+        input
+            .lines()
+            .map(|l|
+                l
+                    .split_ascii_whitespace()
+                    .map(|s| s.parse::<Shape>().unwrap())
+                    .collect_tuple::<(_, _)>()
+                    .unwrap()
+            )
+            .map(|(opponent, player)| Outcome::evaluate(&opponent, &player).score() + player.value())
+            .sum()
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
@@ -64,25 +89,46 @@ impl advent::Solver<2022, 2> for Solver {
         for line in input.lines() {
             let (opp, ply): (&str, &str) = line.split_ascii_whitespace().collect_tuple().unwrap();
             match opp {
-                "A" => match ply {
-                    "X" => score += 3,
-                    "Y" => score += 1 + 3,
-                    "Z" => score += 2 + 6,
-                    _ => panic!()
-                },
-                "B" => match ply {
-                    "X" => score += 1,
-                    "Y" => score += 2 + 3,
-                    "Z" => score += 3 + 6,
-                    _ => panic!()
-                },
-                "C" => match ply {
-                    "X" => score += 2,
-                    "Y" => score += 3 + 3,
-                    "Z" => score += 1 + 6,
-                    _ => panic!()
-                },
-                _ => panic!()
+                "A" =>
+                    match ply {
+                        "X" => {
+                            score += 3;
+                        }
+                        "Y" => {
+                            score += 1 + 3;
+                        }
+                        "Z" => {
+                            score += 2 + 6;
+                        }
+                        _ => panic!(),
+                    }
+                "B" =>
+                    match ply {
+                        "X" => {
+                            score += 1;
+                        }
+                        "Y" => {
+                            score += 2 + 3;
+                        }
+                        "Z" => {
+                            score += 3 + 6;
+                        }
+                        _ => panic!(),
+                    }
+                "C" =>
+                    match ply {
+                        "X" => {
+                            score += 2;
+                        }
+                        "Y" => {
+                            score += 3 + 3;
+                        }
+                        "Z" => {
+                            score += 1 + 6;
+                        }
+                        _ => panic!(),
+                    }
+                _ => panic!(),
             }
         }
 
