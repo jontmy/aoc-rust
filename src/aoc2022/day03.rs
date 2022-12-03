@@ -6,47 +6,29 @@ use crate::utils::advent;
 
 #[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Elf {
-    food: i32,
-}
+impl Solver {
+    const PRIORITIES: &'static str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-impl FromStr for Elf {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let food = s
-            .split("\n")
-            .into_iter()
-            .map(|c| c.parse::<i32>().unwrap())
-            .sum();
-        Ok(Elf { food })
+    fn get_priority(c: char) -> usize {
+        Solver::PRIORITIES.find(c).unwrap() + 1
     }
 }
-
-pub struct Solver;
 
 impl advent::Solver<2022, 3> for Solver {
     type Part1 = usize;
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let pairs = input
+        input
             .trim()
             .lines()
-            .map(|l| (l[0..l.len() / 2].to_owned(), l[l.len() / 2..].to_owned()))
-            .collect_vec();
-        println!("{:?}", pairs);
-        let s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let mut sum = 0;
-        for (a, b) in pairs {
-            let a = a.chars().collect::<HashSet<char>>();
-            let b = b.chars().collect::<HashSet<char>>();
-            let inter = a.intersection(&b).collect_vec();
-            println!("{:?}", inter);
-            let c = inter[0].to_string();
-            println!("{}", s.find(&c).unwrap() + 1);
-            sum += s.find(&c).unwrap() + 1;
-        }
-        sum
+            .map(|l| (
+                l[0..l.len() / 2].chars().collect::<HashSet<char>>(),
+                l[l.len() / 2..].chars().collect::<HashSet<char>>(),
+            ))
+            .map(|(a, b)| a.intersection(&b).next().unwrap().clone())
+            .map(|intersection| Solver::get_priority(intersection))
+            .sum()
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
