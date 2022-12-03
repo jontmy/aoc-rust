@@ -1,16 +1,22 @@
-use std::{ str::FromStr, collections::HashSet, ops::Index, fmt::format };
+use std::collections::HashSet;
 
 use itertools::Itertools;
 
 use crate::utils::advent;
 
-#[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Elf {
+pub struct Solver;
+
 impl Solver {
     const PRIORITIES: &'static str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     fn get_priority(c: char) -> usize {
+        // O(n), but pretty self-explanatory and avoids ASCII manipulation.
         Solver::PRIORITIES.find(c).unwrap() + 1
+    }
+
+    fn intersect(sets: (HashSet<char>, HashSet<char>, HashSet<char>)) -> char {
+        let (a, b, c) = sets;
+        a.intersection(&b).cloned().collect::<HashSet<_>>().intersection(&c).next().unwrap().clone()
     }
 }
 
@@ -23,8 +29,8 @@ impl advent::Solver<2022, 3> for Solver {
             .trim()
             .lines()
             .map(|l| (
-                l[0..l.len() / 2].chars().collect::<HashSet<char>>(),
-                l[l.len() / 2..].chars().collect::<HashSet<char>>(),
+                l[0..l.len() / 2].chars().collect::<HashSet<_>>(),
+                l[l.len() / 2..].chars().collect::<HashSet<_>>(),
             ))
             .map(|(a, b)| a.intersection(&b).next().unwrap().clone())
             .map(|intersection| Solver::get_priority(intersection))
@@ -32,26 +38,17 @@ impl advent::Solver<2022, 3> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let pairs = input
-            .trim()
-            .lines()
-            .tuples::<(_, _, _)>()
-            .collect_vec();
-        let s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let mut sum = 0;
-        for (a, b, c) in pairs {
-            let a = a.chars().collect::<HashSet<char>>();
-            let b = b.chars().collect::<HashSet<char>>();
-            let c = c.chars().collect::<HashSet<char>>();
-            let inter = a.intersection(&b).map(|c| *c).collect::<HashSet<char>>();
-            let inter = inter.intersection(&c).collect_vec();
-            let d = inter[0].to_string();
-            println!("{}", s.find(&d).unwrap() + 1);
-            sum += s.find(&d).unwrap() + 1;
-        }
-        sum
+        let groups = input.trim().lines().chunks(3);
+        groups
+            .into_iter()
+            .map(|group|
+                group
+                    .map(|elf| elf.chars().collect::<HashSet<_>>())
+                    .collect_tuple::<(_, _, _)>()
+                    .unwrap()
+            )
+            .map(|elves| Solver::intersect(elves))
+            .map(|intersection| Solver::get_priority(intersection))
+            .sum()
     }
 }
-
-#[cfg(test)]
-mod tests {}
