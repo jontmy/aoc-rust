@@ -8,6 +8,7 @@ mod day07;
 mod day08;
 mod day09;
 mod day10;
+mod day11;
 
 pub fn run() {
     io::write(3, 2016,
@@ -34,4 +35,5 @@ pub fn run() {
     day08::Solver.solve();
     day09::Solver.solve();
     day10::Solver.solve();
+    day11::Solver.solve();
 }
