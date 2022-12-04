@@ -12,6 +12,16 @@ enum Item {
     Nothing,
 }
 
+impl ToString for Item {
+    fn to_string(&self) -> String {
+        match self {
+            Item::Generator(e) => format!("G({e})"),
+            Item::Microchip(e) => format!("M({e})"),
+            Item::Nothing => "".to_string(),
+        }
+    }
+}
+
 impl Item {
     fn is_nothing(&self) -> bool {
         match self {
@@ -63,6 +73,17 @@ enum Elevator {
 struct Floor {
     id: usize,
     items: HashSet<Item>,
+}
+
+impl ToString for Floor {
+    fn to_string(&self) -> String {
+        let items = self.items
+            .iter()
+            .map(|item| item.to_string())
+            .sorted()
+            .join(", ");
+        format!("{}: {items}", self.id)
+    }
 }
 
 impl Floor {
@@ -133,6 +154,15 @@ impl FromStr for State {
             .map(|(i, s)| Floor::new(i, s))
             .collect_vec();
         Ok(Self { depth: 0, elevator_floor: 0, floors })
+    }
+}
+
+impl ToString for State {
+    fn to_string(&self) -> String {
+        let floors = self.floors.iter()
+            .map(|floor| floor.to_string())
+            .join("\n");
+        format!("elevator @ floor {}\n{floors}", self.elevator_floor)
     }
 }
 
@@ -213,16 +243,23 @@ impl advent::Solver<2016, 11> for Solver {
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
         let initial_state = State::with_elevator_floor(0, input);
+        let mut evaluated = HashSet::new();
         let mut stack = VecDeque::new();
+        // println!("{}", initial_state.to_string());
         // println!("{:?}", initial_state.next_states().collect_vec());
+        evaluated.insert(initial_state.to_string());
         stack.push_back(initial_state);
         loop {
             let eval_state = stack.pop_front().unwrap();
+            evaluated.insert(eval_state.to_string());
             println!("{:?}", eval_state.depth);
             if eval_state.is_goal_state() {
                 return eval_state.depth;
             }
             for next_state in eval_state.next_states() {
+                if evaluated.contains(&next_state.to_string()) {
+                    continue;
+                }
                 stack.push_back(next_state);
             }
         }
