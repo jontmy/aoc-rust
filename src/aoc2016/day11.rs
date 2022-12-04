@@ -5,7 +5,7 @@ use once_cell_regex::regex;
 
 use crate::utils::advent;
 
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Clone, Hash, PartialEq, Eq)]
 enum Item {
     Generator(String),
     Microchip(String),
@@ -63,13 +63,12 @@ impl Item {
     }
 }
 
-#[derive(Debug)]
 enum Elevator {
     Descend,
     Ascend,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 struct Floor {
     id: usize,
     items: HashSet<Item>,
@@ -137,7 +136,7 @@ impl Floor {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 struct State {
     depth: usize, // BFS depth, not related to the elevator
     elevator_floor: usize,
@@ -215,7 +214,6 @@ impl State {
         next_state.elevator_floor = next_floor;
         next_state.floors[self.elevator_floor].remove(elevator_items);
         next_state.floors[next_floor].add(elevator_items);
-        // println!("\n\n{:?}\n{:?}\n\n{:?}", action, elevator_items, next_state);
         match next_state.is_valid_state() {
             true => Some(next_state),
             false => None,
@@ -261,64 +259,12 @@ impl advent::Solver<2016, 11> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        0
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use rstest::rstest;
-
-    use crate::utils::advent;
-
-    use super::State;
-
-    #[rstest]
-    #[case(
-        (
-            indoc::indoc! {
-                "
-                The first floor contains a hydrogen-compatible microchip and a lithium-compatible microchip.
-                The second floor contains a hydrogen generator.
-                The third floor contains a lithium generator.
-                The fourth floor contains nothing relevant.
-                "
-            }
-        ).to_string(),
-        11
-    )]
-    fn test_solve_part_one(#[case] input: String, #[case] expected: usize) {
-        assert_eq!(advent::Solver::solve_part_one(&super::Solver, &input), expected)
-    }
-
-    #[rstest]
-    #[case(
-        (
-            indoc::indoc! {
-                "
-                The first floor contains nothing.
-                The second floor contains nothing.
-                The third floor contains nothing.
-                The fourth floor ccontains a hydrogen-compatible microchip and a lithium-compatible microchip.
-                "
-            }
-        ).to_string(),
-        true
-    )]
-    #[case(
-        (
-            indoc::indoc! {
-                "
-                The first floor contains a hydrogen-compatible microchip and a lithium-compatible microchip.
-                The second floor contains a hydrogen generator.
-                The third floor contains a lithium generator.
-                The fourth floor contains nothing relevant.
-                "
-            }
-        ).to_string(),
-        false
-    )]
-    fn test_is_goal_state(#[case] input: String, #[case] expected: bool) {
-        assert_eq!(input.parse::<State>().unwrap().is_goal_state(), expected)
+        let mut floors = input
+            .lines()
+            .map(|s| s.to_string())
+            .collect_vec();
+        floors[0] +=
+            ", an elerium generator, an elerium-compatible microchip, a dilithium generator, and a dilithium-compatible microchip.";
+        self.solve_part_one(&floors.into_iter().join("\n"))
     }
 }
