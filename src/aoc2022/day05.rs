@@ -15,9 +15,10 @@ pub struct Solver;
 
 impl Solver {
     fn parse(input: &str) -> (Vec<VecDeque<char>>, impl Iterator<Item = Instruction> + '_) {
-        let crates = input
+        let (crates, instructions) = input.split("\n\n").into_iter().collect_tuple().unwrap();
+
+        let crates = crates
             .lines()
-            .take_while(|l| l.starts_with("["))
             .flat_map(|l|
                 l
                     .chars()
@@ -35,9 +36,8 @@ impl Solver {
             .map(|(_, stack)| stack)
             .collect();
 
-        let instructions = input
+        let instructions = instructions
             .lines()
-            .skip_while(|l| !l.starts_with("move"))
             .filter_map(|l| scan_fmt!(l, "move {d} from {d} to {d}", usize, usize, usize).ok())
             .map(|(qty, from, to)| Instruction { qty, from: from - 1, to: to - 1 });
 
