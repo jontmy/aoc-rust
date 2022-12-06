@@ -6,13 +6,11 @@ pub struct Solver;
 
 impl Solver {
     fn find_marker(input: &str, n: usize) -> usize {
-        let input = input.trim();
-        for i in 0..input.len() - n {
-            if input[i..i + n].chars().unique().count() == n {
-                return i + n;
-            }
-        }
-        panic!()
+        let input = input.trim().chars().collect_vec();
+        input.windows(n).enumerate()
+            .filter(|(_, window)| window.into_iter().all_unique())
+            .map(|(i, _)| i + n)
+            .next().unwrap()
     }
 }
 
