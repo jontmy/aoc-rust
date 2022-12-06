@@ -4,8 +4,6 @@ use itertools::Itertools;
 
 use crate::utils::advent;
 
-pub struct Solver;
-
 type Register = char;
 
 #[derive(Debug)]
@@ -49,21 +47,10 @@ impl FromStr for Instruction {
     }
 }
 
-impl advent::Solver<2016, 12> for Solver {
-    type Part1 = i32;
-    type Part2 = i32;
+pub struct Solver;
 
-    fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let instructions = input
-            .lines()
-            .filter_map(|l| l.parse::<Instruction>().ok())
-            .collect_vec();
-
-        let mut registers = HashMap::new();
-        for reg in "abcd".chars() {
-            registers.insert(reg, 0);
-        }
-
+impl Solver {
+    fn exec(instructions: Vec<Instruction>, mut registers: HashMap<char, i32>) -> i32 {
         let mut pc = 0;
         while pc < (instructions.len() as i32) {
             match instructions[pc as usize] {
@@ -101,8 +88,36 @@ impl advent::Solver<2016, 12> for Solver {
         }
         registers[&'a']
     }
+}
+
+impl advent::Solver<2016, 12> for Solver {
+    type Part1 = i32;
+    type Part2 = i32;
+
+    fn solve_part_one(&self, input: &str) -> Self::Part1 {
+        let instructions = input
+            .lines()
+            .filter_map(|l| l.parse::<Instruction>().ok())
+            .collect_vec();
+
+        let mut registers = HashMap::new();
+        for reg in "abcd".chars() {
+            registers.insert(reg, 0);
+        }
+        Solver::exec(instructions, registers)
+    }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        0
+        let instructions = input
+            .lines()
+            .filter_map(|l| l.parse::<Instruction>().ok())
+            .collect_vec();
+
+        let mut registers = HashMap::new();
+        for reg in "abd".chars() {
+            registers.insert(reg, 0);
+        }
+        registers.insert('c', 1);
+        Solver::exec(instructions, registers)
     }
 }
