@@ -1,5 +1,6 @@
 use crate::utils::{ advent, grid::Grid };
 
+use advent_of_code::utils::coords::Coordinates;
 use itertools::Itertools;
 
 pub struct Solver;
@@ -31,11 +32,13 @@ impl advent::Solver<2022, 8> for Solver {
         let visible_count = grid
             .clone()
             .enumerated_map(|c, h| {
-                let (left, _, right) = grid.row_split_at(c.x(), c.y());
-                let (above, _, below) = grid.col_split_at(c.x(), c.y());
+                let (x, y) = (c.x() + 1, c.y() + 1);
+                let (left, _, right) = input.row_split_at(x, y);
+                let (above, _, below) = input.col_split_at(x, y);
                 let dirs = vec![left, right, above, below];
 
-                dirs.into_iter()
+                dirs
+                    .into_iter()
                     .map(|dir| dir.into_iter().all(|height| *height < h))
                     .filter(|is_visible| *is_visible)
                     .count()
@@ -44,7 +47,7 @@ impl advent::Solver<2022, 8> for Solver {
             .into_iter()
             .sum::<usize>();
 
-        visible_count + grid.perimeter() // all trees arond the edge of the grid are visible
+        visible_count + input.perimeter() // all trees arond the edge of the grid are visible
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
