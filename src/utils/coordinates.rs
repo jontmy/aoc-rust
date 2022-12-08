@@ -1,5 +1,6 @@
 use itertools::Itertools;
 
+// deprecated: use coords instead - generic over all num types
 pub mod dim_2 {
     use std::cmp::Ordering;
     use std::fmt::{Debug, Display, Formatter};
