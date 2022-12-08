@@ -1,7 +1,7 @@
 use std::{ hash::Hash, ops::{ Add, Sub, Mul }, fmt::{ Display, Formatter } };
 use num::{ Num, Integer, PrimInt, Signed };
 
-#[derive(PartialEq, Eq, Hash, Copy, Clone)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Coordinates<T> where T: Num {
     x: T,
     y: T,
