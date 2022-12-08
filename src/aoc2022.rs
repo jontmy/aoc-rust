@@ -7,6 +7,7 @@ mod day04;
 mod day05;
 mod day06;
 mod day07;
+mod day08;
 
 pub fn run() {
     day01::Solver.solve();
@@ -16,4 +17,5 @@ pub fn run() {
     day05::Solver.solve();
     day06::Solver.solve();
     day07::Solver.solve();
+    day08::Solver.solve();
 }
