@@ -7,6 +7,7 @@ use num::Num;
 
 use super::coords::Coordinates;
 
+/// perf: uses two-dimensional vecs for extensibility at the cost of some performance
 #[derive(Debug, Clone)]
 pub struct Grid<T> {
     vec: Vec<Vec<T>>,
@@ -41,7 +42,13 @@ impl<T> Grid<T> {
     }
 
     pub fn perimeter(&self) -> usize {
-        (self.height * 2) + (self.width - 1) * 2
+        if self.height == 1 {
+            return self.width;
+        }
+        if self.width == 1 {
+            return self.height;
+        }
+        2 * self.height + 2 * self.width - 4 // corners are double-counted
     }
 
     pub fn set(&mut self, x: usize, y: usize, val: T) {
