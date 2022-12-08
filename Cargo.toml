@@ -24,6 +24,7 @@ trees = "0.4.2"
 num-integer = "0.1.44"
 once-cell-regex = "0.2.1"
 scan_fmt = "0.2.6"
+num = "0.4.0"
 
 [dev-dependencies]
 rstest = "0.15.0"
