@@ -142,9 +142,9 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
         steps
     }
 
-    /// Returns the Euclidean distance between two points -
+    /// Returns the square of the Euclidean distance between two points -
     /// the straight line distance between them.
-    pub fn euclidean_distance(&self, destination: Self) -> T {
+    pub fn euclidean_distance_squared(&self, destination: Self) -> T {
         (self.x - destination.x) * (self.x - destination.x) +
             (self.y - destination.y) * (self.y - destination.y)
     }
