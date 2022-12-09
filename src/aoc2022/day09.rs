@@ -1,10 +1,26 @@
-use std::collections::HashSet;
+use std::{ collections::HashSet, str::FromStr };
 
-use crate::utils::advent;
+use crate::utils::{advent, directions::Direction, coords::Coordinates};
 
 use itertools::Itertools;
 use num::Signed;
 use scan_fmt::scan_fmt;
+
+#[derive(Debug)]
+struct Vector {
+    direction: Direction,
+    displacement: i32,
+}
+
+impl FromStr for Vector {
+    type Err = ();
+
+    fn from_str(l: &str) -> Result<Self, Self::Err> {
+        let (direction, displacement) = scan_fmt!(l, "{} {}", String, i32).unwrap();
+        let direction = Direction::from_str(&direction, "U", "D", "L", "R");
+        Ok(Self { direction, displacement })
+    }
+}
 
 pub struct Solver;
 
@@ -13,56 +29,22 @@ impl advent::Solver<2022, 9> for Solver {
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let ins = input
-            .trim()
-            .lines()
-            .map(|l| scan_fmt!(l, "{} {}", String, i32).unwrap());
-
-        let mut head = (0, 0);
-        let mut tail = (0, 0);
+        let vectors = input.lines().filter_map(|l| l.parse::<Vector>().ok());
+        let mut head = Coordinates::origin();
+        let mut tail = Coordinates::origin();
         let mut visited = HashSet::new();
+        visited.insert(tail);
 
-        for (dir, dist) in ins {
-            let dir = dir.as_str();
-            for _ in 0..dist {
-                let (x, y) = head;
-                head = match dir {
-                    "U" => (x, y + 1),
-                    "D" => (x, y - 1),
-                    "L" => (x - 1, y),
-                    "R" => (x + 1, y),
-                    _ => panic!(),
-                };
-
-                let (x, y) = head;
-                let (i, j) = tail;
-                if x == i && y == j {
+        for vector in vectors {
+            let dest = head.step_by(vector.direction, vector.displacement);
+            for head in head.manhattan_path(dest) {
+                if tail.all_neighbors().contains(&head) {
                     continue;
-                } else if x - i == 2 && y == j {
-                    tail = (i + 1, j);
-                } else if x - i == -2 && y == j {
-                    tail = (i - 1, j);
-                } else if x == i && y - j == 2 {
-                    tail = (i, j + 1);
-                } else if x == i && y - j == -2 {
-                    tail = (i, j - 1);
-                } else if (x - i).abs() == 2 || (y - j).abs() == 2 {
-                    if x > i && y > j {
-                        tail = (i + 1, j + 1);
-                    } else if x > i && y < j {
-                        tail = (i + 1, j - 1);
-                    } else if x < i && y > j {
-                        tail = (i - 1, j + 1);
-                    } else if x < i && y < j {
-                        tail = (i - 1, j - 1);
-                    }
                 }
+                tail = tail.euclidean_step(head);
                 visited.insert(tail);
-
-                let (i, j) = tail;
-                assert!(x.abs_sub(&i) <= 1, "{} {}", x, i);
-                assert!(y.abs_sub(&j) <= 1);
             }
+            head = dest;
         }
         visited.len()
     }
