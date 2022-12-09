@@ -1,12 +1,11 @@
-use std::{ collections::HashSet, str::FromStr };
+use std::str::FromStr;
 
-use crate::utils::{advent, directions::Direction, coords::Coordinates};
+use crate::utils::{ advent, directions::Direction, coords::Coordinates };
 
-use itertools::Itertools;
-use num::Signed;
+use map_macro::set;
+use num_integer::Roots;
 use scan_fmt::scan_fmt;
 
-#[derive(Debug)]
 struct Vector {
     direction: Direction,
     displacement: i32,
@@ -32,13 +31,12 @@ impl advent::Solver<2022, 9> for Solver {
         let vectors = input.lines().filter_map(|l| l.parse::<Vector>().ok());
         let mut head = Coordinates::origin();
         let mut tail = Coordinates::origin();
-        let mut visited = HashSet::new();
-        visited.insert(tail);
+        let mut visited = set![tail];
 
-        for vector in vectors {
-            let dest = head.step_by(vector.direction, vector.displacement);
+        for Vector { direction, displacement } in vectors {
+            let dest = head.step_by(direction, displacement);
             for head in head.manhattan_path(dest) {
-                if tail.all_neighbors().contains(&head) {
+                if tail.euclidean_distance_squared(head).sqrt() < 2 {
                     continue;
                 }
                 tail = tail.euclidean_step(head);
@@ -50,52 +48,20 @@ impl advent::Solver<2022, 9> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let ins = input
-            .trim()
-            .lines()
-            .map(|l| scan_fmt!(l, "{} {}", String, i32).unwrap());
+        let vectors = input.lines().filter_map(|l| l.parse::<Vector>().ok());
+        let mut rope = vec![Coordinates::origin(); 10];
+        let mut visited = set![Coordinates::origin()];
 
-        let mut rope = vec![(0, 0); 10];
-        let mut visited = HashSet::new();
-
-        for (dir, dist) in ins {
-            let dir = dir.as_str();
-            for _ in 0..dist {
-                let (x, y) = rope.first().unwrap().clone();
-                rope[0] = match dir {
-                    "U" => (x, y + 1),
-                    "D" => (x, y - 1),
-                    "L" => (x - 1, y),
-                    "R" => (x + 1, y),
-                    _ => panic!(),
-                };
-
-                for t in 1..=9 {
-                    let h = t - 1;
-                    let (x, y) = rope[h];
-                    let (i, j) = rope[t];
-
-                    if x == i && y == j {
+        for Vector { direction, displacement } in vectors {
+            let dest = rope[0].step_by(direction, displacement);
+            for head in rope[0].manhattan_path(dest) {
+                rope[0] = head;
+                for i in 1..10 {
+                    // rope[i] is the "tail", rope[i-1] is the "head"
+                    if rope[i].euclidean_distance_squared(rope[i - 1]).sqrt() < 2 {
                         continue;
-                    } else if x - i == 2 && y == j {
-                        rope[t] = (i + 1, j);
-                    } else if x - i == -2 && y == j {
-                        rope[t] = (i - 1, j);
-                    } else if x == i && y - j == 2 {
-                        rope[t] = (i, j + 1);
-                    } else if x == i && y - j == -2 {
-                        rope[t] = (i, j - 1);
-                    } else if (x - i).abs() == 2 || (y - j).abs() == 2 {
-                        if x > i && y > j {
-                            rope[t] = (i + 1, j + 1);
-                        } else if x > i && y < j {
-                            rope[t] = (i + 1, j - 1);
-                        } else if x < i && y > j {
-                            rope[t] = (i - 1, j + 1);
-                        } else if x < i && y < j {
-                            rope[t] = (i - 1, j - 1);
-                        }
                     }
+                    rope[i] = rope[i].euclidean_step(rope[i - 1]);
                 }
                 visited.insert(rope[9]);
             }
