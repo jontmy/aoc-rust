@@ -1,6 +1,5 @@
 use crate::utils::{ advent, grid::Grid };
 
-use advent_of_code::utils::coords::Coordinates;
 use itertools::Itertools;
 
 pub struct Solver;
@@ -37,8 +36,7 @@ impl advent::Solver<2022, 8> for Solver {
                 let (above, _, below) = input.col_split_at(x, y);
                 let dirs = vec![left, right, above, below];
 
-                dirs
-                    .into_iter()
+                dirs.into_iter()
                     .map(|dir| dir.into_iter().all(|height| *height < h))
                     .filter(|is_visible| *is_visible)
                     .count()
