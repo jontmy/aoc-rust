@@ -5,6 +5,7 @@ use std::{
     collections::{ HashSet, HashMap, VecDeque },
 };
 use super::{ directions::Direction, misc };
+use map_macro::set;
 use num::{
     Num,
     Integer,
@@ -43,7 +44,7 @@ impl<T> Coordinates<T> where T: Num + Copy {
     }
 }
 
-/// Utility methods for directional movement of **signed** coordinates.
+/// Utility methods for directional movement of **signed integer coordinates**.
 /// For unsigned coordinates, use the `try_*` methods.
 impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// Increments the `y` coordinate by 1.
@@ -208,7 +209,7 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 }
 
-/// Utility methods for signed or unsigned coordinates, useful for checking that a coordinate won't go out of bounds of a grid.
+/// Utility methods for *signed or unsigned* **integer coordinates**, useful for checking that a coordinate won't go out of bounds of a grid.
 impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     pub fn try_up(&self) -> Option<Self> {
         self.y.checked_add(&num::one()).map(|y| Self { x: self.x, y })
@@ -311,7 +312,94 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     }
 }
 
-/// Utility methods for getting the neighbors of *signed or unsigned* **integer** coordinates.
+/// Utility methods for *signed or unsigned* **integer coordinates**, useful for wrapping around the edges of a grid.
+impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
+    /// Increments the `y` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
+    /// 
+    /// Panics if the range is unbounded on either end.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// 
+    /// assert_eq!(Coordinates::new(0, 0).wrapping_up(0..=2), Coordinates::new(0, 1));
+    /// assert_eq!(Coordinates::new(0, 2).wrapping_up(0..=2), Coordinates::new(0, 0));
+    /// assert_eq!(Coordinates::new(0, 2).wrapping_up(-2..=2), Coordinates::new(0, -2));
+    /// ```
+    pub fn wrapping_up<R>(&self, y_range: R) -> Self where R: RangeBounds<T> {
+        let (y_min, y_max) = misc::get_range_min_max(y_range);
+        let y = self.y.wrapping_add(&num::one());
+        let y = Self::get_wrapped(y, y_min, y_max);
+        (self.x, y).into()
+    }
+
+    /// Decrements the `y` coordinate by 1, setting it to the upper bound of the range if it is lower than the lower bound.
+    /// 
+    /// Panics if the range is unbounded on either end.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// 
+    /// assert_eq!(Coordinates::new(0, 2).wrapping_down(0..=2), Coordinates::new(0, 1));
+    /// assert_eq!(Coordinates::new(0, 0).wrapping_down(0..=2), Coordinates::new(0, 2));
+    /// assert_eq!(Coordinates::new(0, -2).wrapping_down(-2..=2), Coordinates::new(0, 2));
+    /// ```
+    pub fn wrapping_down<R>(&self, y_range: R) -> Self where R: RangeBounds<T> {
+        let (y_min, y_max) = misc::get_range_min_max(y_range);
+        let y = self.y.wrapping_sub(&num::one());
+        let y = Self::get_wrapped(y, y_min, y_max);
+        (self.x, y).into()
+    }
+
+    /// Increments the `x` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
+    /// 
+    /// Panics if the range is unbounded on either end.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// 
+    /// assert_eq!(Coordinates::new(0, 0).wrapping_right(0..=2), Coordinates::new(1, 0));
+    /// assert_eq!(Coordinates::new(2, 0).wrapping_right(0..=2), Coordinates::new(0, 0));
+    /// assert_eq!(Coordinates::new(2, 0).wrapping_right(-2..=2), Coordinates::new(-2, 0));
+    /// ```
+    pub fn wrapping_right<R>(&self, x_range: R) -> Self where R: RangeBounds<T> {
+        let (x_min, x_max) = misc::get_range_min_max(x_range);
+        let x = self.x.wrapping_add(&num::one());
+        let x = Self::get_wrapped(x, x_min, x_max);
+        (x, self.y).into()
+    }
+
+    /// Decrements the `x` coordinate by 1, setting it to the upper bound of the range if it is lower than the lower bound.
+    /// 
+    /// Panics if the range is unbounded on either end.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// 
+    /// assert_eq!(Coordinates::new(2, 0).wrapping_left(0..=2), Coordinates::new(1, 0));
+    /// assert_eq!(Coordinates::new(0, 0).wrapping_left(0..=2), Coordinates::new(2, 0));
+    /// assert_eq!(Coordinates::new(-2, 0).wrapping_left(-2..=2), Coordinates::new(2, 0));
+    /// ```
+    pub fn wrapping_left<R>(&self, x_range: R) -> Self where R: RangeBounds<T> {
+        let (x_min, x_max) = misc::get_range_min_max(x_range);
+        let x = self.x.wrapping_sub(&num::one());
+        let x = Self::get_wrapped(x, x_min, x_max);
+        (x, self.y).into()
+    }
+
+    fn get_wrapped(v: T, v_min: T, v_max: T) -> T {
+        if v > v_max { v_min } else if v < v_min { v_max } else { v }
+    }
+}
+
+/// Utility methods for getting the neighbors of *signed or unsigned* **integer coordinates**.
 impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     /// Returns the neighbors of this coordinate which are directly above, below, to the left, or to
     /// the right, in that exact order.
@@ -415,90 +503,167 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     }
 }
 
-/// Utility methods for signed or unsigned coordinates, useful for wrapping around the edges of a grid.
-impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
-    /// Increments the `y` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
+/// Utility methods for *signed or unsigned* **integer coordinates** wrapping around bounds, useful for grids with wrap-around.
+/// These methods return sets of coordinates instead of vectors, to avoid potential duplicates caused by wrapping-around.
+impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Hash + Eq {
+    /// Returns the neighbors of this coordinate which are directly above, below, to the left, or to
+    /// the right, wrapping around the given bounds (and of the integer type) as necessary.
     /// 
-    /// Panics if the range is unbounded on either end.
-    ///
+    /// **Panics** if either of the ranges isn't bounded on both ends.
+    /// 
     /// # Examples
-    ///
+    /// 
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
     /// 
-    /// assert_eq!(Coordinates::new(0, 0).wrapping_up(0..=2), Coordinates::new(0, 1));
-    /// assert_eq!(Coordinates::new(0, 2).wrapping_up(0..=2), Coordinates::new(0, 0));
-    /// assert_eq!(Coordinates::new(0, 2).wrapping_up(-2..=2), Coordinates::new(0, -2));
+    /// // Finding the neighbors of the origin in a 3x3 grid centered around the origin...
+    /// let neighbors = Coordinates::new(0, 0)
+    ///     .orthogonal_neighbors_wrapping(-1..=1, -1..=1);
+    /// 
+    /// // ...includes all 4 of the edge-adjacent neighbors.
+    /// assert_eq!(neighbors.len(), 4);
+    /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(0, -1)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
+    /// assert!(neighbors.contains(&Coordinates::new(-1, 0)));
+    /// 
+    /// // But if shift the 3x3 grid such that the origin is at the bottom-left corner...
+    /// let neighbors = Coordinates::new(0, 0)
+    ///     .orthogonal_neighbors_wrapping(0..=2, 0..=2);
+    /// 
+    /// // ...then the neighbors of the origin include the top-left and bottom-right corner.
+    /// assert_eq!(neighbors.len(), 4);
+    /// assert!(neighbors.contains(&Coordinates::new(0, 2)));
+    /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
+    /// assert!(neighbors.contains(&Coordinates::new(2, 0)));
+    /// 
+    /// // And if we use a 1x1 grid centered around the origin...
+    /// let neighbors = Coordinates::new(0, 0)
+    ///     .orthogonal_neighbors_wrapping(0..=0, 0..=0);
+    /// 
+    /// // ...then there are no neighbors, because even though it would wrap around to the origin,
+    /// // the origin is not a neighbor of itself.
+    /// assert!(neighbors.is_empty());
+    /// 
+    /// // Works on unsigned integers too, and the wrapping will always be limited to the positive quadrant,
+    /// // and you won't be able to specify negative bounds (but you must still specify the lower bounds).
+    /// 
+    /// // Let's try it on a 2x2 grid with the origin at the bottom-left corner...
+    /// let neighbors = Coordinates::<usize>::new(0, 0)
+    ///    .orthogonal_neighbors_wrapping(0..=1, 0..=1);
+    /// // .orthogonal_neighbors_wrapping(-1..=1, -1..=1); // this instead won't compile
+    /// // .orthogonal_neighbors_wrapping(..=1, ..=1);     // this instead will panic at runtime
+    /// 
+    /// // ...and we get 2 neighbors.
+    /// assert_eq!(neighbors.len(), 2);
+    /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
     /// ```
-    pub fn wrapping_up<R>(&self, y_range: R) -> Self where R: RangeBounds<T> {
-        let (y_min, y_max) = misc::get_range_min_max(y_range);
-        let y = self.y.wrapping_add(&num::one());
-        let y = Self::get_wrapped(y, y_min, y_max);
-        (self.x, y).into()
+    pub fn orthogonal_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self> where R: RangeBounds<T> + Clone {
+        let mut neighbors = set! {
+            self.wrapping_up(y_range.clone()),
+            self.wrapping_down(y_range),
+            self.wrapping_left(x_range.clone()),
+            self.wrapping_right(x_range),
+        };
+        neighbors.remove(self);
+        neighbors
     }
 
-    /// Decrements the `y` coordinate by 1, setting it to the upper bound of the range if it is lower than the lower bound.
+    /// Returns the neighbors of this coordinate which are diagonally-adjacent.
     /// 
-    /// Panics if the range is unbounded on either end.
-    ///
+    /// **Panics** if either of the ranges isn't bounded on both ends.
+    /// 
     /// # Examples
-    ///
+    /// 
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
     /// 
-    /// assert_eq!(Coordinates::new(0, 2).wrapping_down(0..=2), Coordinates::new(0, 1));
-    /// assert_eq!(Coordinates::new(0, 0).wrapping_down(0..=2), Coordinates::new(0, 2));
-    /// assert_eq!(Coordinates::new(0, -2).wrapping_down(-2..=2), Coordinates::new(0, 2));
+    /// // Finding the diagonal neighbors of the origin in a 3x3 grid centered around the origin...
+    /// let neighbors = Coordinates::new(0, 0)
+    ///     .diagonal_neighbors_wrapping(-1..=1, -1..=1);
+    /// 
+    /// // ...includes all 4 of the corner neighbors.
+    /// assert_eq!(neighbors.len(), 4);
+    /// assert!(neighbors.contains(&Coordinates::new(1, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, -1)));
+    /// assert!(neighbors.contains(&Coordinates::new(-1, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(-1, -1)));
+    /// 
+    /// // But if shift the 3x3 grid such that the origin is at the bottom-left corner...
+    /// let neighbors = Coordinates::new(0, 0)
+    ///    .diagonal_neighbors_wrapping(0..=2, 0..=2);
+    /// 
+    /// // _ X X
+    /// // _ X X
+    /// // O _ _
+    /// 
+    /// // ...then the diagonal neighbors of the origin form the pattern above.
+    /// assert_eq!(neighbors.len(), 4);
+    /// assert!(neighbors.contains(&Coordinates::new(1, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, 2)));
+    /// assert!(neighbors.contains(&Coordinates::new(2, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(2, 2)));
+    /// 
+    /// // And if we use a 1x1 grid centered around the origin...
+    /// let neighbors = Coordinates::new(0, 0)
+    ///    .diagonal_neighbors_wrapping(0..=0, 0..=0);
+    /// 
+    /// // ...then there are no neighbors, because even though it would wrap around to the origin,
+    /// // the origin is not a neighbor of itself.
+    /// assert!(neighbors.is_empty());
+    /// 
+    /// // Works on unsigned integers too, and the wrapping will always be limited to the positive quadrant,
+    /// // and you won't be able to specify negative bounds (but you must still specify the lower bounds).
+    /// 
+    /// // Let's try it on a 2x2 grid with the origin at the bottom-left corner...
+    /// let neighbors = Coordinates::<usize>::new(0, 0)
+    ///   .diagonal_neighbors_wrapping(0..=1, 0..=1);
+    /// 
+    /// // X X
+    /// // O X
+    /// 
+    /// // ...and we get 3 neighbors in the pattern above (the origin is not a neighbor of itself).
+    /// assert_eq!(neighbors.len(), 3);
+    /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
     /// ```
-    pub fn wrapping_down<R>(&self, y_range: R) -> Self where R: RangeBounds<T> {
-        let (y_min, y_max) = misc::get_range_min_max(y_range);
-        let y = self.y.wrapping_sub(&num::one());
-        let y = Self::get_wrapped(y, y_min, y_max);
-        (self.x, y).into()
+    pub fn diagonal_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self> where R: RangeBounds<T> + Clone {
+        let mut neighbors = set! {
+            self.wrapping_up(y_range.clone()).wrapping_left(x_range.clone()),
+            self.wrapping_up(y_range.clone()).wrapping_right(x_range.clone()),
+            self.wrapping_down(y_range.clone()).wrapping_right(x_range.clone()),
+            self.wrapping_down(y_range).wrapping_left(x_range),
+        };
+        neighbors.remove(self);
+        neighbors
     }
 
-    /// Increments the `x` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
+    /// Returns the neighbors of this coordinate which are orthogonally- or diagonally-adjacent.
     /// 
-    /// Panics if the range is unbounded on either end.
-    ///
+    /// Equivalent to calling `orthogonal_neighbors_wrapping` and `diagonal_neighbors_wrapping` and
+    /// combining the results.
+    /// 
+    /// **Panics** if either of the ranges isn't bounded on both ends.
+    /// 
     /// # Examples
-    ///
+    /// 
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
     /// 
-    /// assert_eq!(Coordinates::new(0, 0).wrapping_right(0..=2), Coordinates::new(1, 0));
-    /// assert_eq!(Coordinates::new(2, 0).wrapping_right(0..=2), Coordinates::new(0, 0));
-    /// assert_eq!(Coordinates::new(2, 0).wrapping_right(-2..=2), Coordinates::new(-2, 0));
-    /// ```
-    pub fn wrapping_right<R>(&self, x_range: R) -> Self where R: RangeBounds<T> {
-        let (x_min, x_max) = misc::get_range_min_max(x_range);
-        let x = self.x.wrapping_add(&num::one());
-        let x = Self::get_wrapped(x, x_min, x_max);
-        (x, self.y).into()
-    }
-
-    /// Decrements the `x` coordinate by 1, setting it to the upper bound of the range if it is lower than the lower bound.
+    /// // Finding the neighbors of the origin in a 3x3 grid centered around the origin...
+    /// let neighbors = Coordinates::new(0, 0)
+    ///    .all_neighbors_wrapping(-1..=1, -1..=1);
     /// 
-    /// Panics if the range is unbounded on either end.
-    ///
-    /// # Examples
-    ///
+    /// // ...includes all 8 of the neighbors which fully encompass the 3x3 grid.
+    /// assert_eq!(neighbors.len(), 8);
     /// ```
-    /// use advent_of_code::utils::coords::Coordinates;
-    /// 
-    /// assert_eq!(Coordinates::new(2, 0).wrapping_left(0..=2), Coordinates::new(1, 0));
-    /// assert_eq!(Coordinates::new(0, 0).wrapping_left(0..=2), Coordinates::new(2, 0));
-    /// assert_eq!(Coordinates::new(-2, 0).wrapping_left(-2..=2), Coordinates::new(2, 0));
-    /// ```
-    pub fn wrapping_left<R>(&self, x_range: R) -> Self where R: RangeBounds<T> {
-        let (x_min, x_max) = misc::get_range_min_max(x_range);
-        let x = self.x.wrapping_sub(&num::one());
-        let x = Self::get_wrapped(x, x_min, x_max);
-        (x, self.y).into()
-    }
-
-    fn get_wrapped(v: T, v_min: T, v_max: T) -> T {
-        if v > v_max { v_min } else if v < v_min { v_max } else { v }
+    pub fn all_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self> where R: RangeBounds<T> + Clone {
+        let mut neighbors = self.orthogonal_neighbors_wrapping(x_range.clone(), y_range.clone());
+        neighbors.extend(self.diagonal_neighbors_wrapping(x_range, y_range));
+        neighbors
     }
 }
 
