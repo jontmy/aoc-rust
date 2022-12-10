@@ -47,11 +47,12 @@ impl<T> Coordinates<T> where T: Num + Copy {
 /// For unsigned coordinates, use the `try_*` methods.
 impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// Increments the `y` coordinate by 1.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).up(), Coordinates::new(0, 1));
     /// ```
     pub fn up(&self) -> Self {
@@ -59,12 +60,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Increments the `y` coordinate by a given amount.
+    /// 
     /// Accepts negative values, but you may want to use `down_by` instead.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).up_by(2), Coordinates::new(0, 2));
     /// assert_eq!(Coordinates::new(0, 0).up_by(-2), Coordinates::new(0, -2));
     /// ```
@@ -73,11 +76,12 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Decrements the `y` coordinate by 1.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).down(), Coordinates::new(0, -1));
     /// ```
     pub fn down(&self) -> Self {
@@ -85,12 +89,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Decrements the `y` coordinate by a given amount.
+    /// 
     /// Accepts negative values, but you may want to use `up_by` instead.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).down_by(2), Coordinates::new(0, -2));
     /// assert_eq!(Coordinates::new(0, 0).down_by(-2), Coordinates::new(0, 2));
     /// ```
@@ -99,11 +105,12 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Decrements the `x` coordinate by 1.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).left(), Coordinates::new(-1, 0));
     /// ```
     pub fn left(&self) -> Self {
@@ -111,12 +118,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Decrements the `x` coordinate by a given amount.
+    /// 
     /// Accepts negative values, but you may want to use `right_by` instead.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).left_by(2), Coordinates::new(-2, 0));
     /// assert_eq!(Coordinates::new(0, 0).left_by(-2), Coordinates::new(2, 0));
     /// ```
@@ -125,11 +134,12 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Increments the `x` coordinate by 1.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).right(), Coordinates::new(1, 0));
     /// ```
     pub fn right(&self) -> Self {
@@ -137,12 +147,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Increments the `x` coordinate by a given amount.
+    /// 
     /// Accepts negative values, but you may want to use `left_by` instead.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).right_by(2), Coordinates::new(2, 0));
     /// assert_eq!(Coordinates::new(0, 0).right_by(-2), Coordinates::new(-2, 0));
     /// ```
@@ -151,12 +163,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Moves the coordinates in a given direction by 1.
+    /// 
     /// Equivalent to calling the appropriate directional `*` method.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::{coords::Coordinates, directions::Direction};
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).step(Direction::Up), Coordinates::new(0, 1));
     /// assert_eq!(Coordinates::new(0, 0).step(Direction::Down), Coordinates::new(0, -1));
     /// assert_eq!(Coordinates::new(0, 0).step(Direction::Left), Coordinates::new(-1, 0));
@@ -172,12 +186,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Moves the coordinates in a given direction by a given amount.
+    /// 
     /// Equivalent to calling the appropriate directional `*_by` method.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::{coords::Coordinates, directions::Direction};
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Up, 2), Coordinates::new(0, 2));
     /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Down, 3), Coordinates::new(0, -3));
     /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Left, 4), Coordinates::new(-4, 0));
@@ -208,6 +224,7 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_up_by(1, ..=2), Some(Coordinates::new(0, 1)));
     /// assert_eq!(Coordinates::new(0, 2).try_bounded_up_by(1, ..=2), None);
     /// ```
@@ -232,6 +249,7 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 2).try_bounded_down_by(1, 0..), Some(Coordinates::new(0, 1)));
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_down_by(1, 0..), None);
     /// ```
@@ -256,6 +274,7 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_right_by(1, ..=2), Some(Coordinates::new(1, 0)));
     /// assert_eq!(Coordinates::new(2, 0).try_bounded_right_by(1, ..=2), None);
     /// ```
@@ -280,6 +299,7 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(2, 0).try_bounded_left_by(1, 0..), Some(Coordinates::new(1, 0)));
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_left_by(1, 0..), None);
     /// ```
@@ -291,7 +311,32 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     }
 }
 
+/// Utility methods for getting the neighbors of *signed or unsigned* **integer** coordinates.
 impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
+    /// Returns the neighbors of this coordinate which are directly above, below, to the left, or to
+    /// the right, in that exact order.
+    ///
+    /// Returns only the neighbors that are within the bounds of that integer type.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    ///
+    /// // With signed integers, all 4 neighbors around the origin are returned.
+    /// assert_eq!(Coordinates::new(0, 0).orthogonal_neighbors(), vec![
+    ///     Coordinates::new(0, 1),
+    ///     Coordinates::new(0, -1),
+    ///     Coordinates::new(-1, 0),
+    ///     Coordinates::new(1, 0),
+    /// ]);
+    ///
+    /// // With unsigned integers, only the 2 neighbors in the positive quadrant are returned.
+    /// assert_eq!(Coordinates::<usize>::new(0, 0).orthogonal_neighbors(), vec![
+    ///     Coordinates::new(0, 1),
+    ///     Coordinates::new(1, 0),
+    /// ]);
+    /// ```
     pub fn orthogonal_neighbors(&self) -> Vec<Self> {
         let mut neighbors = Vec::new();
         if let Some(up) = self.try_up() {
@@ -309,6 +354,28 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
         neighbors
     }
 
+    /// Returns the diagonally-adjacent neighbors of this coordinate in clockwise order, starting
+    /// from the neighbor diagonally-adjacent to the top-left corner.
+    ///
+    /// Returns only the neighbors that are within the bounds of that integer type.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    ///
+    /// // With signed integers, all 4 corner-adjacent neighbors around the origin are returned.
+    /// assert_eq!(Coordinates::new(0, 0).diagonal_neighbors(), vec![
+    ///     Coordinates::new(-1, 1),
+    ///     Coordinates::new(1, 1),
+    ///     Coordinates::new(1, -1),
+    ///     Coordinates::new(-1, -1),
+    /// ]);
+    ///
+    /// // With unsigned integers, only the single neighbor in the positive quadrant is returned.
+    /// assert_eq!(Coordinates::<usize>::new(0, 0).diagonal_neighbors(), vec![
+    ///     Coordinates::new(1, 1),
+    /// ]);
     pub fn diagonal_neighbors(&self) -> Vec<Self> {
         let mut neighbors = Vec::new();
         if let Some(up_left) = self.try_up().and_then(|up| up.try_left()) {
@@ -317,15 +384,30 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
         if let Some(up_right) = self.try_up().and_then(|up| up.try_right()) {
             neighbors.push(up_right);
         }
-        if let Some(down_left) = self.try_down().and_then(|down| down.try_left()) {
-            neighbors.push(down_left);
-        }
         if let Some(down_right) = self.try_down().and_then(|down| down.try_right()) {
             neighbors.push(down_right);
+        }
+        if let Some(down_left) = self.try_down().and_then(|down| down.try_left()) {
+            neighbors.push(down_left);
         }
         neighbors
     }
 
+    /// Returns any of the neighbors of this coordinate which are edge-adjacent (orthogonal) or corner-adjacent (diagonal).
+    /// 
+    /// Equivalent to calling `orthogonal_neighbors` and `diagonal_neighbors` and concatenating the results.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// 
+    /// // With signed integers, all 8 neighbors around the origin are returned.
+    /// assert_eq!(Coordinates::new(0, 0).all_neighbors().len(), 8);
+    /// 
+    /// // With unsigned integers, only the 3 neighbors in the positive quadrant are returned.
+    /// assert_eq!(Coordinates::<usize>::new(0, 0).all_neighbors().len(), 3);
+    /// ```
     pub fn all_neighbors(&self) -> Vec<Self> {
         let mut neighbors = self.orthogonal_neighbors();
         neighbors.extend(self.diagonal_neighbors());
@@ -336,12 +418,14 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
 /// Utility methods for signed or unsigned coordinates, useful for wrapping around the edges of a grid.
 impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     /// Increments the `y` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
+    /// 
     /// Panics if the range is unbounded on either end.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).wrapping_up(0..=2), Coordinates::new(0, 1));
     /// assert_eq!(Coordinates::new(0, 2).wrapping_up(0..=2), Coordinates::new(0, 0));
     /// assert_eq!(Coordinates::new(0, 2).wrapping_up(-2..=2), Coordinates::new(0, -2));
@@ -354,12 +438,14 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     }
 
     /// Decrements the `y` coordinate by 1, setting it to the upper bound of the range if it is lower than the lower bound.
+    /// 
     /// Panics if the range is unbounded on either end.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 2).wrapping_down(0..=2), Coordinates::new(0, 1));
     /// assert_eq!(Coordinates::new(0, 0).wrapping_down(0..=2), Coordinates::new(0, 2));
     /// assert_eq!(Coordinates::new(0, -2).wrapping_down(-2..=2), Coordinates::new(0, 2));
@@ -372,12 +458,14 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     }
 
     /// Increments the `x` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
+    /// 
     /// Panics if the range is unbounded on either end.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(0, 0).wrapping_right(0..=2), Coordinates::new(1, 0));
     /// assert_eq!(Coordinates::new(2, 0).wrapping_right(0..=2), Coordinates::new(0, 0));
     /// assert_eq!(Coordinates::new(2, 0).wrapping_right(-2..=2), Coordinates::new(-2, 0));
@@ -390,12 +478,14 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     }
 
     /// Decrements the `x` coordinate by 1, setting it to the upper bound of the range if it is lower than the lower bound.
+    /// 
     /// Panics if the range is unbounded on either end.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
+    /// 
     /// assert_eq!(Coordinates::new(2, 0).wrapping_left(0..=2), Coordinates::new(1, 0));
     /// assert_eq!(Coordinates::new(0, 0).wrapping_left(0..=2), Coordinates::new(2, 0));
     /// assert_eq!(Coordinates::new(-2, 0).wrapping_left(-2..=2), Coordinates::new(2, 0));
