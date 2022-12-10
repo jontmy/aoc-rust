@@ -9,15 +9,17 @@ mod day06;
 mod day07;
 mod day08;
 mod day09;
+mod day10;
 
 pub fn run() {
-    day01::Solver.solve();
-    day02::Solver.solve();
-    day03::Solver.solve();
-    day04::Solver.solve();
-    day05::Solver.solve();
-    day06::Solver.solve();
-    day07::Solver.solve();
-    day08::Solver.solve();
-    day09::Solver.solve();
+    // day01::Solver.solve();
+    // day02::Solver.solve();
+    // day03::Solver.solve();
+    // day04::Solver.solve();
+    // day05::Solver.solve();
+    // day06::Solver.solve();
+    // day07::Solver.solve();
+    // day08::Solver.solve();
+    // day09::Solver.solve();
+    day10::Solver.solve();
 }
