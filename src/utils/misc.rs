@@ -1,7 +1,6 @@
-use std::{ ops::{ RangeBounds, Bound }, str::FromStr };
+use std::ops::{Bound, RangeBounds};
 
-use num::{ Num, PrimInt, Integer };
-use once_cell_regex::regex;
+use num::Num;
 
 pub fn get_range_min_max<T, R>(range: R) -> (T, T) where T: Num + Copy, R: RangeBounds<T> {
     let min = match range.start_bound() {
@@ -15,11 +14,4 @@ pub fn get_range_min_max<T, R>(range: R) -> (T, T) where T: Num + Copy, R: Range
         Bound::Unbounded => panic!("Range must be upper bounded"),
     };
     (min, max)
-}
-
-pub fn get_all_nums<T>(s: &str) -> Vec<T> where T: Integer + FromStr {
-    let re = regex!(r"[-\d]+");
-    re.captures_iter(s)
-        .filter_map(|c| c.get(0).and_then(|m| m.as_str().parse::<T>().ok()))
-        .collect()
 }
