@@ -1,6 +1,6 @@
 use std::iter;
 
-use crate::utils::{ advent, misc, grid::Grid };
+use crate::utils::{ advent, grid::Grid, self };
 
 pub struct Solver;
 
@@ -9,7 +9,7 @@ impl Solver {
         ("noop\nnoop\n".to_owned() + input)
             .trim()
             .lines()
-            .map(|l| misc::get_all_nums::<i32>(l))
+            .map(|l| utils::get_all_nums::<i32>(l))
             .flat_map(|xs| iter::once(0).chain(xs))
             .scan(1, |f, x| {
                 *f += x;
@@ -41,11 +41,11 @@ impl advent::Solver<2022, 10> for Solver {
             |c| {
                 let (x, y) = c.into();
                 let center = xs[y * 40 + x + 1];
-                let pixel = if center.abs_diff(x as i32) <= 1 { '#' } else { '.' };
+                let pixel = if center.abs_diff(x as i32) <= 1 { '#' } else { ' ' };
                 Some(pixel)
             },
             ' '
         );
-        format!("\n{grid}")
+        utils::ocr(&grid)
     }
 }
