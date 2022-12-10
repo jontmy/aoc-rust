@@ -1,4 +1,9 @@
-use std::{ hash::Hash, ops::{ Add, Sub, Mul, RangeBounds, Bound }, fmt::{ Display, Formatter } };
+use std::{
+    hash::Hash,
+    ops::{ Add, Sub, Mul, RangeBounds, Bound },
+    fmt::{ Display, Formatter },
+    collections::{ HashSet, HashMap, VecDeque },
+};
 use super::{ directions::Direction, misc };
 use num::{
     Num,
@@ -35,6 +40,155 @@ impl<T> Coordinates<T> where T: Num + Copy {
 
     pub fn y(&self) -> T {
         self.y
+    }
+}
+
+/// Utility methods for directional movement of **signed** coordinates.
+/// For unsigned coordinates, use the `try_*` methods.
+impl<T> Coordinates<T> where T: Integer + Signed + Copy {
+    /// Increments the `y` coordinate by 1.
+    /// 
+    /// # Example
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// assert_eq!(Coordinates::new(0, 0).up(), Coordinates::new(0, 1));
+    /// ```
+    pub fn up(&self) -> Self {
+        Self { x: self.x, y: self.y + num::one() }
+    }
+
+    /// Increments the `y` coordinate by a given amount.
+    /// Accepts negative values, but you may want to use `down_by` instead.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// assert_eq!(Coordinates::new(0, 0).up_by(2), Coordinates::new(0, 2));
+    /// assert_eq!(Coordinates::new(0, 0).up_by(-2), Coordinates::new(0, -2));
+    /// ```
+    pub fn up_by(&self, n: T) -> Self {
+        Self { x: self.x, y: self.y + n }
+    }
+
+    /// Decrements the `y` coordinate by 1.
+    /// 
+    /// # Example
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// assert_eq!(Coordinates::new(0, 0).down(), Coordinates::new(0, -1));
+    /// ```
+    pub fn down(&self) -> Self {
+        Self { x: self.x, y: self.y - num::one() }
+    }
+
+    /// Decrements the `y` coordinate by a given amount.
+    /// Accepts negative values, but you may want to use `up_by` instead.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// assert_eq!(Coordinates::new(0, 0).down_by(2), Coordinates::new(0, -2));
+    /// assert_eq!(Coordinates::new(0, 0).down_by(-2), Coordinates::new(0, 2));
+    /// ```
+    pub fn down_by(&self, n: T) -> Self {
+        Self { x: self.x, y: self.y - n }
+    }
+
+    /// Decrements the `x` coordinate by 1.
+    /// 
+    /// # Example
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// assert_eq!(Coordinates::new(0, 0).left(), Coordinates::new(-1, 0));
+    /// ```
+    pub fn left(&self) -> Self {
+        Self { x: self.x - num::one(), y: self.y }
+    }
+
+    /// Decrements the `x` coordinate by a given amount.
+    /// Accepts negative values, but you may want to use `right_by` instead.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// assert_eq!(Coordinates::new(0, 0).left_by(2), Coordinates::new(-2, 0));
+    /// assert_eq!(Coordinates::new(0, 0).left_by(-2), Coordinates::new(2, 0));
+    /// ```
+    pub fn left_by(&self, n: T) -> Self {
+        Self { x: self.x - n, y: self.y }
+    }
+
+    /// Increments the `x` coordinate by 1.
+    /// 
+    /// # Example
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// assert_eq!(Coordinates::new(0, 0).right(), Coordinates::new(1, 0));
+    /// ```
+    pub fn right(&self) -> Self {
+        Self { x: self.x + num::one(), y: self.y }
+    }
+
+    /// Increments the `x` coordinate by a given amount.
+    /// Accepts negative values, but you may want to use `left_by` instead.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    /// assert_eq!(Coordinates::new(0, 0).right_by(2), Coordinates::new(2, 0));
+    /// assert_eq!(Coordinates::new(0, 0).right_by(-2), Coordinates::new(-2, 0));
+    /// ```
+    pub fn right_by(&self, n: T) -> Self {
+        Self { x: self.x + n, y: self.y }
+    }
+
+    /// Moves the coordinates in a given direction by 1.
+    /// Equivalent to calling the appropriate directional `*` method.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use advent_of_code::utils::{coords::Coordinates, directions::Direction};
+    /// assert_eq!(Coordinates::new(0, 0).step(Direction::Up), Coordinates::new(0, 1));
+    /// assert_eq!(Coordinates::new(0, 0).step(Direction::Down), Coordinates::new(0, -1));
+    /// assert_eq!(Coordinates::new(0, 0).step(Direction::Left), Coordinates::new(-1, 0));
+    /// assert_eq!(Coordinates::new(0, 0).step(Direction::Right), Coordinates::new(1, 0));
+    /// ```
+    pub fn step(&self, direction: Direction) -> Self {
+        match direction {
+            Direction::Up => self.up(),
+            Direction::Down => self.down(),
+            Direction::Left => self.left(),
+            Direction::Right => self.right(),
+        }
+    }
+
+    /// Moves the coordinates in a given direction by a given amount.
+    /// Equivalent to calling the appropriate directional `*_by` method.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use advent_of_code::utils::{coords::Coordinates, directions::Direction};
+    /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Up, 2), Coordinates::new(0, 2));
+    /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Down, 3), Coordinates::new(0, -3));
+    /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Left, 4), Coordinates::new(-4, 0));
+    /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Right, 5), Coordinates::new(5, 0));
+    pub fn step_by(&self, direction: Direction, n: T) -> Self {
+        match direction {
+            Direction::Up => self.up_by(n),
+            Direction::Down => self.down_by(n),
+            Direction::Left => self.left_by(n),
+            Direction::Right => self.right_by(n),
+        }
     }
 }
 
@@ -137,6 +291,48 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     }
 }
 
+impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
+    pub fn orthogonal_neighbors(&self) -> Vec<Self> {
+        let mut neighbors = Vec::new();
+        if let Some(up) = self.try_up() {
+            neighbors.push(up);
+        }
+        if let Some(down) = self.try_down() {
+            neighbors.push(down);
+        }
+        if let Some(left) = self.try_left() {
+            neighbors.push(left);
+        }
+        if let Some(right) = self.try_right() {
+            neighbors.push(right);
+        }
+        neighbors
+    }
+
+    pub fn diagonal_neighbors(&self) -> Vec<Self> {
+        let mut neighbors = Vec::new();
+        if let Some(up_left) = self.try_up().and_then(|up| up.try_left()) {
+            neighbors.push(up_left);
+        }
+        if let Some(up_right) = self.try_up().and_then(|up| up.try_right()) {
+            neighbors.push(up_right);
+        }
+        if let Some(down_left) = self.try_down().and_then(|down| down.try_left()) {
+            neighbors.push(down_left);
+        }
+        if let Some(down_right) = self.try_down().and_then(|down| down.try_right()) {
+            neighbors.push(down_right);
+        }
+        neighbors
+    }
+
+    pub fn all_neighbors(&self) -> Vec<Self> {
+        let mut neighbors = self.orthogonal_neighbors();
+        neighbors.extend(self.diagonal_neighbors());
+        neighbors
+    }
+}
+
 /// Utility methods for signed or unsigned coordinates, useful for wrapping around the edges of a grid.
 impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     /// Increments the `y` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
@@ -217,73 +413,6 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
 }
 
 impl<T> Coordinates<T> where T: Integer + Signed + Copy {
-    pub fn up(&self) -> Self {
-        Self { x: self.x, y: self.y + num::one() }
-    }
-
-    pub fn up_by(&self, n: T) -> Self {
-        Self { x: self.x, y: self.y + n }
-    }
-
-    pub fn down(&self) -> Self {
-        Self { x: self.x, y: self.y - num::one() }
-    }
-
-    pub fn down_by(&self, n: T) -> Self {
-        Self { x: self.x, y: self.y - n }
-    }
-
-    pub fn left(&self) -> Self {
-        Self { x: self.x - num::one(), y: self.y }
-    }
-
-    pub fn left_by(&self, n: T) -> Self {
-        Self { x: self.x - n, y: self.y }
-    }
-
-    pub fn right(&self) -> Self {
-        Self { x: self.x + num::one(), y: self.y }
-    }
-
-    pub fn right_by(&self, n: T) -> Self {
-        Self { x: self.x + n, y: self.y }
-    }
-
-    pub fn step(&self, direction: Direction) -> Self {
-        match direction {
-            Direction::Up => self.up(),
-            Direction::Down => self.down(),
-            Direction::Left => self.left(),
-            Direction::Right => self.right(),
-        }
-    }
-
-    pub fn step_by(&self, direction: Direction, n: T) -> Self {
-        match direction {
-            Direction::Up => self.up_by(n),
-            Direction::Down => self.down_by(n),
-            Direction::Left => self.left_by(n),
-            Direction::Right => self.right_by(n),
-        }
-    }
-
-    pub fn adjacent_neighbors(&self) -> impl Iterator<Item = Self> {
-        vec![self.up(), self.down(), self.left(), self.right()].into_iter()
-    }
-
-    pub fn diagonal_neighbors(&self) -> impl Iterator<Item = Self> {
-        vec![
-            self.up().left(),
-            self.up().right(),
-            self.down().left(),
-            self.down().right()
-        ].into_iter()
-    }
-
-    pub fn all_neighbors(&self) -> impl Iterator<Item = Self> {
-        self.adjacent_neighbors().chain(self.diagonal_neighbors())
-    }
-
     /// Returns the Manhattan distance between two points -
     /// the sum of the straight line distances between their x- and y-coordinates.
     pub fn manhattan_distance(&self, destination: Self) -> T {
@@ -376,6 +505,36 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
         current
     }
 }
+
+// impl<T> Coordinates<T> where T: Integer + Copy + Hash + Eq {
+//     pub fn manhattan_bfs_path(&self, destination: Self, obstacles: &HashSet<Coordinates<T>>) -> Vec<Coordinates<T>> {
+//         let mut queue = VecDeque::new();
+//         let mut visited = HashSet::new();
+//         let mut parents = HashMap::new();
+//         queue.push_back(*self);
+//         visited.insert(*self);
+//         while let Some(current) = queue.pop_front() {
+//             if current == destination {
+//                 let mut path = vec![destination];
+//                 let mut current = destination;
+//                 while let Some(parent) = parents.get(&current) {
+//                     path.push(*parent);
+//                     current = *parent;
+//                 }
+//                 path.reverse();
+//                 return path;
+//             }
+//             for neighbor in current.all_neighbors() {
+//                 if !visited.contains(&neighbor) && !obstacles.contains(&neighbor) {
+//                     queue.push_back(neighbor);
+//                     visited.insert(neighbor);
+//                     parents.insert(neighbor, current);
+//                 }
+//             }
+//         }
+//         vec![]
+//     }
+// }
 
 impl<T> Add for Coordinates<T> where T: Num + Copy {
     type Output = Self;
