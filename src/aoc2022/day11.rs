@@ -1,4 +1,4 @@
-use std::{ str::FromStr, collections::VecDeque };
+use std::str::FromStr;
 
 use itertools::Itertools;
 use num::Integer;
@@ -8,7 +8,7 @@ use crate::utils::{ self, advent };
 
 #[derive(Debug, Clone)]
 struct Monkey {
-    items: VecDeque<usize>,
+    items: Vec<usize>,
     op: (String, String),
     test: usize,
     if_true: usize,
@@ -49,17 +49,17 @@ impl Solver {
     }
 
     fn round(
-        monkeys_ref: &mut [Monkey],
+        monkeys: &mut [Monkey],
         counts: &mut [usize],
         worry_fn: impl Fn(usize) -> usize
     ) -> Vec<Monkey> {
-        let mut monkeys = monkeys_ref.to_owned().clone();
+        let mut monkeys = monkeys.to_owned();
         for m_ptr in 0..monkeys.len() {
-            let mut monkeys_ref = monkeys.clone();
-            let monkey = monkeys_ref.get_mut(m_ptr).unwrap();
+            let mut monkey = monkeys.get(m_ptr).unwrap().clone();
             monkeys[m_ptr].items.clear();
-            while let Some(worry) = monkey.items.pop_front() {
-                let mut worry = match (monkey.op.0.as_str(), monkey.op.1.as_str()) {
+            for i_ptr in 0..monkey.items.len() {
+                let mut worry = monkey.items[i_ptr];
+                worry = match (monkey.op.0.as_str(), monkey.op.1.as_str()) {
                     ("*", "old") => worry * worry,
                     ("*", v) => worry * v.parse::<usize>().unwrap(),
                     ("+", v) => worry + v.parse::<usize>().unwrap(),
@@ -68,11 +68,12 @@ impl Solver {
                 worry = worry_fn(worry);
                 counts[m_ptr] += 1;
                 if worry % monkey.test == 0 {
-                    monkeys[monkey.if_true].items.push_back(worry);
+                    monkeys[monkey.if_true].items.push(worry);
                 } else {
-                    monkeys[monkey.if_false].items.push_back(worry);
+                    monkeys[monkey.if_false].items.push(worry);
                 }
             }
+            monkey.items.clear();
         }
         monkeys
     }
