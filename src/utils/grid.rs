@@ -3,6 +3,7 @@ use std::fmt::Debug;
 use std::iter::Sum;
 
 use itertools::Itertools;
+use ndarray::Array2;
 use num::Num;
 
 use super::coords::Coordinates;
@@ -180,6 +181,11 @@ impl<T> Grid<T> where T: Copy {
             row.remove(0);
         }
         Self::new(vec)
+    }
+
+    /// Converts this grid into an two-dimensional ndarray which can be used for further processing.
+    pub fn into_ndarray(self) -> Array2<T> {
+        Array2::from_shape_vec((self.height(), self.width()), self.into_iter().collect()).unwrap()
     }
 }
 
