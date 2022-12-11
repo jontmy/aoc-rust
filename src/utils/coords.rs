@@ -53,7 +53,7 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).up(), Coordinates::new(0, 1));
     /// ```
     pub fn up(&self) -> Self {
@@ -61,14 +61,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Increments the `y` coordinate by a given amount.
-    /// 
+    ///
     /// Accepts negative values, but you may want to use `down_by` instead.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).up_by(2), Coordinates::new(0, 2));
     /// assert_eq!(Coordinates::new(0, 0).up_by(-2), Coordinates::new(0, -2));
     /// ```
@@ -82,7 +82,7 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).down(), Coordinates::new(0, -1));
     /// ```
     pub fn down(&self) -> Self {
@@ -90,14 +90,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Decrements the `y` coordinate by a given amount.
-    /// 
+    ///
     /// Accepts negative values, but you may want to use `up_by` instead.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).down_by(2), Coordinates::new(0, -2));
     /// assert_eq!(Coordinates::new(0, 0).down_by(-2), Coordinates::new(0, 2));
     /// ```
@@ -111,7 +111,7 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).left(), Coordinates::new(-1, 0));
     /// ```
     pub fn left(&self) -> Self {
@@ -119,14 +119,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Decrements the `x` coordinate by a given amount.
-    /// 
+    ///
     /// Accepts negative values, but you may want to use `right_by` instead.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).left_by(2), Coordinates::new(-2, 0));
     /// assert_eq!(Coordinates::new(0, 0).left_by(-2), Coordinates::new(2, 0));
     /// ```
@@ -140,7 +140,7 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).right(), Coordinates::new(1, 0));
     /// ```
     pub fn right(&self) -> Self {
@@ -148,14 +148,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Increments the `x` coordinate by a given amount.
-    /// 
+    ///
     /// Accepts negative values, but you may want to use `left_by` instead.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).right_by(2), Coordinates::new(2, 0));
     /// assert_eq!(Coordinates::new(0, 0).right_by(-2), Coordinates::new(-2, 0));
     /// ```
@@ -164,14 +164,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Moves the coordinates in a given direction by 1.
-    /// 
+    ///
     /// Equivalent to calling the appropriate directional `*` method.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::{coords::Coordinates, directions::Direction};
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).step(Direction::Up), Coordinates::new(0, 1));
     /// assert_eq!(Coordinates::new(0, 0).step(Direction::Down), Coordinates::new(0, -1));
     /// assert_eq!(Coordinates::new(0, 0).step(Direction::Left), Coordinates::new(-1, 0));
@@ -187,14 +187,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 
     /// Moves the coordinates in a given direction by a given amount.
-    /// 
+    ///
     /// Equivalent to calling the appropriate directional `*_by` method.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::{coords::Coordinates, directions::Direction};
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Up, 2), Coordinates::new(0, 2));
     /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Down, 3), Coordinates::new(0, -3));
     /// assert_eq!(Coordinates::new(0, 0).step_by(Direction::Left, 4), Coordinates::new(-4, 0));
@@ -225,7 +225,7 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_up_by(1, ..=2), Some(Coordinates::new(0, 1)));
     /// assert_eq!(Coordinates::new(0, 2).try_bounded_up_by(1, ..=2), None);
     /// ```
@@ -250,7 +250,7 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 2).try_bounded_down_by(1, 0..), Some(Coordinates::new(0, 1)));
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_down_by(1, 0..), None);
     /// ```
@@ -275,7 +275,7 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_right_by(1, ..=2), Some(Coordinates::new(1, 0)));
     /// assert_eq!(Coordinates::new(2, 0).try_bounded_right_by(1, ..=2), None);
     /// ```
@@ -300,7 +300,7 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(2, 0).try_bounded_left_by(1, 0..), Some(Coordinates::new(1, 0)));
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_left_by(1, 0..), None);
     /// ```
@@ -315,14 +315,14 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
 /// Utility methods for *signed or unsigned* **integer coordinates**, useful for wrapping around the edges of a grid.
 impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     /// Increments the `y` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
-    /// 
+    ///
     /// Panics if the range is unbounded on either end.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).wrapping_up(0..=2), Coordinates::new(0, 1));
     /// assert_eq!(Coordinates::new(0, 2).wrapping_up(0..=2), Coordinates::new(0, 0));
     /// assert_eq!(Coordinates::new(0, 2).wrapping_up(-2..=2), Coordinates::new(0, -2));
@@ -335,14 +335,14 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     }
 
     /// Decrements the `y` coordinate by 1, setting it to the upper bound of the range if it is lower than the lower bound.
-    /// 
+    ///
     /// Panics if the range is unbounded on either end.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 2).wrapping_down(0..=2), Coordinates::new(0, 1));
     /// assert_eq!(Coordinates::new(0, 0).wrapping_down(0..=2), Coordinates::new(0, 2));
     /// assert_eq!(Coordinates::new(0, -2).wrapping_down(-2..=2), Coordinates::new(0, 2));
@@ -355,14 +355,14 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     }
 
     /// Increments the `x` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
-    /// 
+    ///
     /// Panics if the range is unbounded on either end.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(0, 0).wrapping_right(0..=2), Coordinates::new(1, 0));
     /// assert_eq!(Coordinates::new(2, 0).wrapping_right(0..=2), Coordinates::new(0, 0));
     /// assert_eq!(Coordinates::new(2, 0).wrapping_right(-2..=2), Coordinates::new(-2, 0));
@@ -375,14 +375,14 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     }
 
     /// Decrements the `x` coordinate by 1, setting it to the upper bound of the range if it is lower than the lower bound.
-    /// 
+    ///
     /// Panics if the range is unbounded on either end.
     ///
     /// # Examples
     ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// assert_eq!(Coordinates::new(2, 0).wrapping_left(0..=2), Coordinates::new(1, 0));
     /// assert_eq!(Coordinates::new(0, 0).wrapping_left(0..=2), Coordinates::new(2, 0));
     /// assert_eq!(Coordinates::new(-2, 0).wrapping_left(-2..=2), Coordinates::new(2, 0));
@@ -400,9 +400,9 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
 }
 
 /// Utility methods for getting the neighbors of *signed or unsigned* **integer coordinates**.
-impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
+impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq {
     /// Returns the neighbors of this coordinate which are directly above, below, to the left, or to
-    /// the right, in that exact order.
+    /// the right, in a set.
     ///
     /// Returns only the neighbors that are within the bounds of that integer type.
     ///
@@ -412,38 +412,39 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     /// use advent_of_code::utils::coords::Coordinates;
     ///
     /// // With signed integers, all 4 neighbors around the origin are returned.
-    /// assert_eq!(Coordinates::new(0, 0).orthogonal_neighbors(), vec![
-    ///     Coordinates::new(0, 1),
-    ///     Coordinates::new(0, -1),
-    ///     Coordinates::new(-1, 0),
-    ///     Coordinates::new(1, 0),
-    /// ]);
+    /// let neighbors = Coordinates::new(0, 0).orthogonal_neighbors();
+    ///
+    /// assert_eq!(neighbors.len(), 4);
+    /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(0, -1)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
+    /// assert!(neighbors.contains(&Coordinates::new(-1, 0)));
     ///
     /// // With unsigned integers, only the 2 neighbors in the positive quadrant are returned.
-    /// assert_eq!(Coordinates::<usize>::new(0, 0).orthogonal_neighbors(), vec![
-    ///     Coordinates::new(0, 1),
-    ///     Coordinates::new(1, 0),
-    /// ]);
+    /// let neighbors = Coordinates::<usize>::new(0, 0).orthogonal_neighbors();
+    ///
+    /// assert_eq!(neighbors.len(), 2);
+    /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
     /// ```
-    pub fn orthogonal_neighbors(&self) -> Vec<Self> {
-        let mut neighbors = Vec::new();
+    pub fn orthogonal_neighbors(&self) -> HashSet<Self> {
+        let mut neighbors = HashSet::new();
         if let Some(up) = self.try_up() {
-            neighbors.push(up);
+            neighbors.insert(up);
         }
         if let Some(down) = self.try_down() {
-            neighbors.push(down);
+            neighbors.insert(down);
         }
         if let Some(left) = self.try_left() {
-            neighbors.push(left);
+            neighbors.insert(left);
         }
         if let Some(right) = self.try_right() {
-            neighbors.push(right);
+            neighbors.insert(right);
         }
         neighbors
     }
 
-    /// Returns the diagonally-adjacent neighbors of this coordinate in clockwise order, starting
-    /// from the neighbor diagonally-adjacent to the top-left corner.
+    /// Returns the diagonally-adjacent neighbors of this coordinate.
     ///
     /// Returns only the neighbors that are within the bounds of that integer type.
     ///
@@ -453,52 +454,121 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     /// use advent_of_code::utils::coords::Coordinates;
     ///
     /// // With signed integers, all 4 corner-adjacent neighbors around the origin are returned.
-    /// assert_eq!(Coordinates::new(0, 0).diagonal_neighbors(), vec![
-    ///     Coordinates::new(-1, 1),
-    ///     Coordinates::new(1, 1),
-    ///     Coordinates::new(1, -1),
-    ///     Coordinates::new(-1, -1),
-    /// ]);
+    /// let neighbors = Coordinates::new(0, 0).diagonal_neighbors();
+    ///
+    /// assert_eq!(neighbors.len(), 4);
+    /// assert!(neighbors.contains(&Coordinates::new(1, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(-1, 1)));
+    /// assert!(neighbors.contains(&Coordinates::new(-1, -1)));
+    /// assert!(neighbors.contains(&Coordinates::new(1, -1)));
     ///
     /// // With unsigned integers, only the single neighbor in the positive quadrant is returned.
-    /// assert_eq!(Coordinates::<usize>::new(0, 0).diagonal_neighbors(), vec![
-    ///     Coordinates::new(1, 1),
-    /// ]);
-    pub fn diagonal_neighbors(&self) -> Vec<Self> {
-        let mut neighbors = Vec::new();
+    /// let neighbors = Coordinates::<usize>::new(0, 0).diagonal_neighbors();
+    ///
+    /// assert_eq!(neighbors.len(), 1);
+    /// assert!(neighbors.contains(&Coordinates::new(1, 1)));
+    /// ```
+    pub fn diagonal_neighbors(&self) -> HashSet<Self> {
+        let mut neighbors = HashSet::new();
         if let Some(up_left) = self.try_up().and_then(|up| up.try_left()) {
-            neighbors.push(up_left);
+            neighbors.insert(up_left);
         }
         if let Some(up_right) = self.try_up().and_then(|up| up.try_right()) {
-            neighbors.push(up_right);
+            neighbors.insert(up_right);
         }
         if let Some(down_right) = self.try_down().and_then(|down| down.try_right()) {
-            neighbors.push(down_right);
+            neighbors.insert(down_right);
         }
         if let Some(down_left) = self.try_down().and_then(|down| down.try_left()) {
-            neighbors.push(down_left);
+            neighbors.insert(down_left);
         }
         neighbors
     }
 
     /// Returns any of the neighbors of this coordinate which are edge-adjacent (orthogonal) or corner-adjacent (diagonal).
-    /// 
+    ///
     /// Equivalent to calling `orthogonal_neighbors` and `diagonal_neighbors` and concatenating the results.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// // With signed integers, all 8 neighbors around the origin are returned.
     /// assert_eq!(Coordinates::new(0, 0).all_neighbors().len(), 8);
-    /// 
+    ///
     /// // With unsigned integers, only the 3 neighbors in the positive quadrant are returned.
     /// assert_eq!(Coordinates::<usize>::new(0, 0).all_neighbors().len(), 3);
     /// ```
-    pub fn all_neighbors(&self) -> Vec<Self> {
+    pub fn all_neighbors(&self) -> HashSet<Self> {
         let mut neighbors = self.orthogonal_neighbors();
         neighbors.extend(self.diagonal_neighbors());
+        neighbors
+    }
+}
+
+impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq {
+    pub fn orthogonal_neighbors_bounded<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
+        where R: RangeBounds<T> + Clone
+    {
+        let mut neighbors = HashSet::new();
+        if let Some(up) = self.try_bounded_up_by(num::one(), y_range.clone()) {
+            neighbors.insert(up);
+        }
+        if let Some(down) = self.try_bounded_down_by(num::one(), y_range) {
+            neighbors.insert(down);
+        }
+        if let Some(left) = self.try_bounded_left_by(num::one(), x_range.clone()) {
+            neighbors.insert(left);
+        }
+        if let Some(right) = self.try_bounded_right_by(num::one(), x_range) {
+            neighbors.insert(right);
+        }
+        neighbors.remove(self);
+        neighbors
+    }
+
+    pub fn diagonal_neighbors_bounded<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
+        where R: RangeBounds<T> + Clone
+    {
+        let mut neighbors = HashSet::new();
+        if
+            let Some(up_left) = self
+                .try_bounded_up_by(num::one(), y_range.clone())
+                .and_then(|up| up.try_bounded_left_by(num::one(), x_range.clone()))
+        {
+            neighbors.insert(up_left);
+        }
+        if
+            let Some(up_right) = self
+                .try_bounded_up_by(num::one(), y_range.clone())
+                .and_then(|up| up.try_bounded_right_by(num::one(), x_range.clone()))
+        {
+            neighbors.insert(up_right);
+        }
+        if
+            let Some(down_right) = self
+                .try_bounded_down_by(num::one(), y_range.clone())
+                .and_then(|down| down.try_bounded_right_by(num::one(), x_range.clone()))
+        {
+            neighbors.insert(down_right);
+        }
+        if
+            let Some(down_left) = self
+                .try_bounded_down_by(num::one(), y_range.clone())
+                .and_then(|down| down.try_bounded_left_by(num::one(), x_range.clone()))
+        {
+            neighbors.insert(down_left);
+        }
+        neighbors.remove(self);
+        neighbors
+    }
+
+    pub fn all_neighbors_bounded<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
+        where R: RangeBounds<T> + Clone
+    {
+        let mut neighbors = self.orthogonal_neighbors_bounded(x_range.clone(), y_range.clone());
+        neighbors.extend(self.diagonal_neighbors_bounded(x_range, y_range));
         neighbors
     }
 }
@@ -508,159 +578,165 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
 impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Hash + Eq {
     /// Returns the neighbors of this coordinate which are directly above, below, to the left, or to
     /// the right, wrapping around the given bounds (and of the integer type) as necessary.
-    /// 
+    ///
     /// **Panics** if either of the ranges isn't bounded on both ends.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// // Finding the neighbors of the origin in a 3x3 grid centered around the origin...
     /// let neighbors = Coordinates::new(0, 0)
     ///     .orthogonal_neighbors_wrapping(-1..=1, -1..=1);
-    /// 
+    ///
     /// // ...includes all 4 of the edge-adjacent neighbors.
     /// assert_eq!(neighbors.len(), 4);
     /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
     /// assert!(neighbors.contains(&Coordinates::new(0, -1)));
     /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
     /// assert!(neighbors.contains(&Coordinates::new(-1, 0)));
-    /// 
+    ///
     /// // But if shift the 3x3 grid such that the origin is at the bottom-left corner...
     /// let neighbors = Coordinates::new(0, 0)
     ///     .orthogonal_neighbors_wrapping(0..=2, 0..=2);
-    /// 
+    ///
     /// // ...then the neighbors of the origin include the top-left and bottom-right corner.
     /// assert_eq!(neighbors.len(), 4);
     /// assert!(neighbors.contains(&Coordinates::new(0, 2)));
     /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
     /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
     /// assert!(neighbors.contains(&Coordinates::new(2, 0)));
-    /// 
+    ///
     /// // And if we use a 1x1 grid centered around the origin...
     /// let neighbors = Coordinates::new(0, 0)
     ///     .orthogonal_neighbors_wrapping(0..=0, 0..=0);
-    /// 
+    ///
     /// // ...then there are no neighbors, because even though it would wrap around to the origin,
     /// // the origin is not a neighbor of itself.
     /// assert!(neighbors.is_empty());
-    /// 
+    ///
     /// // Works on unsigned integers too, and the wrapping will always be limited to the positive quadrant,
     /// // and you won't be able to specify negative bounds (but you must still specify the lower bounds).
-    /// 
+    ///
     /// // Let's try it on a 2x2 grid with the origin at the bottom-left corner...
     /// let neighbors = Coordinates::<usize>::new(0, 0)
     ///    .orthogonal_neighbors_wrapping(0..=1, 0..=1);
     /// // .orthogonal_neighbors_wrapping(-1..=1, -1..=1); // this instead won't compile
     /// // .orthogonal_neighbors_wrapping(..=1, ..=1);     // this instead will panic at runtime
-    /// 
+    ///
     /// // ...and we get 2 neighbors.
     /// assert_eq!(neighbors.len(), 2);
     /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
     /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
     /// ```
-    pub fn orthogonal_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self> where R: RangeBounds<T> + Clone {
-        let mut neighbors = set! {
+    pub fn orthogonal_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
+        where R: RangeBounds<T> + Clone
+    {
+        let mut neighbors = set!(
             self.wrapping_up(y_range.clone()),
             self.wrapping_down(y_range),
             self.wrapping_left(x_range.clone()),
-            self.wrapping_right(x_range),
-        };
+            self.wrapping_right(x_range)
+        );
         neighbors.remove(self);
         neighbors
     }
 
     /// Returns the neighbors of this coordinate which are diagonally-adjacent.
-    /// 
+    ///
     /// **Panics** if either of the ranges isn't bounded on both ends.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// // Finding the diagonal neighbors of the origin in a 3x3 grid centered around the origin...
     /// let neighbors = Coordinates::new(0, 0)
     ///     .diagonal_neighbors_wrapping(-1..=1, -1..=1);
-    /// 
+    ///
     /// // ...includes all 4 of the corner neighbors.
     /// assert_eq!(neighbors.len(), 4);
     /// assert!(neighbors.contains(&Coordinates::new(1, 1)));
     /// assert!(neighbors.contains(&Coordinates::new(1, -1)));
     /// assert!(neighbors.contains(&Coordinates::new(-1, 1)));
     /// assert!(neighbors.contains(&Coordinates::new(-1, -1)));
-    /// 
+    ///
     /// // But if shift the 3x3 grid such that the origin is at the bottom-left corner...
     /// let neighbors = Coordinates::new(0, 0)
     ///    .diagonal_neighbors_wrapping(0..=2, 0..=2);
-    /// 
+    ///
     /// // _ X X
     /// // _ X X
     /// // O _ _
-    /// 
+    ///
     /// // ...then the diagonal neighbors of the origin form the pattern above.
     /// assert_eq!(neighbors.len(), 4);
     /// assert!(neighbors.contains(&Coordinates::new(1, 1)));
     /// assert!(neighbors.contains(&Coordinates::new(1, 2)));
     /// assert!(neighbors.contains(&Coordinates::new(2, 1)));
     /// assert!(neighbors.contains(&Coordinates::new(2, 2)));
-    /// 
+    ///
     /// // And if we use a 1x1 grid centered around the origin...
     /// let neighbors = Coordinates::new(0, 0)
     ///    .diagonal_neighbors_wrapping(0..=0, 0..=0);
-    /// 
+    ///
     /// // ...then there are no neighbors, because even though it would wrap around to the origin,
     /// // the origin is not a neighbor of itself.
     /// assert!(neighbors.is_empty());
-    /// 
+    ///
     /// // Works on unsigned integers too, and the wrapping will always be limited to the positive quadrant,
     /// // and you won't be able to specify negative bounds (but you must still specify the lower bounds).
-    /// 
+    ///
     /// // Let's try it on a 2x2 grid with the origin at the bottom-left corner...
     /// let neighbors = Coordinates::<usize>::new(0, 0)
     ///   .diagonal_neighbors_wrapping(0..=1, 0..=1);
-    /// 
+    ///
     /// // X X
     /// // O X
-    /// 
+    ///
     /// // ...and we get 3 neighbors in the pattern above (the origin is not a neighbor of itself).
     /// assert_eq!(neighbors.len(), 3);
     /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
     /// assert!(neighbors.contains(&Coordinates::new(1, 1)));
     /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
     /// ```
-    pub fn diagonal_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self> where R: RangeBounds<T> + Clone {
-        let mut neighbors = set! {
+    pub fn diagonal_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
+        where R: RangeBounds<T> + Clone
+    {
+        let mut neighbors = set!(
             self.wrapping_up(y_range.clone()).wrapping_left(x_range.clone()),
             self.wrapping_up(y_range.clone()).wrapping_right(x_range.clone()),
             self.wrapping_down(y_range.clone()).wrapping_right(x_range.clone()),
-            self.wrapping_down(y_range).wrapping_left(x_range),
-        };
+            self.wrapping_down(y_range).wrapping_left(x_range)
+        );
         neighbors.remove(self);
         neighbors
     }
 
     /// Returns the neighbors of this coordinate which are orthogonally- or diagonally-adjacent.
-    /// 
+    ///
     /// Equivalent to calling `orthogonal_neighbors_wrapping` and `diagonal_neighbors_wrapping` and
     /// combining the results.
-    /// 
+    ///
     /// **Panics** if either of the ranges isn't bounded on both ends.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use advent_of_code::utils::coords::Coordinates;
-    /// 
+    ///
     /// // Finding the neighbors of the origin in a 3x3 grid centered around the origin...
     /// let neighbors = Coordinates::new(0, 0)
     ///    .all_neighbors_wrapping(-1..=1, -1..=1);
-    /// 
+    ///
     /// // ...includes all 8 of the neighbors which fully encompass the 3x3 grid.
     /// assert_eq!(neighbors.len(), 8);
     /// ```
-    pub fn all_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self> where R: RangeBounds<T> + Clone {
+    pub fn all_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
+        where R: RangeBounds<T> + Clone
+    {
         let mut neighbors = self.orthogonal_neighbors_wrapping(x_range.clone(), y_range.clone());
         neighbors.extend(self.diagonal_neighbors_wrapping(x_range, y_range));
         neighbors
@@ -761,35 +837,201 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 }
 
-// impl<T> Coordinates<T> where T: Integer + Copy + Hash + Eq {
-//     pub fn manhattan_bfs_path(&self, destination: Self, obstacles: &HashSet<Coordinates<T>>) -> Vec<Coordinates<T>> {
-//         let mut queue = VecDeque::new();
-//         let mut visited = HashSet::new();
-//         let mut parents = HashMap::new();
-//         queue.push_back(*self);
-//         visited.insert(*self);
-//         while let Some(current) = queue.pop_front() {
-//             if current == destination {
-//                 let mut path = vec![destination];
-//                 let mut current = destination;
-//                 while let Some(parent) = parents.get(&current) {
-//                     path.push(*parent);
-//                     current = *parent;
-//                 }
-//                 path.reverse();
-//                 return path;
-//             }
-//             for neighbor in current.all_neighbors() {
-//                 if !visited.contains(&neighbor) && !obstacles.contains(&neighbor) {
-//                     queue.push_back(neighbor);
-//                     visited.insert(neighbor);
-//                     parents.insert(neighbor, current);
-//                 }
-//             }
-//         }
-//         vec![]
-//     }
-// }
+impl<T> Coordinates<T> where T: Integer + Copy + Hash + Eq {
+    /// Returns the shortest path between two points found by breadth-first search, if one exists,
+    /// or `None` if no path exists.
+    ///
+    /// If more than one path exists, the shortest path will be returned.
+    /// Among the shortest paths of equal length, the path that is returned is selected arbitrarily.
+    ///
+    /// The starting point (i.e. this itself) is not included in the path.
+    ///
+    /// See also `manhattan_bfs()` and `euclidean_bfs()` for specialized versions of this function.
+    ///
+    /// # Parameters
+    ///
+    /// * `destination` - The point to which a path should be found.
+    /// * `constraints_fn` - A function (predicate) which returns `true` if a given point is valid to visit, and `false` otherwise.
+    /// * `neighbors_fn` - A function which returns a set of the neighbors of a given point.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use advent_of_code::utils::coords::Coordinates;
+    ///
+    /// // Finding the shortest path from [0, 0] to [2, 2] in a 3x3 grid moving only diagonally...
+    /// let start = Coordinates::new(0, 0);
+    /// let end = Coordinates::new(2, 2);
+    /// let path = start.generalized_bfs(
+    ///     end,
+    ///     |c| (0..3).contains(&c.x()) && (0..3).contains(&c.y()),
+    ///     |c| c.diagonal_neighbors()
+    /// ).unwrap();
+    ///
+    /// // ...returns the path [0, 0] (excluded) -> [1, 1] -> [2, 2]:
+    /// // _ _ 2
+    /// // _ 1 _
+    /// // 0 _ _
+    ///
+    /// assert_eq!(path, vec![
+    ///     Coordinates::new(1, 1),
+    ///     Coordinates::new(2, 2)
+    /// ]);
+    ///
+    /// // If we obstruct the path with a wall at [1, 1]...
+    /// let path = start.generalized_bfs(
+    ///     end,
+    ///     |c| (0..3).contains(&c.x()) && (0..3).contains(&c.y()) && *c != Coordinates::new(1, 1),
+    ///     |c| c.diagonal_neighbors()
+    /// );
+    ///
+    /// // ...then no path exists:
+    /// assert!(path.is_none());
+    ///
+    /// // If we allow horizontal and vertical movement only...
+    /// let path = start.generalized_bfs(
+    ///     end,
+    ///     |c| (0..3).contains(&c.x()) && (0..3).contains(&c.y()),
+    ///     |c| c.orthogonal_neighbors()
+    /// ).unwrap();
+    ///
+    /// // ...then there are two possible paths (again, 0 is excluded), and it can return either:
+    /// // 2 3 4
+    /// // 1 _ 3
+    /// // 0 1 2
+    ///
+    /// assert_eq!(path.len(), 4);
+    /// ```
+    pub fn generalized_bfs<F, G>(
+        &self,
+        destination: Self,
+        constraints_fn: F,
+        neighbors_fn: G
+    )
+        -> Option<Vec<Self>>
+        where F: Fn(&Self) -> bool, G: Fn(&Self) -> HashSet<Self>
+    {
+        let mut queue = VecDeque::new();
+        let mut visited = HashSet::new();
+        let mut parents = HashMap::new();
+        queue.push_back(*self);
+        visited.insert(*self);
+        while let Some(current) = queue.pop_front() {
+            if current == destination {
+                let mut path = vec![destination];
+                let mut current = destination;
+                while let Some(parent) = parents.get(&current) {
+                    path.push(*parent);
+                    current = *parent;
+                }
+                let start = path.pop(); // remove the starting point from the path
+                match start {
+                    Some(start) if start == *self => (),
+                    Some(_) => panic!("The starting point should be the last element in the path"),
+                    None => panic!("No starting point found in the path"),
+                }
+                path.reverse();
+                return Some(path);
+            }
+            for neighbor in neighbors_fn(&current) {
+                if constraints_fn(&neighbor) && !visited.contains(&neighbor) {
+                    queue.push_back(neighbor);
+                    visited.insert(neighbor);
+                    parents.insert(neighbor, current);
+                }
+            }
+        }
+        None
+    }
+}
+
+impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq {
+    pub fn manhattan_bfs<R>(&self, destination: Self, obstacles: HashSet<Self>) -> Option<Vec<Self>>
+        where R: RangeBounds<T> + Clone
+    {
+        self.generalized_bfs(
+            destination,
+            |c| !obstacles.contains(c),
+            |c| c.orthogonal_neighbors()
+        )
+    }
+
+    pub fn manhattan_bfs_bounded<R>(
+        &self,
+        destination: Self,
+        obstacles: HashSet<Self>,
+        x_range: R,
+        y_range: R
+    ) -> Option<Vec<Self>>
+        where R: RangeBounds<T> + Clone
+    {
+        self.generalized_bfs(
+            destination,
+            |c| !obstacles.contains(c),
+            |c| c.orthogonal_neighbors_bounded(x_range.clone(), y_range.clone())
+        )
+    }
+
+    pub fn euclidean_bfs<R>(&self, destination: Self, obstacles: HashSet<Self>) -> Option<Vec<Self>>
+        where R: RangeBounds<T> + Clone
+    {
+        self.generalized_bfs(
+            destination,
+            |c| !obstacles.contains(c),
+            |c| c.all_neighbors()
+        )
+    }
+
+    pub fn euclidean_bfs_bounded<R>(
+        &self,
+        destination: Self,
+        obstacles: HashSet<Self>,
+        x_range: R,
+        y_range: R
+    ) -> Option<Vec<Self>>
+        where R: RangeBounds<T> + Clone
+    {
+        self.generalized_bfs(
+            destination,
+            |c| !obstacles.contains(c),
+            |c| c.all_neighbors_bounded(x_range.clone(), y_range.clone())
+        )
+    }
+}
+
+impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Hash + Eq {
+    pub fn manhattan_bfs_wraparound<R>(
+        &self,
+        destination: Self,
+        obstacles: HashSet<Self>,
+        x_range: R,
+        y_range: R
+    ) -> Option<Vec<Self>>
+        where R: RangeBounds<T> + Clone
+    {
+        self.generalized_bfs(
+            destination,
+            |c| !obstacles.contains(c),
+            |c| c.orthogonal_neighbors_wrapping(x_range.clone(), y_range.clone())
+        )
+    }
+
+    pub fn euclidean_bfs_wraparound<R>(
+        &self,
+        destination: Self,
+        obstacles: HashSet<Self>,
+        x_range: R,
+        y_range: R
+    ) -> Option<Vec<Self>>
+        where R: RangeBounds<T> + Clone
+    {
+        self.generalized_bfs(
+            destination,
+            |c| !obstacles.contains(c),
+            |c| c.all_neighbors_wrapping(x_range.clone(), y_range.clone())
+        )
+    }
+}
 
 impl<T> Add for Coordinates<T> where T: Num + Copy {
     type Output = Self;
