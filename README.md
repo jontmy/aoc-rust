@@ -6,7 +6,7 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 
 | Year | 2022 | 2021 | 2020 | 2019 | 2018 | 2017 | 2016 | 2015 |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Progress | `22*` | `41*` | `×` | `×` | `×` | `×` | `20*` | `38*` |
+| Progress | `24*` | `41*` | `×` | `×` | `×` | `×` | `20*` | `38*` |
 
 > Progress indicated only for solutions in Rust. I haven't written all puzzles solutions in Rust—2019's iteration is written in [Haskell](https://github.com/jontmy/aoc-haskell), 2018's and 2020's in [Java](https://github.com/jontmy/aoc-java).  
 
@@ -16,7 +16,7 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |     |     |     |     | [1](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day01.rs)   | [2](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day02.rs)   | [3](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day03.rs)   |
 | [4](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day04.rs)   | [5](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day05.rs)   | [6](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day06.rs)   | [7](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day07.rs)   | [8](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day08.rs)   | [9](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day09.rs)   | [10](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day10.rs)  |
-| [11](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day11.rs)  | 12  | 13  | 14  | 15  | 16  | 17  |
+| [11](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day11.rs)  | [12](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day12.rs)  | 13  | 14  | 15  | 16  | 17  |
 | 18  | 19  | 20  | 21  | 22  | 23  | 24  |
 | 25  |     |     |     |     |     |     |
 
