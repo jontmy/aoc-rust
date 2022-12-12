@@ -110,6 +110,31 @@ impl<T> Grid<T> {
     }
 }
 
+impl<T> Grid<T> where T: Eq {
+    pub fn find(&self, query: T) -> Option<Coordinates<usize>> {
+        for (y, row) in self.vec.iter().enumerate() {
+            for (x, cell) in row.into_iter().enumerate() {
+                if cell == &query {
+                    return Some(Coordinates::new(x, y));
+                }
+            }
+        }
+        None
+    }
+
+    pub fn find_all(&self, query: T) -> Vec<Coordinates<usize>> {
+        let mut results = Vec::new();
+        for (y, row) in self.vec.iter().enumerate() {
+            for (x, cell) in row.into_iter().enumerate() {
+                if cell == &query {
+                    results.push(Coordinates::new(x, y));
+                }
+            }
+        }
+        results
+    }
+}
+
 impl<T> Grid<T> where T: Copy {
     pub fn from_value(rows: usize, columns: usize, value: T) -> Self {
         Self { vec: vec![vec![value; columns]; rows], height: rows, width: columns }
