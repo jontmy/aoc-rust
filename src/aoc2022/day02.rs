@@ -99,26 +99,25 @@ impl advent::Solver<2022, 2> for Solver {
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
         input
             .lines()
-            .filter_map(|l|
-                l
-                    .split_ascii_whitespace()
+            .filter_map(|l| {
+                l.split_ascii_whitespace()
                     .map(|s| s.parse::<Shape>().unwrap())
                     .collect_tuple::<(_, _)>()
-            )
-            .map(|(opponent, player)| Outcome::evaluate(&opponent, &player).score() + player.value())
+            })
+            .map(|(opponent, player)| {
+                Outcome::evaluate(&opponent, &player).score() + player.value()
+            })
             .sum()
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
         input
-        .lines()
-        .filter_map(|l|
-            l
-                .split_ascii_whitespace()
-                .collect_tuple::<(_, _)>()
-        )
-        .map(|(a, b)| (a.parse::<Shape>().unwrap(), b.parse::<Outcome>().unwrap()))
-        .map(|(opponent, outcome)| Shape::from_outcome(&opponent, &outcome).value() + outcome.score())
-        .sum()
+            .lines()
+            .filter_map(|l| l.split_ascii_whitespace().collect_tuple::<(_, _)>())
+            .map(|(a, b)| (a.parse::<Shape>().unwrap(), b.parse::<Outcome>().unwrap()))
+            .map(|(opponent, outcome)| {
+                Shape::from_outcome(&opponent, &outcome).value() + outcome.score()
+            })
+            .sum()
     }
 }

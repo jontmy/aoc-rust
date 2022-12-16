@@ -12,13 +12,16 @@ pub fn solve_part_one(input: &String) -> usize {
 
 pub fn solve_part_two(input: &String) -> usize {
     let (_, medicine) = parse_input(input);
-    let (caps, rn, ar, y) = ["[A-Z]", "Rn", "Ar", "Y"].into_iter()
+    let (caps, rn, ar, y) = ["[A-Z]", "Rn", "Ar", "Y"]
+        .into_iter()
         .map(|condition| {
-            Regex::new(condition).unwrap()
+            Regex::new(condition)
+                .unwrap()
                 .captures_iter(medicine.formula.as_str())
                 .count()
         })
-        .collect_tuple().unwrap();
+        .collect_tuple()
+        .unwrap();
 
     caps - rn - ar - 2 * y - 1
 
@@ -56,7 +59,8 @@ pub fn solve_part_two(input: &String) -> usize {
 fn parse_input(input: &String) -> (Vec<Replacement>, Molecule) {
     let (replacements, molecule): (&str, &str) = input.split("\n\n").collect_tuple().unwrap();
 
-    let replacements = replacements.lines()
+    let replacements = replacements
+        .lines()
         .map(|line| line.parse::<Replacement>().unwrap())
         .collect_vec();
     let molecule = molecule.parse::<Molecule>().unwrap();
@@ -74,14 +78,14 @@ impl FromStr for Replacement {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let (input, output) = s.trim().split(" => ")
+        let (input, output) = s
+            .trim()
+            .split(" => ")
             .map(|s| s.to_string())
-            .collect_tuple().unwrap();
+            .collect_tuple()
+            .unwrap();
 
-        Ok(Replacement {
-            input,
-            output,
-        })
+        Ok(Replacement { input, output })
     }
 }
 
@@ -111,9 +115,11 @@ impl FromStr for Molecule {
 
 impl Molecule {
     fn all_replacements(&self, replacements: &[Replacement]) -> Vec<Self> {
-        replacements.into_iter()
+        replacements
+            .into_iter()
             .flat_map(|replacement| {
-                Regex::new(replacement.input.as_str()).unwrap()
+                Regex::new(replacement.input.as_str())
+                    .unwrap()
                     .find_iter(self.formula.as_str())
                     .map(|m| self.replace(replacement, m.start(), m.end()))
                     .collect_vec()
@@ -126,9 +132,7 @@ impl Molecule {
         let mut formula = self.formula.clone();
         formula.replace_range(start..end, replacement.output.as_str());
 
-        Molecule {
-            formula
-        }
+        Molecule { formula }
     }
 
     fn len(&self) -> usize {

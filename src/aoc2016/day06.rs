@@ -46,7 +46,7 @@ pub fn solve_part_two(input: String) -> String {
 mod tests {
     use rstest::rstest;
 
-    use super::{ solve_part_one, solve_part_two };
+    use super::{solve_part_one, solve_part_two};
 
     #[rstest]
     #[case(

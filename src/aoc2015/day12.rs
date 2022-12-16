@@ -16,16 +16,12 @@ fn count(data: &JsonValue) -> i32 {
     return if data.is_number() {
         data.as_i32().unwrap()
     } else if data.is_array() {
-        data.members()
-            .map(|x| count(&x))
-            .sum()
+        data.members().map(|x| count(&x)).sum()
     } else if data.is_object() {
         if data.entries().any(|(_, v)| v.is_string() && v == "red") {
             0
         } else {
-            data.entries()
-                .map(|(_, v)| count(&v))
-                .sum()
+            data.entries().map(|(_, v)| count(&v)).sum()
         }
     } else {
         0

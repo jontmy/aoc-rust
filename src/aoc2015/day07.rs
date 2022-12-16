@@ -18,7 +18,9 @@ struct Operation<'a> {
 impl Operation<'_> {
     fn parse(s: &str) -> Operation {
         lazy_static! {
-            static ref RE: Regex = Regex::new(r"^(\w*)*? ?(AND|OR|NOT|LSHIFT|RSHIFT)? ?(\w*) ? -> ([a-z]{1,2})$").unwrap();
+            static ref RE: Regex =
+                Regex::new(r"^(\w*)*? ?(AND|OR|NOT|LSHIFT|RSHIFT)? ?(\w*) ? -> ([a-z]{1,2})$")
+                    .unwrap();
         }
         let captures = RE.captures(s).unwrap();
         Operation {
@@ -48,7 +50,9 @@ struct Machine {
 
 impl Machine {
     fn new() -> Machine {
-        Machine { wires: HashMap::new() }
+        Machine {
+            wires: HashMap::new(),
+        }
     }
 
     fn perform_operation(&mut self, op: &Operation) {
@@ -59,7 +63,7 @@ impl Machine {
             "NOT" => !self.get_wire_value(op.ic),
             "LSHIFT" => self.get_wire_value(op.io.unwrap()) << self.get_wire_value(op.ic),
             "RSHIFT" => self.get_wire_value(op.io.unwrap()) >> self.get_wire_value(op.ic),
-            _ => panic!()
+            _ => panic!(),
         };
         self.wires.insert(String::from(op.o), result);
     }
@@ -75,7 +79,8 @@ impl Machine {
 
 pub fn solve_part_one(input: &String) -> u16 {
     let mut machine = Machine::new();
-    let operations = input.lines()
+    let operations = input
+        .lines()
         .map(Operation::parse)
         .fold(HashMap::new(), |mut acc, op| {
             acc.insert(op.o, op);
@@ -83,21 +88,22 @@ pub fn solve_part_one(input: &String) -> u16 {
         });
 
     // Wires are connected in reverse alphabetical order.
-    let mut wires = operations.keys()
-        .map(|w| *w)
-        .collect::<Vec<&str>>();
+    let mut wires = operations.keys().map(|w| *w).collect::<Vec<&str>>();
     wires.sort();
 
     // Wires with one letter are connected before those with two letters.
-    let singular = wires.iter()
+    let singular = wires
+        .iter()
         .filter(|w| w.len() == 1)
         .map(|w| operations.get(w).unwrap());
 
-    let plural = wires.iter()
+    let plural = wires
+        .iter()
         .filter(|w| w.len() == 2)
         .map(|w| operations.get(w).unwrap());
 
-    singular.chain(plural)
+    singular
+        .chain(plural)
         .skip(1) // skip the connection of wire 'a' till the end
         .for_each(|op| machine.perform_operation(op));
 
@@ -107,7 +113,8 @@ pub fn solve_part_one(input: &String) -> u16 {
 
 pub fn solve_part_two(input: &String) -> u16 {
     let re: Regex = Regex::new(r"(?m)^[\d]+ -> b$").unwrap();
-    let input = re.replace(input, format!("{} -> b", solve_part_one(input)))
+    let input = re
+        .replace(input, format!("{} -> b", solve_part_one(input)))
         .lines()
         .map(|x| format!("{}\n", x))
         .collect::<String>();

@@ -1,4 +1,4 @@
-use std::{ str::FromStr, fmt::Display };
+use std::{fmt::Display, str::FromStr};
 
 use once_cell_regex::regex;
 
@@ -25,9 +25,8 @@ impl FromStr for Operation {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let fill_regex = regex!(r"rect (?P<width>\d+)x(?P<height>\d+)");
-        let rotate_regex = regex!(
-            r"rotate (?P<axis>row|column) [x|y]=(?P<index>\d+) by (?P<offset>\d+)"
-        );
+        let rotate_regex =
+            regex!(r"rotate (?P<axis>row|column) [x|y]=(?P<index>\d+) by (?P<offset>\d+)");
 
         if s.starts_with("rect") {
             let captures = fill_regex.captures(s).unwrap();
@@ -79,11 +78,7 @@ impl Screen {
     }
 
     fn count_lit(self) -> usize {
-        self.grid
-            .into_iter()
-            .flat_map(|x| x)
-            .filter(|x| *x)
-            .count()
+        self.grid.into_iter().flat_map(|x| x).filter(|x| *x).count()
     }
 
     fn rotate_row(&mut self, rotation: Rotation) {
@@ -123,7 +118,9 @@ impl advent::Solver<2016, 8> for Solver {
     type Part2 = String;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let mut screen = Screen { grid: [[false; WIDTH]; HEIGHT] };
+        let mut screen = Screen {
+            grid: [[false; WIDTH]; HEIGHT],
+        };
         input
             .lines()
             .filter_map(|line| line.parse::<Operation>().ok())
@@ -133,7 +130,9 @@ impl advent::Solver<2016, 8> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let mut screen = Screen { grid: [[false; WIDTH]; HEIGHT] };
+        let mut screen = Screen {
+            grid: [[false; WIDTH]; HEIGHT],
+        };
         input
             .lines()
             .filter_map(|line| line.parse::<Operation>().ok())

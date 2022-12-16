@@ -1,4 +1,4 @@
-use std::{ str::FromStr, collections::HashMap };
+use std::{collections::HashMap, str::FromStr};
 
 use itertools::Itertools;
 
@@ -70,14 +70,13 @@ impl Solver {
                         *v -= 1;
                     });
                 }
-                Instruction::Jump(rs, offset) =>
-                    match registers[&rs] {
-                        0 => (),
-                        _ => {
-                            pc += offset;
-                            continue;
-                        }
+                Instruction::Jump(rs, offset) => match registers[&rs] {
+                    0 => (),
+                    _ => {
+                        pc += offset;
+                        continue;
                     }
+                },
                 Instruction::Skip(offset) => {
                     pc += offset;
                     continue;

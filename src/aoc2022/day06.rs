@@ -7,10 +7,13 @@ pub struct Solver;
 impl Solver {
     fn find_marker(input: &str, n: usize) -> usize {
         let input = input.trim().chars().collect_vec();
-        input.windows(n).enumerate()
+        input
+            .windows(n)
+            .enumerate()
             .filter(|(_, window)| window.into_iter().all_unique())
             .map(|(i, _)| i + n)
-            .next().unwrap()
+            .next()
+            .unwrap()
     }
 }
 

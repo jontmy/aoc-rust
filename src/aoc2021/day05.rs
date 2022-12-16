@@ -5,7 +5,8 @@ use itertools::MinMaxResult::MinMax;
 use regex::Regex;
 
 pub fn solve_part_one(input: &String) -> usize {
-    let hv_lines = Regex::new(r"(?m)(\d+),(\d+) -> (\d+),(\d+)").unwrap()
+    let hv_lines = Regex::new(r"(?m)(\d+),(\d+) -> (\d+),(\d+)")
+        .unwrap()
         .captures_iter(input)
         .map(|capture| {
             let x1 = capture.get(1).unwrap().as_str().parse::<usize>().unwrap();
@@ -18,26 +19,34 @@ pub fn solve_part_one(input: &String) -> usize {
         .collect_vec();
 
     // Determine the dimensions of the 2D vector to be allocated.
-    let (x_min, x_max) = hv_lines.iter()
+    let (x_min, x_max) = hv_lines
+        .iter()
         .flat_map(|(x1, _, x2, _)| [x1, x2])
-        .minmax().into_option()
-        .map(|(min, max)| (min.clone(), max.clone())).unwrap();
-    let (y_min, y_max) = hv_lines.iter()
+        .minmax()
+        .into_option()
+        .map(|(min, max)| (min.clone(), max.clone()))
+        .unwrap();
+    let (y_min, y_max) = hv_lines
+        .iter()
         .flat_map(|(_, y1, _, y2)| [y1, y2])
-        .minmax().into_option()
-        .map(|(min, max)| (min.clone(), max.clone())).unwrap();
+        .minmax()
+        .into_option()
+        .map(|(min, max)| (min.clone(), max.clone()))
+        .unwrap();
     let (height, width) = (x_max - x_min + 1, y_max - y_min + 1);
 
     // Populate the grid with horizontal and vertical lines only.
-    let grid = hv_lines.into_iter()
-        .fold(vec![vec![0; height]; width], |mut grid, (x1, y1, x2, y2)| {
+    let grid = hv_lines.into_iter().fold(
+        vec![vec![0; height]; width],
+        |mut grid, (x1, y1, x2, y2)| {
             for y in y1..=y2 {
                 for x in x1..=x2 {
                     grid[y - y_min][x - x_min] += 1;
                 }
             }
             grid
-        });
+        },
+    );
 
     // Count the number of points on the grid at which two or more lines overlap.
     grid.into_iter()
@@ -47,7 +56,8 @@ pub fn solve_part_one(input: &String) -> usize {
 }
 
 pub fn solve_part_two(input: &String) -> usize {
-    let lines = Regex::new(r"(?m)(\d+),(\d+) -> (\d+),(\d+)").unwrap()
+    let lines = Regex::new(r"(?m)(\d+),(\d+) -> (\d+),(\d+)")
+        .unwrap()
         .captures_iter(input)
         .map(|capture| {
             let x1 = capture.get(1).unwrap().as_str().parse::<usize>().unwrap();
@@ -59,33 +69,43 @@ pub fn solve_part_two(input: &String) -> usize {
         .collect_vec();
 
     // Determine the dimensions of the 2D vector to be allocated.
-    let (x_min, x_max) = lines.iter()
+    let (x_min, x_max) = lines
+        .iter()
         .flat_map(|(x1, _, x2, _)| [x1, x2])
-        .minmax().into_option()
-        .map(|(min, max)| (min.clone(), max.clone())).unwrap();
-    let (y_min, y_max) = lines.iter()
+        .minmax()
+        .into_option()
+        .map(|(min, max)| (min.clone(), max.clone()))
+        .unwrap();
+    let (y_min, y_max) = lines
+        .iter()
         .flat_map(|(_, y1, _, y2)| [y1, y2])
-        .minmax().into_option()
-        .map(|(min, max)| (min.clone(), max.clone())).unwrap();
+        .minmax()
+        .into_option()
+        .map(|(min, max)| (min.clone(), max.clone()))
+        .unwrap();
     let (height, width) = (x_max - x_min + 1, y_max - y_min + 1);
 
     // Partition the lines into horizontal/vertical lines and diagonal lines.
-    let (hv_lines, diag_lines): (Vec<_>, Vec<_>) = lines.into_iter()
+    let (hv_lines, diag_lines): (Vec<_>, Vec<_>) = lines
+        .into_iter()
         .partition(|(x1, y1, x2, y2)| x1 == x2 || y1 == y2);
 
     // Populate the grid with horizontal and vertical lines only.
-    let grid = hv_lines.into_iter()
-        .fold(vec![vec![0; height]; width], |mut grid, (x1, y1, x2, y2)| {
+    let grid = hv_lines.into_iter().fold(
+        vec![vec![0; height]; width],
+        |mut grid, (x1, y1, x2, y2)| {
             for y in y1.min(y2)..=y1.max(y2) {
                 for x in x1.min(x2)..=x1.max(x2) {
                     grid[y - y_min][x - x_min] += 1;
                 }
             }
             grid
-        });
+        },
+    );
 
     // Populate the grid with the remaining diagonal lines.
-    let grid = diag_lines.into_iter()
+    let grid = diag_lines
+        .into_iter()
         .flat_map(|(x1, y1, x2, y2)| {
             let xs = if x1 <= x2 {
                 (min(x1, x2)..=max(x1, x2)).collect_vec()
@@ -97,9 +117,7 @@ pub fn solve_part_two(input: &String) -> usize {
             } else {
                 (min(y1, y2)..=max(y1, y2)).rev().collect_vec()
             };
-            xs.into_iter()
-                .zip(ys.into_iter())
-                .collect_vec()
+            xs.into_iter().zip(ys.into_iter()).collect_vec()
         })
         .fold(grid, |mut grid, (x, y)| {
             grid[y - y_min][x - x_min] += 1;

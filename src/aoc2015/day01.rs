@@ -1,18 +1,23 @@
 pub fn solve_part_one(input: &String) -> i32 {
-    input.trim().chars()
-        .map(|x| if x == '(' {1} else {-1})
+    input
+        .trim()
+        .chars()
+        .map(|x| if x == '(' { 1 } else { -1 })
         .sum()
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    input.trim().chars()
+    input
+        .trim()
+        .chars()
         .map(|x| if x == '(' { 1 } else { -1 })
         .scan(0, |state, x: i32| {
             *state += x;
             Some(*state)
         })
         .position(|x: i32| x == -1)
-        .unwrap() as i32 + 1
+        .unwrap() as i32
+        + 1
 }
 
 #[cfg(test)]

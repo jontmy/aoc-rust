@@ -1,42 +1,42 @@
 use itertools::Itertools;
 
 pub fn solve_part_one(input: &String) -> i32 {
-    let crabs = input.split(',').into_iter()
+    let crabs = input
+        .split(',')
+        .into_iter()
         .map(|i| i.parse::<i32>().unwrap())
         .collect_vec();
 
-    let (min, max) = crabs.iter()
-        .minmax()
-        .into_option().unwrap();
+    let (min, max) = crabs.iter().minmax().into_option().unwrap();
 
-    (*min..=*max).into_iter()
-        .map(|i| {
-            crabs.iter()
-                .map(|crab| (*crab - i).abs())
-                .sum()
-        })
-        .min().unwrap()
+    (*min..=*max)
+        .into_iter()
+        .map(|i| crabs.iter().map(|crab| (*crab - i).abs()).sum())
+        .min()
+        .unwrap()
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    let crabs = input.split(',').into_iter()
+    let crabs = input
+        .split(',')
+        .into_iter()
         .map(|i| i.parse::<i32>().unwrap())
         .collect_vec();
 
-    let (min, max) = crabs.iter()
-        .minmax()
-        .into_option().unwrap();
+    let (min, max) = crabs.iter().minmax().into_option().unwrap();
 
-    (*min..=*max).into_iter()
+    (*min..=*max)
+        .into_iter()
         .map(|i| {
-            crabs.iter()
+            crabs
+                .iter()
                 .map(|crab| (*crab - i).abs())
                 .map(|n| n * (n + 1) / 2)
                 .sum()
         })
-        .min().unwrap()
+        .min()
+        .unwrap()
 }
-
 
 #[cfg(test)]
 mod tests {

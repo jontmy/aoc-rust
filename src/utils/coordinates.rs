@@ -26,7 +26,9 @@ pub mod dim_2 {
             x_range: Range<i32>,
             y_range: Range<i32>,
         ) -> impl Iterator<Item = Coordinates> {
-            y_range.cartesian_product(x_range).map(|(y, x)| Coordinates::at(x, y))
+            y_range
+                .cartesian_product(x_range)
+                .map(|(y, x)| Coordinates::at(x, y))
         }
 
         /// Returns a new instance of `Coordinates` given its `x`- and `y`-components.
@@ -315,11 +317,11 @@ pub mod dim_2 {
 
 pub mod dim_3 {
     use itertools::Itertools;
+    use lazy_static::lazy_static;
     use regex::Regex;
     use std::fmt::{Debug, Display, Formatter};
     use std::ops::{Add, Mul};
     use std::str::FromStr;
-    use lazy_static::lazy_static;
 
     #[derive(Clone, Copy, Hash, PartialEq, Eq)]
     pub struct Coordinates(i32, i32, i32);
@@ -365,16 +367,17 @@ pub mod dim_3 {
         type Err = ();
 
         fn from_str(s: &str) -> Result<Self, Self::Err> {
-            lazy_static!(
+            lazy_static! {
                 static ref RE: Regex = Regex::new(r"(-?\d+).*?(-?\d+).*?(-?\d+)").unwrap();
-            );
-            let coordinates = RE.captures_iter(s)
-                                .flat_map(|captures| {
-                                    (1..=3).map(move |i| captures.get(i).unwrap().as_str().parse().unwrap())
-                                })
-                                .collect_tuple::<(i32, i32, i32)>()
-                                .unwrap()
-                                .into();
+            };
+            let coordinates = RE
+                .captures_iter(s)
+                .flat_map(|captures| {
+                    (1..=3).map(move |i| captures.get(i).unwrap().as_str().parse().unwrap())
+                })
+                .collect_tuple::<(i32, i32, i32)>()
+                .unwrap()
+                .into();
 
             Ok(coordinates)
         }

@@ -5,16 +5,24 @@ use itertools::Itertools;
 
 pub fn solve_part_one(input: &String) -> usize {
     let initial = input.parse::<Grid>().unwrap();
-    (0..100).into_iter()
+    (0..100)
+        .into_iter()
         .fold(initial, |grid, _| grid.next())
-        .states().get(&State::On).unwrap().clone()
+        .states()
+        .get(&State::On)
+        .unwrap()
+        .clone()
 }
 
 pub fn solve_part_two(input: &String) -> usize {
     let initial = input.parse::<Grid>().unwrap().spoil_corners();
-    (0..100).into_iter()
+    (0..100)
+        .into_iter()
         .fold(initial, |grid, _| grid.next().spoil_corners())
-        .states().get(&State::On).unwrap().clone()
+        .states()
+        .get(&State::On)
+        .unwrap()
+        .clone()
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Hash)]
@@ -33,14 +41,17 @@ impl FromStr for Grid {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let size = s.lines().count();
-        let grid = s.lines().into_iter()
+        let grid = s
+            .lines()
+            .into_iter()
             .flat_map(|line| line.chars().into_iter())
             .map(|c| match c {
                 '.' => State::Off,
                 '#' => State::On,
-                _ => panic!()
+                _ => panic!(),
             })
-            .chunks(size).into_iter()
+            .chunks(size)
+            .into_iter()
             .map(|chunk| chunk.collect_vec())
             .collect_vec();
 
@@ -51,11 +62,11 @@ impl FromStr for Grid {
 impl Grid {
     fn neighbors(&self, row: usize, col: usize) -> Vec<State> {
         (row.saturating_sub(1)..=row + 1)
-            .flat_map(|row| {
-                (col.saturating_sub(1)..=col + 1).map(move |col| (row, col))
-            })
+            .flat_map(|row| (col.saturating_sub(1)..=col + 1).map(move |col| (row, col)))
             .filter(|(r, c)| {
-                (0..self.size).contains(r) && (0..self.size).contains(c) && !(*r == row && *c == col)
+                (0..self.size).contains(r)
+                    && (0..self.size).contains(c)
+                    && !(*r == row && *c == col)
             })
             .map(|(row, col)| self.grid[row][col])
             .collect_vec()
@@ -65,10 +76,11 @@ impl Grid {
         let grid = (0..self.size)
             .flat_map(|row| (0..self.size).map(move |col| (row, col)))
             .map(|(row, col)| {
-
                 // The state a light should have next is based on its current state (on or off),
                 // plus the number of neighbors that are on.
-                let on = self.neighbors(row, col).iter()
+                let on = self
+                    .neighbors(row, col)
+                    .iter()
                     .filter(|&neighbor| *neighbor == State::On)
                     .count();
 
@@ -79,17 +91,19 @@ impl Grid {
                     _ => State::Off,
                 }
             })
-            .chunks(self.size).into_iter()
+            .chunks(self.size)
+            .into_iter()
             .map(|chunk| chunk.collect_vec())
             .collect_vec();
 
-        Grid { grid, size: self.size }
+        Grid {
+            grid,
+            size: self.size,
+        }
     }
 
     fn states(&self) -> HashMap<&State, usize> {
-        self.grid.iter()
-            .flat_map(|row| row)
-            .counts()
+        self.grid.iter().flat_map(|row| row).counts()
     }
 
     fn spoil_corners(mut self) -> Self {
@@ -105,7 +119,7 @@ impl Grid {
 mod tests {
     use rstest::rstest;
 
-    use super::{Grid, solve_part_two, State};
+    use super::{solve_part_two, Grid, State};
 
     #[rstest]
     #[case(indoc::indoc ! {"
@@ -118,9 +132,13 @@ mod tests {
     "}.to_string(), 4)]
     fn test_part_one(#[case] input: String, #[case] expected: usize) {
         let initial = input.parse::<Grid>().unwrap();
-        let actual = (0..4).into_iter()
+        let actual = (0..4)
+            .into_iter()
             .fold(initial, |grid, _| grid.next())
-            .states().get(&State::On).unwrap().clone();
+            .states()
+            .get(&State::On)
+            .unwrap()
+            .clone();
         assert_eq!(expected, actual)
     }
 
@@ -135,9 +153,13 @@ mod tests {
     "}.to_string(), 17)]
     fn test_part_two(#[case] input: String, #[case] expected: usize) {
         let initial = input.parse::<Grid>().unwrap().spoil_corners();
-        let actual = (0..5).into_iter()
+        let actual = (0..5)
+            .into_iter()
             .fold(initial, |grid, _| grid.next().spoil_corners())
-            .states().get(&State::On).unwrap().clone();
+            .states()
+            .get(&State::On)
+            .unwrap()
+            .clone();
         assert_eq!(expected, actual)
     }
 }

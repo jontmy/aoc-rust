@@ -6,10 +6,13 @@ pub fn solve_part_one(input: &String) -> i32 {
     let (numbers, boards) = parse_input(input);
 
     // Pick the board that can be won in the least number of numbers drawn.
-    let (winning_board, winning_draws) = boards.iter()
-        .filter_map(|board| board
-            .numbers_to_win(&numbers)
-            .map(|winning_draws| (board, winning_draws)))
+    let (winning_board, winning_draws) = boards
+        .iter()
+        .filter_map(|board| {
+            board
+                .numbers_to_win(&numbers)
+                .map(|winning_draws| (board, winning_draws))
+        })
         .sorted_by(|(_, x), (_, y)| x.len().cmp(&y.len()))
         .next()
         .unwrap();
@@ -21,10 +24,13 @@ pub fn solve_part_two(input: &String) -> i32 {
     let (numbers, boards) = parse_input(input);
 
     // Pick the board that can be won in the most number of numbers drawn.
-    let (winning_board, winning_draws) = boards.iter()
-        .filter_map(|board| board
-            .numbers_to_win(&numbers)
-            .map(|winning_draws| (board, winning_draws)))
+    let (winning_board, winning_draws) = boards
+        .iter()
+        .filter_map(|board| {
+            board
+                .numbers_to_win(&numbers)
+                .map(|winning_draws| (board, winning_draws))
+        })
         .sorted_by(|(_, x), (_, y)| x.len().cmp(&y.len()))
         .last()
         .unwrap();
@@ -39,26 +45,32 @@ struct Board {
 impl Board {
     fn parse(chunk: &[&str]) -> Board {
         Board {
-            grid: chunk.iter()
+            grid: chunk
+                .iter()
                 .flat_map(|&row| row.split_whitespace())
                 .map(|tile| tile.parse().unwrap())
-                .collect::<Vec<i32>>()
+                .collect::<Vec<i32>>(),
         }
     }
 
     // Returns true if the board is won given a slice of numbers are drawn, or false otherwise.
     fn is_won(&self, drawn: &[i32]) -> bool {
-        let matches = self.grid.iter()
+        let matches = self
+            .grid
+            .iter()
             .map(|tile| drawn.contains(tile))
             .collect_vec();
 
-        let any_row_won = *&matches.chunks(BOARD_SIZE)
+        let any_row_won = *&matches
+            .chunks(BOARD_SIZE)
             .map(|row| row.iter().all(|tile| *tile))
             .any(|row| row);
 
-        let any_col_won = (0..BOARD_SIZE).into_iter()
+        let any_col_won = (0..BOARD_SIZE)
+            .into_iter()
             .map(|offset| {
-                matches.iter()
+                matches
+                    .iter()
                     .skip(offset)
                     .step_by(BOARD_SIZE)
                     .all(|tile| *tile)
@@ -71,7 +83,8 @@ impl Board {
     // Returns the slice of numbers that need to be drawn in order for the board to be won,
     // if and only if the board can be won.
     fn numbers_to_win<'a>(&self, drawn: &'a [i32]) -> Option<&'a [i32]> {
-        (0..drawn.len()).into_iter()
+        (0..drawn.len())
+            .into_iter()
             .map(|i| &drawn[0..=i])
             .skip_while(|drawn| !self.is_won(drawn))
             .next()
@@ -80,19 +93,25 @@ impl Board {
     // Returns the sum of all unmarked numbers that are unmarked (not drawn),
     // multiplied by the last number drawn.
     fn checksum(&self, drawn: &[i32]) -> i32 {
-        self.grid.iter()
+        self.grid
+            .iter()
             .filter(|tile| !drawn.contains(tile))
-            .sum::<i32>() * drawn.last().unwrap()
+            .sum::<i32>()
+            * drawn.last().unwrap()
     }
 }
 
 fn parse_input(input: &String) -> (Vec<i32>, Vec<Board>) {
-    let numbers = input.lines().next().unwrap()
+    let numbers = input
+        .lines()
+        .next()
+        .unwrap()
         .split(',')
         .map(|s| s.parse::<i32>().unwrap())
         .collect_vec();
 
-    let boards = input.lines()
+    let boards = input
+        .lines()
         .skip(1)
         .filter(|l| !l.is_empty())
         .collect_vec()

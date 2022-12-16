@@ -34,7 +34,8 @@ impl advent::Solver<2022, 1> for Solver {
             .split("\n\n")
             .map(|l| l.parse::<Elf>().unwrap())
             .max()
-            .unwrap().food
+            .unwrap()
+            .food
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {

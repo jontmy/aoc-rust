@@ -5,7 +5,8 @@ use itertools::Itertools;
 use regex::Regex;
 
 pub fn solve_part_one(input: &String) -> i32 {
-    input.lines()
+    input
+        .lines()
         .map(|l| Reindeer::parse(l))
         .map(|reindeer| reindeer.distance_at_nth_second(2503))
         .max()
@@ -13,18 +14,20 @@ pub fn solve_part_one(input: &String) -> i32 {
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    let reindeer = input.lines()
-        .map(|l| (Reindeer::parse(l)))
-        .collect_vec();
-    let mut reindeer_points = reindeer.iter()
+    let reindeer = input.lines().map(|l| (Reindeer::parse(l))).collect_vec();
+    let mut reindeer_points = reindeer
+        .iter()
         .map(|r| (r, 0))
         .collect::<HashMap<&Reindeer, i32>>();
 
     for i in 1..=2503 {
-        let farthest_distance = reindeer.iter()
+        let farthest_distance = reindeer
+            .iter()
             .map(|r| r.distance_at_nth_second(i))
-            .max().unwrap();
-        reindeer.iter()
+            .max()
+            .unwrap();
+        reindeer
+            .iter()
             .filter(|r| r.distance_at_nth_second(i) == farthest_distance)
             .for_each(|r| *reindeer_points.entry(r).or_insert(0) += 1)
     }
@@ -41,14 +44,17 @@ struct Reindeer {
 
 impl PartialEq for Reindeer {
     fn eq(&self, other: &Self) -> bool {
-        self.name == other.name && self.speed == other.speed &&
-            self.duration == other.duration && self.cooldown == other.cooldown
+        self.name == other.name
+            && self.speed == other.speed
+            && self.duration == other.duration
+            && self.cooldown == other.cooldown
     }
 }
 
 impl Reindeer {
     fn parse(s: &str) -> Reindeer {
-        let capture = Regex::new(r"(\w+) .*? (\d+) .*? (\d+) .*? (\d+)").unwrap()
+        let capture = Regex::new(r"(\w+) .*? (\d+) .*? (\d+) .*? (\d+)")
+            .unwrap()
             .captures_iter(s)
             .next()
             .unwrap();

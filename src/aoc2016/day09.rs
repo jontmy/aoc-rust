@@ -1,13 +1,14 @@
-use std::{ collections::BTreeMap, vec };
+use std::{collections::BTreeMap, vec};
 
 use itertools::Itertools;
 use once_cell_regex::regex;
 
 use crate::utils::advent;
 
-struct Marker { // in the format (<grab>x<repeat>)
+struct Marker {
+    // in the format (<grab>x<repeat>)
     start: usize, // index in the input string of the opening parentheses `(`
-    end: usize, // index of the next character after the closing parentheses `)`
+    end: usize,   // index of the next character after the closing parentheses `)`
     grab: usize,
     repeat: usize,
 }
@@ -55,7 +56,7 @@ fn length_recursive_descent(
     markers: &Markers,
     multiplicity: usize,
     start: usize,
-    end: usize
+    end: usize,
 ) -> usize {
     let children = find_parent_markers(markers, start, end);
     if children.is_empty() {
@@ -70,14 +71,14 @@ fn length_recursive_descent(
         .sum::<usize>();
     let children_len = children
         .into_iter()
-        .map(|marker|
+        .map(|marker| {
             length_recursive_descent(
                 markers,
                 multiplicity * marker.repeat,
                 marker.end,
-                marker.end + marker.grab
+                marker.end + marker.grab,
             )
-        )
+        })
         .sum::<usize>();
     children_len + intermarker_len + trailing_len
 }
@@ -124,8 +125,8 @@ impl advent::Solver<2016, 9> for Solver {
 
 #[cfg(test)]
 mod tests {
-    use rstest::rstest;
     use crate::utils::advent;
+    use rstest::rstest;
 
     #[rstest]
     #[case("ADVENT".to_string(), 6)]
@@ -135,7 +136,10 @@ mod tests {
     #[case("(6x1)(1x3)A".to_string(), 6)]
     #[case("X(8x2)(3x3)ABCY".to_string(), 18)]
     fn test_solve_part_one(#[case] input: String, #[case] expected: usize) {
-        assert_eq!(advent::Solver::solve_part_one(&super::Solver, &input), expected)
+        assert_eq!(
+            advent::Solver::solve_part_one(&super::Solver, &input),
+            expected
+        )
     }
 
     #[rstest]
@@ -153,6 +157,9 @@ mod tests {
         242374
     )]
     fn test_solve_part_two(#[case] input: String, #[case] expected: usize) {
-        assert_eq!(advent::Solver::solve_part_two(&super::Solver, &input), expected)
+        assert_eq!(
+            advent::Solver::solve_part_two(&super::Solver, &input),
+            expected
+        )
     }
 }

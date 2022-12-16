@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use crate::utils::{ advent, directions::Direction, coords::Coordinates };
+use crate::utils::{advent, coords::Coordinates, directions::Direction};
 
 use map_macro::set;
 use num_integer::Roots;
@@ -17,7 +17,10 @@ impl FromStr for Vector {
     fn from_str(l: &str) -> Result<Self, Self::Err> {
         let (direction, displacement) = scan_fmt!(l, "{} {}", String, i32).unwrap();
         let direction = Direction::from_str(&direction, "U", "D", "L", "R");
-        Ok(Self { direction, displacement })
+        Ok(Self {
+            direction,
+            displacement,
+        })
     }
 }
 
@@ -33,7 +36,11 @@ impl advent::Solver<2022, 9> for Solver {
         let mut tail = Coordinates::origin();
         let mut visited = set![tail];
 
-        for Vector { direction, displacement } in vectors {
+        for Vector {
+            direction,
+            displacement,
+        } in vectors
+        {
             let dest = head.step_by(direction, displacement);
             for head in head.manhattan_path(dest) {
                 if tail.euclidean_distance_squared(head).sqrt() < 2 {
@@ -52,7 +59,11 @@ impl advent::Solver<2022, 9> for Solver {
         let mut rope = vec![Coordinates::origin(); 10];
         let mut visited = set![Coordinates::origin()];
 
-        for Vector { direction, displacement } in vectors {
+        for Vector {
+            direction,
+            displacement,
+        } in vectors
+        {
             let dest = rope[0].step_by(direction, displacement);
             for head in rope[0].manhattan_path(dest) {
                 rope[0] = head;

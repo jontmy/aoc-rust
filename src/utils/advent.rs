@@ -1,4 +1,11 @@
-use std::{ fmt::Display, error::Error, path::Path, fs, fs::{ File, OpenOptions }, io::Write };
+use std::{
+    error::Error,
+    fmt::Display,
+    fs,
+    fs::{File, OpenOptions},
+    io::Write,
+    path::Path,
+};
 
 use ansi_term::Style;
 
@@ -15,7 +22,9 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         let year = YEAR;
         println!(
             "\n{}",
-            Style::new().bold().paint(format!("Advent of Code {}, Day {}", year, day))
+            Style::new()
+                .bold()
+                .paint(format!("Advent of Code {}, Day {}", year, day))
         );
 
         // Create the input file (and its parent directories).
@@ -55,17 +64,25 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         // Solve part 1, writing to stdout and the output file.
         print!("Part 1: ");
         let part_one_solution = format!("{}", self.solve_part_one(&input));
-        println!("{}", Style::new().italic().paint(format!("{}", part_one_solution)));
-        writeln!(file, "{part_one_solution}").expect(
-            "Failed to write part 1 solution for day {day} of {year}"
+        println!(
+            "{}",
+            Style::new()
+                .italic()
+                .paint(format!("{}", part_one_solution))
         );
+        writeln!(file, "{part_one_solution}")
+            .expect("Failed to write part 1 solution for day {day} of {year}");
 
         // Solve part 2, writing to stdout and the output file.
         print!("Part 2: ");
         let part_two_solution = format!("{}", self.solve_part_two(&input));
-        println!("{}", Style::new().italic().paint(format!("{}", part_two_solution)));
-        writeln!(file, "{part_two_solution}").expect(
-            "Failed to write part 2 solution for day {day} of {year}"
+        println!(
+            "{}",
+            Style::new()
+                .italic()
+                .paint(format!("{}", part_two_solution))
         );
+        writeln!(file, "{part_two_solution}")
+            .expect("Failed to write part 2 solution for day {day} of {year}");
     }
 }

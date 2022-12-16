@@ -60,9 +60,11 @@ pub fn solve_part_two(input: &String) -> u64 {
     let last_element = polymer.last().unwrap().clone();
 
     // Get the frequency table of all elements pairwise, casting usize to u64.
-    let mut element_pairs = polymer.into_iter()
+    let mut element_pairs = polymer
+        .into_iter()
         .tuple_windows::<(char, char)>()
-        .counts().into_iter()
+        .counts()
+        .into_iter()
         .map(|(k, v)| (k, v as u64))
         .collect::<HashMap<_, _>>();
 
@@ -71,11 +73,13 @@ pub fn solve_part_two(input: &String) -> u64 {
         let mut next = HashMap::new();
         // Elements `x` and `y` form a pair `xy`, occurring `n` times.
         for ((x, y), n) in element_pairs.into_iter() {
-            if rules.contains_key(&(x, y)) { // pair insertion occurs: `xy` -> `xzy`
+            if rules.contains_key(&(x, y)) {
+                // pair insertion occurs: `xy` -> `xzy`
                 let z = *rules.get(&(x, y)).unwrap();
                 *next.entry((x, z)).or_insert(0) += n; // 1. `xy` -> `xz`
                 *next.entry((z, y)).or_insert(0) += n; // 2. `xy` -> `zy`
-            } else { // pair insertion does not occur: `xy` -> `xy`
+            } else {
+                // pair insertion does not occur: `xy` -> `xy`
                 next.insert((x, y), n);
             }
         }

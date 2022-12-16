@@ -10,33 +10,36 @@ pub fn solve_part_one(input: &String) -> i64 {
     fish_after_n_days(input, 80)
 }
 
-    fn fish_after_n_days(input: &String, n: usize) -> i64 {
-        let fish = input.trim()
-            .split(',').into_iter()
-            .map(|s| s.parse::<i32>().unwrap())
-            .fold(HashMap::new(), |mut freqs, value| -> HashMap<i32, i64> {
-                *freqs.entry(value).or_insert(0) += 1;
-                freqs
-            });
+fn fish_after_n_days(input: &String, n: usize) -> i64 {
+    let fish = input
+        .trim()
+        .split(',')
+        .into_iter()
+        .map(|s| s.parse::<i32>().unwrap())
+        .fold(HashMap::new(), |mut freqs, value| -> HashMap<i32, i64> {
+            *freqs.entry(value).or_insert(0) += 1;
+            freqs
+        });
 
-        let fish = (0..=8).into_iter()
-            .map(|days| *fish.get(&days).or(Some(&0)).unwrap())
-            .collect::<VecDeque<_>>();
+    let fish = (0..=8)
+        .into_iter()
+        .map(|days| *fish.get(&days).or(Some(&0)).unwrap())
+        .collect::<VecDeque<_>>();
 
-        (0..n).into_iter()
-            .fold(fish, |mut fish, _| {
-                fish.rotate_left(1);
-                fish[6] += fish[8];
-                fish
-            })
-            .into_iter()
-            .sum()
-    }
+    (0..n)
+        .into_iter()
+        .fold(fish, |mut fish, _| {
+            fish.rotate_left(1);
+            fish[6] += fish[8];
+            fish
+        })
+        .into_iter()
+        .sum()
+}
 
 pub fn solve_part_two(input: &String) -> i64 {
     fish_after_n_days(input, 256)
 }
-
 
 #[cfg(test)]
 mod tests {

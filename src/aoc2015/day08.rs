@@ -1,7 +1,5 @@
 pub fn solve_part_one(input: &String) -> i32 {
-    input.lines()
-        .map(count_skipped_chars)
-        .sum()
+    input.lines().map(count_skipped_chars).sum()
 }
 
 fn count_skipped_chars(str: &str) -> i32 {
@@ -20,21 +18,18 @@ fn count_skipped_chars(str: &str) -> i32 {
                     i += 4;
                     skipped += 3;
                 }
-                _ => i += 1
-            }
-            _ => i += 1
+                _ => i += 1,
+            },
+            _ => i += 1,
         }
     }
     skipped
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    input.lines()
-        .map(|s| {
-            s.chars()
-                .filter(|c| *c == '\\' || *c == '"')
-                .count() as i32 + 2
-        })
+    input
+        .lines()
+        .map(|s| s.chars().filter(|c| *c == '\\' || *c == '"').count() as i32 + 2)
         .sum()
 }
 

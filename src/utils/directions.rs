@@ -1,5 +1,5 @@
 use super::coords::Coordinates;
-use num::{ Num, Signed, Integer };
+use num::{Integer, Num, Signed};
 
 #[derive(Debug)]
 pub enum Direction {
@@ -27,7 +27,10 @@ impl Direction {
     }
 }
 
-impl<T> Into<Coordinates<T>> for Direction where T: Integer + Copy + Signed {
+impl<T> Into<Coordinates<T>> for Direction
+where
+    T: Integer + Copy + Signed,
+{
     /// Converts this direction into a coordinate unit vector.
     fn into(self) -> Coordinates<T> {
         match self {

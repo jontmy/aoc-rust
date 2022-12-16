@@ -4,16 +4,17 @@ use std::fmt::{Display, Formatter};
 
 pub fn solve_part_one(input: &String) -> i32 {
     // Track the houses which are visited.
-    let visits = input.trim()
+    let visits = input
+        .trim()
         .chars()
-        .scan(House{ x: 0, y: 0 }, |state, c: char| {
+        .scan(House { x: 0, y: 0 }, |state, c: char| {
             *state = state.next(c);
             Some(*state)
         });
 
     // De-duplicated via a HashSet, and add the initial house at (0, 0);
     let mut visited: HashSet<House> = HashSet::from_iter(visits);
-    visited.insert(House {x: 0, y: 0});
+    visited.insert(House { x: 0, y: 0 });
     visited.len() as i32
 
     /*
@@ -39,7 +40,8 @@ pub fn solve_part_one(input: &String) -> i32 {
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
-    let robo = input.chars()
+    let robo = input
+        .chars()
         .enumerate()
         .filter(|i| i.0 % 2 == 1)
         .map(|p| p.1) // discard the enumeration index
@@ -48,7 +50,8 @@ pub fn solve_part_two(input: &String) -> i32 {
             Some(*state)
         });
 
-    let santa = input.chars()
+    let santa = input
+        .chars()
         .enumerate()
         .filter(|i| i.0 % 2 == 0)
         .map(|p| p.1) // discard the enumeration index
@@ -59,17 +62,17 @@ pub fn solve_part_two(input: &String) -> i32 {
 
     // De-duplicated via a HashSet, and add the initial house at (0, 0);
     let mut visited: HashSet<House> = HashSet::from_iter(robo.chain(santa)); // combines their efforts
-    visited.insert(House {x: 0, y: 0});
+    visited.insert(House { x: 0, y: 0 });
     visited.len() as i32
 }
 
 #[derive(Hash, Copy, Clone)]
 struct House {
     x: i32,
-    y: i32
+    y: i32,
 }
 
-impl Eq for House { }
+impl Eq for House {}
 
 impl PartialEq<Self> for House {
     fn eq(&self, other: &Self) -> bool {
@@ -86,11 +89,23 @@ impl Display for House {
 impl House {
     fn next(&self, c: char) -> House {
         match c {
-            '<' => House{ x: self.x - 1, y: self.y },
-            '>' => House{ x: self.x + 1, y: self.y },
-            '^' => House{ x: self.x, y: self.y + 1 },
-            'v' => House{ x: self.x, y: self.y - 1 },
-            _ => panic!("Unmatched character {}", c)
+            '<' => House {
+                x: self.x - 1,
+                y: self.y,
+            },
+            '>' => House {
+                x: self.x + 1,
+                y: self.y,
+            },
+            '^' => House {
+                x: self.x,
+                y: self.y + 1,
+            },
+            'v' => House {
+                x: self.x,
+                y: self.y - 1,
+            },
+            _ => panic!("Unmatched character {}", c),
         }
     }
 }

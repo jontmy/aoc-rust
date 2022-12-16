@@ -18,17 +18,18 @@ impl FromStr for Room {
         let (name, id, checksum) = (&captures["name"], &captures["id"], &captures["checksum"]);
 
         assert_eq!(checksum.len(), 5);
-        Ok(Room { name: name.to_owned(), id: id.parse().unwrap(), checksum: checksum.to_owned() })
+        Ok(Room {
+            name: name.to_owned(),
+            id: id.parse().unwrap(),
+            checksum: checksum.to_owned(),
+        })
     }
 }
 
 impl Room {
     fn is_real(&self) -> bool {
         // Count the letters in the encrypted name.
-        let letters = self.name
-            .chars()
-            .filter(|c| *c != '-')
-            .counts();
+        let letters = self.name.chars().filter(|c| *c != '-').counts();
 
         // Sort the letters by frequency then by alphabetical order to compute the checksum.
         let checksum = letters
@@ -93,6 +94,9 @@ mod tests {
     #[rstest]
     #[case("qzmt-zixmtkozy-ivhz-343[fubar]".to_string(), "very encrypted name")]
     fn test_room_get_decrypted_name(#[case] input: String, #[case] expected: String) {
-        assert_eq!(input.parse::<Room>().unwrap().get_decrypted_name(), expected)
+        assert_eq!(
+            input.parse::<Room>().unwrap().get_decrypted_name(),
+            expected
+        )
     }
 }

@@ -14,13 +14,15 @@ pub fn solve_part_two(input: &String) -> i32 {
 
 fn next(s: &String) -> String {
     let chars = s.chars().collect::<Vec<char>>();
-    let repetitions = s.chars()
+    let repetitions = s
+        .chars()
         .enumerate()
         .filter(|(i, c)| i.eq(&0) || chars[i - 1] != *c)
         .chain([(s.len(), '_')]) // add a dummy terminator
         .collect_vec();
 
-    repetitions.iter()
+    repetitions
+        .iter()
         .zip(&mut repetitions.iter().skip(1)) // compare each tuple with the next
         .map(|((start, char), (end, _))| format!("{}{}", end - start, char))
         .collect::<String>()
@@ -37,7 +39,7 @@ fn rounds(s: String, n: usize) -> String {
 mod tests {
     use rstest::rstest;
 
-    use super::{next};
+    use super::next;
 
     #[rstest]
     #[case("1", "11")]

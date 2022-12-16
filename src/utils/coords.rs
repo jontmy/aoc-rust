@@ -1,32 +1,33 @@
-use std::{
-    hash::Hash,
-    ops::{ Add, Sub, Mul, RangeBounds, Bound },
-    fmt::{ Display, Formatter },
-    collections::{ HashSet, HashMap, VecDeque },
-};
-use super::{ directions::Direction, misc };
+use super::{directions::Direction, misc};
 use map_macro::set;
 use num::{
-    Num,
-    Integer,
-    PrimInt,
-    Signed,
-    CheckedAdd,
-    CheckedSub,
-    traits::{ WrappingAdd, Euclid, WrappingSub },
     iter::Range,
+    traits::{Euclid, WrappingAdd, WrappingSub},
+    CheckedAdd, CheckedSub, Integer, Num, PrimInt, Signed,
+};
+use std::{
+    collections::{HashMap, HashSet, VecDeque},
+    fmt::{Display, Formatter},
+    hash::Hash,
+    ops::{Add, Bound, Mul, RangeBounds, Sub},
 };
 
 /// A point in 2D space which can either be signed or unsigned.
 /// The `x` and `y` fields are private; use the `x()` and `y()` methods to access them.
 /// To destructure into a tuple of `x` and `y`, use the `into()` method.
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
-pub struct Coordinates<T> where T: Num {
+pub struct Coordinates<T>
+where
+    T: Num,
+{
     x: T,
     y: T,
 }
 
-impl<T> Coordinates<T> where T: Num + Copy {
+impl<T> Coordinates<T>
+where
+    T: Num + Copy,
+{
     pub fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
@@ -46,7 +47,10 @@ impl<T> Coordinates<T> where T: Num + Copy {
 
 /// Utility methods for directional movement of **signed integer coordinates**.
 /// For unsigned coordinates, use the `try_*` methods.
-impl<T> Coordinates<T> where T: Integer + Signed + Copy {
+impl<T> Coordinates<T>
+where
+    T: Integer + Signed + Copy,
+{
     /// Increments the `y` coordinate by 1.
     ///
     /// # Example
@@ -57,7 +61,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// assert_eq!(Coordinates::new(0, 0).up(), Coordinates::new(0, 1));
     /// ```
     pub fn up(&self) -> Self {
-        Self { x: self.x, y: self.y + num::one() }
+        Self {
+            x: self.x,
+            y: self.y + num::one(),
+        }
     }
 
     /// Increments the `y` coordinate by a given amount.
@@ -73,7 +80,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// assert_eq!(Coordinates::new(0, 0).up_by(-2), Coordinates::new(0, -2));
     /// ```
     pub fn up_by(&self, n: T) -> Self {
-        Self { x: self.x, y: self.y + n }
+        Self {
+            x: self.x,
+            y: self.y + n,
+        }
     }
 
     /// Decrements the `y` coordinate by 1.
@@ -86,7 +96,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// assert_eq!(Coordinates::new(0, 0).down(), Coordinates::new(0, -1));
     /// ```
     pub fn down(&self) -> Self {
-        Self { x: self.x, y: self.y - num::one() }
+        Self {
+            x: self.x,
+            y: self.y - num::one(),
+        }
     }
 
     /// Decrements the `y` coordinate by a given amount.
@@ -102,7 +115,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// assert_eq!(Coordinates::new(0, 0).down_by(-2), Coordinates::new(0, 2));
     /// ```
     pub fn down_by(&self, n: T) -> Self {
-        Self { x: self.x, y: self.y - n }
+        Self {
+            x: self.x,
+            y: self.y - n,
+        }
     }
 
     /// Decrements the `x` coordinate by 1.
@@ -115,7 +131,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// assert_eq!(Coordinates::new(0, 0).left(), Coordinates::new(-1, 0));
     /// ```
     pub fn left(&self) -> Self {
-        Self { x: self.x - num::one(), y: self.y }
+        Self {
+            x: self.x - num::one(),
+            y: self.y,
+        }
     }
 
     /// Decrements the `x` coordinate by a given amount.
@@ -131,7 +150,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// assert_eq!(Coordinates::new(0, 0).left_by(-2), Coordinates::new(2, 0));
     /// ```
     pub fn left_by(&self, n: T) -> Self {
-        Self { x: self.x - n, y: self.y }
+        Self {
+            x: self.x - n,
+            y: self.y,
+        }
     }
 
     /// Increments the `x` coordinate by 1.
@@ -144,7 +166,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// assert_eq!(Coordinates::new(0, 0).right(), Coordinates::new(1, 0));
     /// ```
     pub fn right(&self) -> Self {
-        Self { x: self.x + num::one(), y: self.y }
+        Self {
+            x: self.x + num::one(),
+            y: self.y,
+        }
     }
 
     /// Increments the `x` coordinate by a given amount.
@@ -160,7 +185,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// assert_eq!(Coordinates::new(0, 0).right_by(-2), Coordinates::new(-2, 0));
     /// ```
     pub fn right_by(&self, n: T) -> Self {
-        Self { x: self.x + n, y: self.y }
+        Self {
+            x: self.x + n,
+            y: self.y,
+        }
     }
 
     /// Moves the coordinates in a given direction by 1.
@@ -210,9 +238,14 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
 }
 
 /// Utility methods for *signed or unsigned* **integer coordinates**, useful for checking that a coordinate won't go out of bounds of a grid.
-impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
+impl<T> Coordinates<T>
+where
+    T: Integer + Copy + CheckedAdd + CheckedSub,
+{
     pub fn try_up(&self) -> Option<Self> {
-        self.y.checked_add(&num::one()).map(|y| Self { x: self.x, y })
+        self.y
+            .checked_add(&num::one())
+            .map(|y| Self { x: self.x, y })
     }
 
     pub fn try_up_by(&self, n: T) -> Option<Self> {
@@ -229,7 +262,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_up_by(1, ..=2), Some(Coordinates::new(0, 1)));
     /// assert_eq!(Coordinates::new(0, 2).try_bounded_up_by(1, ..=2), None);
     /// ```
-    pub fn try_bounded_up_by<R>(&self, n: T, y_range: R) -> Option<Self> where R: RangeBounds<T> {
+    pub fn try_bounded_up_by<R>(&self, n: T, y_range: R) -> Option<Self>
+    where
+        R: RangeBounds<T>,
+    {
         self.y
             .checked_add(&n)
             .filter(|y| y_range.contains(y))
@@ -237,7 +273,9 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     }
 
     pub fn try_down(&self) -> Option<Self> {
-        self.y.checked_sub(&num::one()).map(|y| Self { x: self.x, y })
+        self.y
+            .checked_sub(&num::one())
+            .map(|y| Self { x: self.x, y })
     }
 
     pub fn try_down_by(&self, n: T) -> Option<Self> {
@@ -254,7 +292,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     /// assert_eq!(Coordinates::new(0, 2).try_bounded_down_by(1, 0..), Some(Coordinates::new(0, 1)));
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_down_by(1, 0..), None);
     /// ```
-    pub fn try_bounded_down_by<R>(&self, n: T, y_range: R) -> Option<Self> where R: RangeBounds<T> {
+    pub fn try_bounded_down_by<R>(&self, n: T, y_range: R) -> Option<Self>
+    where
+        R: RangeBounds<T>,
+    {
         self.y
             .checked_sub(&n)
             .filter(|y| y_range.contains(y))
@@ -262,7 +303,9 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     }
 
     pub fn try_right(&self) -> Option<Self> {
-        self.x.checked_add(&num::one()).map(|x| Self { x, y: self.y })
+        self.x
+            .checked_add(&num::one())
+            .map(|x| Self { x, y: self.y })
     }
 
     pub fn try_right_by(&self, n: T) -> Option<Self> {
@@ -279,7 +322,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_right_by(1, ..=2), Some(Coordinates::new(1, 0)));
     /// assert_eq!(Coordinates::new(2, 0).try_bounded_right_by(1, ..=2), None);
     /// ```
-    pub fn try_bounded_right_by<R>(&self, n: T, x_range: R) -> Option<Self> where R: RangeBounds<T> {
+    pub fn try_bounded_right_by<R>(&self, n: T, x_range: R) -> Option<Self>
+    where
+        R: RangeBounds<T>,
+    {
         self.x
             .checked_add(&n)
             .filter(|x| x_range.contains(x))
@@ -287,7 +333,9 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     }
 
     pub fn try_left(&self) -> Option<Self> {
-        self.x.checked_sub(&num::one()).map(|x| Self { x, y: self.y })
+        self.x
+            .checked_sub(&num::one())
+            .map(|x| Self { x, y: self.y })
     }
 
     pub fn try_left_by(&self, n: T) -> Option<Self> {
@@ -304,7 +352,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
     /// assert_eq!(Coordinates::new(2, 0).try_bounded_left_by(1, 0..), Some(Coordinates::new(1, 0)));
     /// assert_eq!(Coordinates::new(0, 0).try_bounded_left_by(1, 0..), None);
     /// ```
-    pub fn try_bounded_left_by<R>(&self, n: T, x_range: R) -> Option<Self> where R: RangeBounds<T> {
+    pub fn try_bounded_left_by<R>(&self, n: T, x_range: R) -> Option<Self>
+    where
+        R: RangeBounds<T>,
+    {
         self.x
             .checked_sub(&n)
             .filter(|x| x_range.contains(x))
@@ -313,7 +364,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub {
 }
 
 /// Utility methods for *signed or unsigned* **integer coordinates**, useful for wrapping around the edges of a grid.
-impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
+impl<T> Coordinates<T>
+where
+    T: Integer + Copy + WrappingAdd + WrappingSub,
+{
     /// Increments the `y` coordinate by 1, setting it to the lower bound of the range if it exceeds the upper bound.
     ///
     /// Panics if the range is unbounded on either end.
@@ -327,7 +381,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     /// assert_eq!(Coordinates::new(0, 2).wrapping_up(0..=2), Coordinates::new(0, 0));
     /// assert_eq!(Coordinates::new(0, 2).wrapping_up(-2..=2), Coordinates::new(0, -2));
     /// ```
-    pub fn wrapping_up<R>(&self, y_range: R) -> Self where R: RangeBounds<T> {
+    pub fn wrapping_up<R>(&self, y_range: R) -> Self
+    where
+        R: RangeBounds<T>,
+    {
         let (y_min, y_max) = misc::get_range_min_max(y_range);
         let y = self.y.wrapping_add(&num::one());
         let y = Self::get_wrapped(y, y_min, y_max);
@@ -347,7 +404,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     /// assert_eq!(Coordinates::new(0, 0).wrapping_down(0..=2), Coordinates::new(0, 2));
     /// assert_eq!(Coordinates::new(0, -2).wrapping_down(-2..=2), Coordinates::new(0, 2));
     /// ```
-    pub fn wrapping_down<R>(&self, y_range: R) -> Self where R: RangeBounds<T> {
+    pub fn wrapping_down<R>(&self, y_range: R) -> Self
+    where
+        R: RangeBounds<T>,
+    {
         let (y_min, y_max) = misc::get_range_min_max(y_range);
         let y = self.y.wrapping_sub(&num::one());
         let y = Self::get_wrapped(y, y_min, y_max);
@@ -367,7 +427,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     /// assert_eq!(Coordinates::new(2, 0).wrapping_right(0..=2), Coordinates::new(0, 0));
     /// assert_eq!(Coordinates::new(2, 0).wrapping_right(-2..=2), Coordinates::new(-2, 0));
     /// ```
-    pub fn wrapping_right<R>(&self, x_range: R) -> Self where R: RangeBounds<T> {
+    pub fn wrapping_right<R>(&self, x_range: R) -> Self
+    where
+        R: RangeBounds<T>,
+    {
         let (x_min, x_max) = misc::get_range_min_max(x_range);
         let x = self.x.wrapping_add(&num::one());
         let x = Self::get_wrapped(x, x_min, x_max);
@@ -387,7 +450,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     /// assert_eq!(Coordinates::new(0, 0).wrapping_left(0..=2), Coordinates::new(2, 0));
     /// assert_eq!(Coordinates::new(-2, 0).wrapping_left(-2..=2), Coordinates::new(2, 0));
     /// ```
-    pub fn wrapping_left<R>(&self, x_range: R) -> Self where R: RangeBounds<T> {
+    pub fn wrapping_left<R>(&self, x_range: R) -> Self
+    where
+        R: RangeBounds<T>,
+    {
         let (x_min, x_max) = misc::get_range_min_max(x_range);
         let x = self.x.wrapping_sub(&num::one());
         let x = Self::get_wrapped(x, x_min, x_max);
@@ -395,12 +461,21 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub {
     }
 
     fn get_wrapped(v: T, v_min: T, v_max: T) -> T {
-        if v > v_max { v_min } else if v < v_min { v_max } else { v }
+        if v > v_max {
+            v_min
+        } else if v < v_min {
+            v_max
+        } else {
+            v
+        }
     }
 }
 
 /// Utility methods for getting the neighbors of *signed or unsigned* **integer coordinates**.
-impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq {
+impl<T> Coordinates<T>
+where
+    T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq,
+{
     /// Returns the neighbors of this coordinate which are directly above, below, to the left, or to
     /// the right, in a set.
     ///
@@ -507,9 +582,13 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash 
     }
 }
 
-impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq {
+impl<T> Coordinates<T>
+where
+    T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq,
+{
     pub fn orthogonal_neighbors_bounded<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         let mut neighbors = HashSet::new();
         if let Some(up) = self.try_bounded_up_by(num::one(), y_range.clone()) {
@@ -529,34 +608,31 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash 
     }
 
     pub fn diagonal_neighbors_bounded<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         let mut neighbors = HashSet::new();
-        if
-            let Some(up_left) = self
-                .try_bounded_up_by(num::one(), y_range.clone())
-                .and_then(|up| up.try_bounded_left_by(num::one(), x_range.clone()))
+        if let Some(up_left) = self
+            .try_bounded_up_by(num::one(), y_range.clone())
+            .and_then(|up| up.try_bounded_left_by(num::one(), x_range.clone()))
         {
             neighbors.insert(up_left);
         }
-        if
-            let Some(up_right) = self
-                .try_bounded_up_by(num::one(), y_range.clone())
-                .and_then(|up| up.try_bounded_right_by(num::one(), x_range.clone()))
+        if let Some(up_right) = self
+            .try_bounded_up_by(num::one(), y_range.clone())
+            .and_then(|up| up.try_bounded_right_by(num::one(), x_range.clone()))
         {
             neighbors.insert(up_right);
         }
-        if
-            let Some(down_right) = self
-                .try_bounded_down_by(num::one(), y_range.clone())
-                .and_then(|down| down.try_bounded_right_by(num::one(), x_range.clone()))
+        if let Some(down_right) = self
+            .try_bounded_down_by(num::one(), y_range.clone())
+            .and_then(|down| down.try_bounded_right_by(num::one(), x_range.clone()))
         {
             neighbors.insert(down_right);
         }
-        if
-            let Some(down_left) = self
-                .try_bounded_down_by(num::one(), y_range.clone())
-                .and_then(|down| down.try_bounded_left_by(num::one(), x_range.clone()))
+        if let Some(down_left) = self
+            .try_bounded_down_by(num::one(), y_range.clone())
+            .and_then(|down| down.try_bounded_left_by(num::one(), x_range.clone()))
         {
             neighbors.insert(down_left);
         }
@@ -565,7 +641,8 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash 
     }
 
     pub fn all_neighbors_bounded<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         let mut neighbors = self.orthogonal_neighbors_bounded(x_range.clone(), y_range.clone());
         neighbors.extend(self.diagonal_neighbors_bounded(x_range, y_range));
@@ -575,7 +652,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash 
 
 /// Utility methods for *signed or unsigned* **integer coordinates** wrapping around bounds, useful for grids with wrap-around.
 /// These methods return sets of coordinates instead of vectors, to avoid potential duplicates caused by wrapping-around.
-impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Hash + Eq {
+impl<T> Coordinates<T>
+where
+    T: Integer + Copy + WrappingAdd + WrappingSub + Hash + Eq,
+{
     /// Returns the neighbors of this coordinate which are directly above, below, to the left, or to
     /// the right, wrapping around the given bounds (and of the integer type) as necessary.
     ///
@@ -631,7 +711,8 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Has
     /// assert!(neighbors.contains(&Coordinates::new(1, 0)));
     /// ```
     pub fn orthogonal_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         let mut neighbors = set!(
             self.wrapping_up(y_range.clone()),
@@ -703,12 +784,16 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Has
     /// assert!(neighbors.contains(&Coordinates::new(0, 1)));
     /// ```
     pub fn diagonal_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         let mut neighbors = set!(
-            self.wrapping_up(y_range.clone()).wrapping_left(x_range.clone()),
-            self.wrapping_up(y_range.clone()).wrapping_right(x_range.clone()),
-            self.wrapping_down(y_range.clone()).wrapping_right(x_range.clone()),
+            self.wrapping_up(y_range.clone())
+                .wrapping_left(x_range.clone()),
+            self.wrapping_up(y_range.clone())
+                .wrapping_right(x_range.clone()),
+            self.wrapping_down(y_range.clone())
+                .wrapping_right(x_range.clone()),
             self.wrapping_down(y_range).wrapping_left(x_range)
         );
         neighbors.remove(self);
@@ -735,7 +820,8 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Has
     /// assert_eq!(neighbors.len(), 8);
     /// ```
     pub fn all_neighbors_wrapping<R>(&self, x_range: R, y_range: R) -> HashSet<Self>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         let mut neighbors = self.orthogonal_neighbors_wrapping(x_range.clone(), y_range.clone());
         neighbors.extend(self.diagonal_neighbors_wrapping(x_range, y_range));
@@ -743,7 +829,10 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Has
     }
 }
 
-impl<T> Coordinates<T> where T: Integer + Signed + Copy {
+impl<T> Coordinates<T>
+where
+    T: Integer + Signed + Copy,
+{
     /// Returns the Manhattan distance between two points -
     /// the sum of the straight line distances between their x- and y-coordinates.
     pub fn manhattan_distance(&self, destination: Self) -> T {
@@ -792,8 +881,8 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     /// Returns the square of the Euclidean distance between two points -
     /// the straight line distance between them.
     pub fn euclidean_distance_squared(&self, destination: Self) -> T {
-        (self.x - destination.x) * (self.x - destination.x) +
-            (self.y - destination.y) * (self.y - destination.y)
+        (self.x - destination.x) * (self.x - destination.x)
+            + (self.y - destination.y) * (self.y - destination.y)
     }
 
     /// Returns the coordinates along the shortest path that must be traversed to get to a destination.
@@ -837,7 +926,10 @@ impl<T> Coordinates<T> where T: Integer + Signed + Copy {
     }
 }
 
-impl<T> Coordinates<T> where T: Integer + Copy + Hash + Eq {
+impl<T> Coordinates<T>
+where
+    T: Integer + Copy + Hash + Eq,
+{
     /// Returns the shortest path between two points found by breadth-first search, if one exists,
     /// or `None` if no path exists.
     ///
@@ -906,10 +998,11 @@ impl<T> Coordinates<T> where T: Integer + Copy + Hash + Eq {
         &self,
         destination: Self,
         constraints_fn: F,
-        neighbors_fn: G
-    )
-        -> Option<Vec<Self>>
-        where F: Fn(&Self) -> bool, G: Fn(&Self) -> HashSet<Self>
+        neighbors_fn: G,
+    ) -> Option<Vec<Self>>
+    where
+        F: Fn(&Self) -> bool,
+        G: Fn(&Self) -> HashSet<Self>,
     {
         let mut queue = VecDeque::new();
         let mut visited = HashSet::new();
@@ -945,14 +1038,18 @@ impl<T> Coordinates<T> where T: Integer + Copy + Hash + Eq {
     }
 }
 
-impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq {
+impl<T> Coordinates<T>
+where
+    T: Integer + Copy + CheckedAdd + CheckedSub + Hash + Eq,
+{
     pub fn manhattan_bfs<R>(&self, destination: Self, obstacles: HashSet<Self>) -> Option<Vec<Self>>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         self.generalized_bfs(
             destination,
             |c| !obstacles.contains(c),
-            |c| c.orthogonal_neighbors()
+            |c| c.orthogonal_neighbors(),
         )
     }
 
@@ -961,24 +1058,26 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash 
         destination: Self,
         obstacles: HashSet<Self>,
         x_range: R,
-        y_range: R
+        y_range: R,
     ) -> Option<Vec<Self>>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         self.generalized_bfs(
             destination,
             |c| !obstacles.contains(c),
-            |c| c.orthogonal_neighbors_bounded(x_range.clone(), y_range.clone())
+            |c| c.orthogonal_neighbors_bounded(x_range.clone(), y_range.clone()),
         )
     }
 
     pub fn euclidean_bfs<R>(&self, destination: Self, obstacles: HashSet<Self>) -> Option<Vec<Self>>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         self.generalized_bfs(
             destination,
             |c| !obstacles.contains(c),
-            |c| c.all_neighbors()
+            |c| c.all_neighbors(),
         )
     }
 
@@ -987,32 +1086,37 @@ impl<T> Coordinates<T> where T: Integer + Copy + CheckedAdd + CheckedSub + Hash 
         destination: Self,
         obstacles: HashSet<Self>,
         x_range: R,
-        y_range: R
+        y_range: R,
     ) -> Option<Vec<Self>>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         self.generalized_bfs(
             destination,
             |c| !obstacles.contains(c),
-            |c| c.all_neighbors_bounded(x_range.clone(), y_range.clone())
+            |c| c.all_neighbors_bounded(x_range.clone(), y_range.clone()),
         )
     }
 }
 
-impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Hash + Eq {
+impl<T> Coordinates<T>
+where
+    T: Integer + Copy + WrappingAdd + WrappingSub + Hash + Eq,
+{
     pub fn manhattan_bfs_wraparound<R>(
         &self,
         destination: Self,
         obstacles: HashSet<Self>,
         x_range: R,
-        y_range: R
+        y_range: R,
     ) -> Option<Vec<Self>>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         self.generalized_bfs(
             destination,
             |c| !obstacles.contains(c),
-            |c| c.orthogonal_neighbors_wrapping(x_range.clone(), y_range.clone())
+            |c| c.orthogonal_neighbors_wrapping(x_range.clone(), y_range.clone()),
         )
     }
 
@@ -1021,19 +1125,23 @@ impl<T> Coordinates<T> where T: Integer + Copy + WrappingAdd + WrappingSub + Has
         destination: Self,
         obstacles: HashSet<Self>,
         x_range: R,
-        y_range: R
+        y_range: R,
     ) -> Option<Vec<Self>>
-        where R: RangeBounds<T> + Clone
+    where
+        R: RangeBounds<T> + Clone,
     {
         self.generalized_bfs(
             destination,
             |c| !obstacles.contains(c),
-            |c| c.all_neighbors_wrapping(x_range.clone(), y_range.clone())
+            |c| c.all_neighbors_wrapping(x_range.clone(), y_range.clone()),
         )
     }
 }
 
-impl<T> Add for Coordinates<T> where T: Num + Copy {
+impl<T> Add for Coordinates<T>
+where
+    T: Num + Copy,
+{
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
@@ -1041,7 +1149,10 @@ impl<T> Add for Coordinates<T> where T: Num + Copy {
     }
 }
 
-impl<T> Sub for Coordinates<T> where T: Num + Copy {
+impl<T> Sub for Coordinates<T>
+where
+    T: Num + Copy,
+{
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self::Output {
@@ -1049,7 +1160,10 @@ impl<T> Sub for Coordinates<T> where T: Num + Copy {
     }
 }
 
-impl<T> Mul for Coordinates<T> where T: Num + Copy {
+impl<T> Mul for Coordinates<T>
+where
+    T: Num + Copy,
+{
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
@@ -1057,37 +1171,55 @@ impl<T> Mul for Coordinates<T> where T: Num + Copy {
     }
 }
 
-impl<T> From<(T, T)> for Coordinates<T> where T: Num + Copy {
+impl<T> From<(T, T)> for Coordinates<T>
+where
+    T: Num + Copy,
+{
     fn from((x, y): (T, T)) -> Self {
         Self::new(x, y)
     }
 }
 
-impl<T> From<(&T, T)> for Coordinates<T> where T: Num + Copy {
+impl<T> From<(&T, T)> for Coordinates<T>
+where
+    T: Num + Copy,
+{
     fn from((x, y): (&T, T)) -> Self {
         Self::new(*x, y)
     }
 }
 
-impl<T> From<(T, &T)> for Coordinates<T> where T: Num + Copy {
+impl<T> From<(T, &T)> for Coordinates<T>
+where
+    T: Num + Copy,
+{
     fn from((x, y): (T, &T)) -> Self {
         Self::new(x, *y)
     }
 }
 
-impl<T> From<(&T, &T)> for Coordinates<T> where T: Num + Copy {
+impl<T> From<(&T, &T)> for Coordinates<T>
+where
+    T: Num + Copy,
+{
     fn from((x, y): (&T, &T)) -> Self {
         Self::new(*x, *y)
     }
 }
 
-impl<T> Into<(T, T)> for Coordinates<T> where T: Num {
+impl<T> Into<(T, T)> for Coordinates<T>
+where
+    T: Num,
+{
     fn into(self) -> (T, T) {
         (self.x, self.y)
     }
 }
 
-impl<T> Display for Coordinates<T> where T: Num + Display {
+impl<T> Display for Coordinates<T>
+where
+    T: Num + Display,
+{
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "({}, {})", self.x, self.y)
     }

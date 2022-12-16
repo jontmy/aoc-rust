@@ -1,9 +1,9 @@
+use ansi_term::Style;
 use std::fmt::Display;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
-use ansi_term::Style;
 
 /// Reads to a string the puzzle input for a given day and year.
 pub fn read(day: u32, year: u32) -> String {
@@ -20,18 +20,27 @@ pub fn write<T: Display, U: Display>(day: u32, year: u32, part_one: T, part_two:
     let output = format!("{}\n{}", part_one, part_two);
 
     let mut file = match File::create(&path) {
-        Err(why) => panic!("Couldn't create the puzzle output for day {} year {}: {}", day, year, why),
+        Err(why) => panic!(
+            "Couldn't create the puzzle output for day {} year {}: {}",
+            day, year, why
+        ),
         Ok(file) => file,
     };
 
     match file.write_all(output.as_bytes()) {
-        Err(why) => panic!("Couldn't write the puzzle output for day {} year {}: {}", day, year, why),
-        _ => ()
+        Err(why) => panic!(
+            "Couldn't write the puzzle output for day {} year {}: {}",
+            day, year, why
+        ),
+        _ => (),
     }
 
-    println!("\n{}\nPart 1: {}\nPart 2: {}",
-             Style::new().bold().paint(format!{"Advent of Code {}, Day {}", year, day}),
-             Style::new().italic().paint(format!("{}", part_one)),
-             Style::new().italic().paint(format!("{}", part_two))
+    println!(
+        "\n{}\nPart 1: {}\nPart 2: {}",
+        Style::new()
+            .bold()
+            .paint(format! {"Advent of Code {}, Day {}", year, day}),
+        Style::new().italic().paint(format!("{}", part_one)),
+        Style::new().italic().paint(format!("{}", part_two))
     );
 }

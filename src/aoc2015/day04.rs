@@ -6,7 +6,8 @@ pub fn solve_part_one(input: &String) -> i32 {
         .map(|hash| format!("{:x}", hash))
         .enumerate()
         .find(|p| p.1.starts_with("00000"))
-        .unwrap().0 as i32
+        .unwrap()
+        .0 as i32
 }
 
 pub fn solve_part_two(input: &String) -> i32 {
@@ -15,12 +16,13 @@ pub fn solve_part_two(input: &String) -> i32 {
         .map(|hash| format!("{:x}", hash))
         .enumerate()
         .find(|p| p.1.starts_with("000000"))
-        .unwrap().0 as i32
+        .unwrap()
+        .0 as i32
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::aoc2015::day04::{solve_part_one};
+    use crate::aoc2015::day04::solve_part_one;
     use rstest::rstest;
 
     #[rstest]

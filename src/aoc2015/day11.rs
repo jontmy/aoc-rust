@@ -21,7 +21,8 @@ fn is_valid_password(pwd: &String) -> bool {
     let bytes = pwd.bytes().collect_vec();
 
     // 1. Passwords must include one increasing straight of at least three letters without skipping letters.
-    let fulfils_increasing_requirement = pwd.bytes()
+    let fulfils_increasing_requirement = pwd
+        .bytes()
         .enumerate()
         .take(pwd.len() - 2)
         .any(|(i, c)| bytes[i + 1] == c + 1 && bytes[i + 2] == c + 2);
@@ -31,20 +32,21 @@ fn is_valid_password(pwd: &String) -> bool {
     }
 
     // 2. Passwords may not contain the letters i, o, or l.
-    let fulfils_exclusion_requirement = pwd.chars()
-        .all(|c| c != 'i' && c != 'o' && c != 'l');
+    let fulfils_exclusion_requirement = pwd.chars().all(|c| c != 'i' && c != 'o' && c != 'l');
 
     if !fulfils_exclusion_requirement {
         return false;
     }
 
     // 3. Passwords must contain at least two different, non-overlapping pairs of letters.
-    let fulfils_pair_requirements = pwd.bytes()
+    let fulfils_pair_requirements = pwd
+        .bytes()
         .enumerate()
         .filter(|(i, c)| *i > 0 && bytes[i - 1] == *c)
         .map(|(i, c)| c)
         .dedup()
-        .count() >= 2;
+        .count()
+        >= 2;
 
     fulfils_increasing_requirement && fulfils_exclusion_requirement && fulfils_pair_requirements
 }
@@ -54,7 +56,8 @@ fn increment_password(pwd: &String) -> String {
     let mut chars = pwd.bytes().collect_vec();
     for c in chars.iter_mut().rev() {
         *c += 1; // increment the last letter, carrying as needed
-        if *c > 0x7a { // wrap an incremented 'z' back around to 'a'
+        if *c > 0x7a {
+            // wrap an incremented 'z' back around to 'a'
             *c = 0x61;
         } else {
             break;

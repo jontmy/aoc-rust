@@ -6,8 +6,13 @@ use ndarray::Array2;
 
 pub fn solve_part_one(input: &String) -> i32 {
     let cave = input.parse::<Cave>().unwrap();
-    (0..cave.height).into_iter()
-        .flat_map(|row| (0..cave.width).into_iter().map(move |col| (row as i32, col as i32)))
+    (0..cave.height)
+        .into_iter()
+        .flat_map(|row| {
+            (0..cave.width)
+                .into_iter()
+                .map(move |col| (row as i32, col as i32))
+        })
         .map(|(row, col)| cave.risk(row, col))
         .sum()
 }
@@ -27,10 +32,7 @@ pub fn solve_part_two(input: &String) -> usize {
             }
         }
     }
-    basins.into_iter()
-        .sorted().rev()
-        .take(3)
-        .product()
+    basins.into_iter().sorted().rev().take(3).product()
 }
 
 struct Cave {
@@ -71,9 +73,15 @@ impl Cave {
     }
 
     fn orthogonal(&self, row: i32, col: i32) -> Vec<(i32, i32, i32)> {
-        [(row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)].into_iter()
-            .filter_map(|(row, col)| self.height(row, col))
-            .collect_vec()
+        [
+            (row - 1, col),
+            (row + 1, col),
+            (row, col - 1),
+            (row, col + 1),
+        ]
+        .into_iter()
+        .filter_map(|(row, col)| self.height(row, col))
+        .collect_vec()
     }
 
     fn risk(&self, row: i32, col: i32) -> i32 {
@@ -96,7 +104,9 @@ impl Cave {
 
         while !queue.is_empty() {
             let (r, c) = queue.pop_front().unwrap();
-            let unvisited = self.orthogonal(r, c).into_iter()
+            let unvisited = self
+                .orthogonal(r, c)
+                .into_iter()
                 .filter(|(r, c, h)| *h < 9 && !visited.contains(&(*r, *c)))
                 .map(|(r, c, _)| (r, c))
                 .collect_vec();

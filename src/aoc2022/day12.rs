@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::utils::{ advent, grid::Grid, coords::Coordinates };
+use crate::utils::{advent, coords::Coordinates, grid::Grid};
 
 pub struct Solver;
 
@@ -25,35 +25,27 @@ impl Solver {
         input
             .trim()
             .lines()
-            .map(|l|
-                l
-                    .chars()
-                    .map(|c| Solver::elevation(c))
-                    .collect_vec()
-            )
+            .map(|l| l.chars().map(|c| Solver::elevation(c)).collect_vec())
             .collect()
     }
 
     pub fn bfs(
         elevations: &Grid<usize>,
         start: Coordinates<usize>,
-        end: Coordinates<usize>
+        end: Coordinates<usize>,
     ) -> Option<usize> {
         let path = start.generalized_bfs(
             end,
-            |c|
-                (0..elevations.width()).contains(&c.x()) &&
-                (0..elevations.height()).contains(&c.y()),
-            |c|
-                c
-                    .orthogonal_neighbors_bounded(0..elevations.width(), 0..elevations.height())
+            |c| {
+                (0..elevations.width()).contains(&c.x())
+                    && (0..elevations.height()).contains(&c.y())
+            },
+            |c| {
+                c.orthogonal_neighbors_bounded(0..elevations.width(), 0..elevations.height())
                     .into_iter()
-                    .filter(
-                        |n|
-                            elevations.get(n.x(), n.y()) <=
-                            &(elevations.get(c.x(), c.y()) + 1)
-                    )
+                    .filter(|n| elevations.get(n.x(), n.y()) <= &(elevations.get(c.x(), c.y()) + 1))
                     .collect()
+            },
         );
         path.map(|v| v.len())
     }

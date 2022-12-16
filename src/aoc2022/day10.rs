@@ -1,6 +1,6 @@
 use std::iter;
 
-use crate::utils::{ advent, grid::Grid, self };
+use crate::utils::{self, advent, grid::Grid};
 
 pub struct Solver;
 
@@ -41,10 +41,14 @@ impl advent::Solver<2022, 10> for Solver {
             |c| {
                 let (x, y) = c.into();
                 let center = xs[y * 40 + x + 1];
-                let pixel = if center.abs_diff(x as i32) <= 1 { '#' } else { ' ' };
+                let pixel = if center.abs_diff(x as i32) <= 1 {
+                    '#'
+                } else {
+                    ' '
+                };
                 Some(pixel)
             },
-            ' '
+            ' ',
         );
         utils::ocr(&grid)
     }

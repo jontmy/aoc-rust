@@ -1,4 +1,4 @@
-use crate::utils::{ advent, grid::Grid };
+use crate::utils::{advent, grid::Grid};
 
 use itertools::Itertools;
 
@@ -9,12 +9,7 @@ impl Solver {
         input
             .trim()
             .lines()
-            .map(|x|
-                x
-                    .chars()
-                    .filter_map(|d| d.to_digit(10))
-                    .collect_vec()
-            )
+            .map(|x| x.chars().filter_map(|d| d.to_digit(10)).collect_vec())
             .collect::<Grid<_>>()
     }
 }

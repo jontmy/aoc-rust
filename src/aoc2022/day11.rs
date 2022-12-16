@@ -4,7 +4,7 @@ use itertools::Itertools;
 use num::Integer;
 use scan_fmt::scan_fmt;
 
-use crate::utils::{ self, advent };
+use crate::utils::{self, advent};
 
 #[derive(Debug, Clone)]
 struct Monkey {
@@ -26,7 +26,13 @@ impl FromStr for Monkey {
         let if_true = utils::get_all_nums::<usize>(s[4])[0];
         let if_false = utils::get_all_nums::<usize>(s[5])[0];
 
-        Ok(Self { items, op, test, if_true, if_false })
+        Ok(Self {
+            items,
+            op,
+            test,
+            if_true,
+            if_false,
+        })
     }
 }
 
@@ -42,16 +48,13 @@ impl Solver {
     }
 
     fn lcm(monkeys: &[Monkey]) -> usize {
-        monkeys
-            .iter()
-            .map(|m| m.test)
-            .fold(1, |acc, f| acc.lcm(&f))
+        monkeys.iter().map(|m| m.test).fold(1, |acc, f| acc.lcm(&f))
     }
 
     fn round(
         monkeys: &mut [Monkey],
         counts: &mut [usize],
-        worry_fn: impl Fn(usize) -> usize
+        worry_fn: impl Fn(usize) -> usize,
     ) -> Vec<Monkey> {
         let mut monkeys = monkeys.to_owned();
         for m_ptr in 0..monkeys.len() {

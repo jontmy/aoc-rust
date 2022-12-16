@@ -19,14 +19,13 @@ impl Solver {
 
         let crates = crates
             .lines()
-            .flat_map(|l|
-                l
-                    .chars()
+            .flat_map(|l| {
+                l.chars()
                     .skip(1)
                     .step_by(4)
                     .enumerate()
                     .filter(|(_, c)| c.is_alphabetic())
-            )
+            })
             .into_grouping_map()
             .collect::<VecDeque<char>>();
 
@@ -39,7 +38,11 @@ impl Solver {
         let instructions = instructions
             .lines()
             .filter_map(|l| scan_fmt!(l, "move {d} from {d} to {d}", usize, usize, usize).ok())
-            .map(|(qty, from, to)| Instruction { qty, from: from - 1, to: to - 1 });
+            .map(|(qty, from, to)| Instruction {
+                qty,
+                from: from - 1,
+                to: to - 1,
+            });
 
         (crates, instructions)
     }

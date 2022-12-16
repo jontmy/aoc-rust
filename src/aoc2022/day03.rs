@@ -16,7 +16,13 @@ impl Solver {
 
     fn intersect(sets: (HashSet<char>, HashSet<char>, HashSet<char>)) -> char {
         let (a, b, c) = sets;
-        a.intersection(&b).cloned().collect::<HashSet<_>>().intersection(&c).next().unwrap().clone()
+        a.intersection(&b)
+            .cloned()
+            .collect::<HashSet<_>>()
+            .intersection(&c)
+            .next()
+            .unwrap()
+            .clone()
     }
 }
 
@@ -28,10 +34,12 @@ impl advent::Solver<2022, 3> for Solver {
         input
             .trim()
             .lines()
-            .map(|l| (
-                l[0..l.len() / 2].chars().collect::<HashSet<_>>(),
-                l[l.len() / 2..].chars().collect::<HashSet<_>>(),
-            ))
+            .map(|l| {
+                (
+                    l[0..l.len() / 2].chars().collect::<HashSet<_>>(),
+                    l[l.len() / 2..].chars().collect::<HashSet<_>>(),
+                )
+            })
             .map(|(a, b)| a.intersection(&b).next().unwrap().clone())
             .map(|intersection| Solver::get_priority(intersection))
             .sum()
@@ -41,12 +49,12 @@ impl advent::Solver<2022, 3> for Solver {
         let groups = input.trim().lines().chunks(3);
         groups
             .into_iter()
-            .map(|group|
+            .map(|group| {
                 group
                     .map(|elf| elf.chars().collect::<HashSet<_>>())
                     .collect_tuple::<(_, _, _)>()
                     .unwrap()
-            )
+            })
             .map(|elves| Solver::intersect(elves))
             .map(|intersection| Solver::get_priority(intersection))
             .sum()

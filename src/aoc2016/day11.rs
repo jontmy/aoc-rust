@@ -1,4 +1,9 @@
-use std::{ collections::{ HashSet, VecDeque }, str::FromStr, iter, hash::Hash };
+use std::{
+    collections::{HashSet, VecDeque},
+    hash::Hash,
+    iter,
+    str::FromStr,
+};
 
 use itertools::Itertools;
 use once_cell_regex::regex;
@@ -76,7 +81,8 @@ struct Floor {
 
 impl ToString for Floor {
     fn to_string(&self) -> String {
-        let items = self.items
+        let items = self
+            .items
             .iter()
             .map(|item| item.to_string())
             .sorted()
@@ -100,7 +106,9 @@ impl Floor {
     }
 
     fn remove(&mut self, to_remove: &[Item]) {
-        assert!(to_remove.into_iter().all(|item| (item.is_nothing() || self.items.contains(item))));
+        assert!(to_remove
+            .into_iter()
+            .all(|item| (item.is_nothing() || self.items.contains(item))));
         for item in to_remove {
             self.items.remove(item);
         }
@@ -117,7 +125,8 @@ impl Floor {
     }
 
     fn will_fry(&self) -> bool {
-        let generators = self.items
+        let generators = self
+            .items
             .iter()
             .filter(|i| i.is_generator())
             .map(|i| i.element())
@@ -152,16 +161,17 @@ impl FromStr for State {
             .enumerate()
             .map(|(i, s)| Floor::new(i, s))
             .collect_vec();
-        Ok(Self { depth: 0, elevator_floor: 0, floors })
+        Ok(Self {
+            depth: 0,
+            elevator_floor: 0,
+            floors,
+        })
     }
 }
 
 impl ToString for State {
     fn to_string(&self) -> String {
-        let floors = self.floors
-            .iter()
-            .map(|floor| floor.to_string())
-            .join(",");
+        let floors = self.floors.iter().map(|floor| floor.to_string()).join(",");
         format!("{}:{floors}", self.elevator_floor)
     }
 }
@@ -176,16 +186,17 @@ impl State {
     fn next_states(&self) -> impl Iterator<Item = Self> + '_ {
         // The elevator can ascend or descend at most one floor, carrying at most 2 items each time.
         let floor = self.floors[self.elevator_floor].clone();
-        floor.items
+        floor
+            .items
             .into_iter()
             .chain(iter::once(Item::Nothing))
             .combinations(2)
-            .flat_map(|items|
+            .flat_map(|items| {
                 vec![
                     self.next_state(&items, Elevator::Ascend),
-                    self.next_state(&items, Elevator::Descend)
+                    self.next_state(&items, Elevator::Descend),
                 ]
-            )
+            })
             .filter_map(|state| state) // remove invalid states
     }
 
@@ -197,15 +208,19 @@ impl State {
         }
         // Reject the state transition if the elevator will go out of bounds.
         let next_floor = match action {
-            Elevator::Ascend => if self.elevator_floor == self.floors.len() - 1 {
-                return None;
-            } else {
-                self.elevator_floor + 1
+            Elevator::Ascend => {
+                if self.elevator_floor == self.floors.len() - 1 {
+                    return None;
+                } else {
+                    self.elevator_floor + 1
+                }
             }
-            Elevator::Descend => if self.elevator_floor == 0 {
-                return None;
-            } else {
-                self.elevator_floor - 1
+            Elevator::Descend => {
+                if self.elevator_floor == 0 {
+                    return None;
+                } else {
+                    self.elevator_floor - 1
+                }
             }
         };
         // Compute the next state, rejecting floors with any item that will fry each other.
@@ -259,10 +274,7 @@ impl advent::Solver<2016, 11> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let mut floors = input
-            .lines()
-            .map(|s| s.to_string())
-            .collect_vec();
+        let mut floors = input.lines().map(|s| s.to_string()).collect_vec();
         floors[0] +=
             ", an elerium generator, an elerium-compatible microchip, a dilithium generator, and a dilithium-compatible microchip.";
         self.solve_part_one(&floors.into_iter().join("\n"))

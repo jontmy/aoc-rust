@@ -1,7 +1,8 @@
 use itertools::Itertools;
 
 pub fn solve_part_one(input: &String) -> usize {
-    input.lines()
+    input
+        .lines()
         .map(|s| s.parse().unwrap())
         .tuple_windows::<(i32, i32)>()
         .filter(|(prev, curr)| *curr > *prev)
@@ -9,7 +10,8 @@ pub fn solve_part_one(input: &String) -> usize {
 }
 
 pub fn solve_part_two(input: &String) -> usize {
-    input.lines()
+    input
+        .lines()
         .map(|s| s.parse().unwrap())
         .tuple_windows::<(i32, _, _, i32)>()
         .filter(|(prev, _, _, curr)| *curr > *prev)

@@ -1,4 +1,4 @@
-use std::{ str::FromStr, collections::HashMap };
+use std::{collections::HashMap, str::FromStr};
 
 use itertools::Itertools;
 use scan_fmt::scan_fmt;
@@ -19,8 +19,13 @@ impl FromStr for Instruction {
         let (bot, target_lo, lo, target_hi, hi) = scan_fmt!(
             s,
             "bot {d} gives low to {} {d} and high to {} {d}",
-            i32, String, i32, String, i32
-        ).unwrap();
+            i32,
+            String,
+            i32,
+            String,
+            i32
+        )
+        .unwrap();
 
         Ok(Instruction {
             bot,
@@ -79,7 +84,10 @@ impl advent::Solver<2016, 10> for Solver {
             let current = state.clone();
             // For every bot with 2 microchips, give it to the bot next in line based on its instruction.
             for (bot, microchips) in current.into_iter().filter(|(_, v)| v.len() == 2) {
-                let (lo, hi) = (microchips[0].min(microchips[1]), microchips[0].max(microchips[1]));
+                let (lo, hi) = (
+                    microchips[0].min(microchips[1]),
+                    microchips[0].max(microchips[1]),
+                );
                 let instruction = &instructions[&bot];
                 state.remove(&bot);
                 // Ignore output bins.
@@ -104,7 +112,10 @@ impl advent::Solver<2016, 10> for Solver {
             let current = state.clone();
             // For every bot with 2 microchips, give it to the bot next in line based on its instruction.
             for (bot, microchips) in current.into_iter().filter(|(_, v)| v.len() == 2) {
-                let (lo, hi) = (microchips[0].min(microchips[1]), microchips[0].max(microchips[1]));
+                let (lo, hi) = (
+                    microchips[0].min(microchips[1]),
+                    microchips[0].max(microchips[1]),
+                );
                 let instruction = &instructions[&bot];
                 state.remove(&bot);
                 match instruction.lo {

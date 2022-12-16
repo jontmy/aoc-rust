@@ -1,13 +1,14 @@
-use std::collections::HashMap;
+use crate::utils::coordinates::dim_2::Coordinates;
 use petgraph::algo::dijkstra;
 use petgraph::prelude::DiGraphMap;
-use crate::utils::coordinates::dim_2::Coordinates;
+use std::collections::HashMap;
 
 pub fn solve_part_one(input: &String) -> u32 {
     let height = input.lines().count() as i32;
     let width = input.lines().next().unwrap().chars().count() as i32;
 
-    let risks = input.lines()
+    let risks = input
+        .lines()
         .flat_map(&str::chars)
         .map(|risk| risk.to_digit(10).unwrap());
 
@@ -15,7 +16,8 @@ pub fn solve_part_one(input: &String) -> u32 {
         .zip(risks)
         .collect::<HashMap<Coordinates, u32>>();
 
-    let graph = risks.keys()
+    let graph = risks
+        .keys()
         .flat_map(|c| {
             c.axial_offset_by(1)
                 .filter(|d| d.x() >= 0 && d.y() >= 0 && d.x() < width && d.y() < height)
@@ -29,7 +31,8 @@ pub fn solve_part_one(input: &String) -> u32 {
         Some(Coordinates::at(width - 1, height - 1)),
         |(.., w)| *w,
     )
-    .get(&Coordinates::at(width - 1, height - 1)).unwrap()
+    .get(&Coordinates::at(width - 1, height - 1))
+    .unwrap()
 }
 
 pub fn solve_part_two(input: &String) -> u32 {

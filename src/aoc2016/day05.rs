@@ -1,4 +1,4 @@
-use std::{ collections::HashMap };
+use std::collections::HashMap;
 
 use itertools::Itertools;
 
@@ -41,18 +41,14 @@ pub fn solve_part_two(input: String) -> String {
     }
 
     // Reconstruct the password in order.
-    password
-        .into_iter()
-        .sorted()
-        .map(|(_, val)| val)
-        .collect()
+    password.into_iter().sorted().map(|(_, val)| val).collect()
 }
 
 #[cfg(test)]
 mod tests {
     use rstest::rstest;
 
-    use super::{ solve_part_one, solve_part_two };
+    use super::{solve_part_one, solve_part_two};
 
     #[rstest]
     #[case("abc".to_string(), "18f47a30".to_string())]

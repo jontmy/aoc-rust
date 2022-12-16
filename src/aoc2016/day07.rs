@@ -1,4 +1,4 @@
-use std::{ str::FromStr, collections::HashSet };
+use std::{collections::HashSet, str::FromStr};
 
 use itertools::Itertools;
 use once_cell_regex::regex;
@@ -23,18 +23,28 @@ impl FromStr for Address {
             .map(|supernet| supernet.to_string())
             .collect();
 
-        Ok(Address { supernets, hypernets })
+        Ok(Address {
+            supernets,
+            hypernets,
+        })
     }
 }
 
 impl Address {
     fn supports_tls(&self) -> bool {
-        self.supernets.iter().any(|hypernet| Address::has_abba(hypernet.as_str())) &&
-            self.hypernets.iter().all(|hypernet| !Address::has_abba(hypernet.as_str()))
+        self.supernets
+            .iter()
+            .any(|hypernet| Address::has_abba(hypernet.as_str()))
+            && self
+                .hypernets
+                .iter()
+                .all(|hypernet| !Address::has_abba(hypernet.as_str()))
     }
 
     fn has_abba(seq: &str) -> bool {
-        seq.chars().tuple_windows::<(_, _, _, _)>().any(Address::is_abba)
+        seq.chars()
+            .tuple_windows::<(_, _, _, _)>()
+            .any(Address::is_abba)
     }
 
     fn is_abba(sub_seq: (char, char, char, char)) -> bool {
@@ -43,7 +53,8 @@ impl Address {
     }
 
     fn supports_ssl(&self) -> bool {
-        let babs = self.hypernets
+        let babs = self
+            .hypernets
             .iter()
             .flat_map(Address::get_babs)
             .collect::<HashSet<(_, _, _)>>();

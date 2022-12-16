@@ -6,30 +6,42 @@ use lazy_static::lazy_static;
 use regex::{Captures, Regex};
 
 pub fn solve_part_one(input: &String) -> i64 {
-    input.lines().into_iter()
+    input
+        .lines()
+        .into_iter()
         .map(|l| l.parse::<Ingredient>())
-        .combinations_with_replacement(100).into_iter()
+        .combinations_with_replacement(100)
+        .into_iter()
         .map(|combination| {
-            combination.into_iter()
+            combination
+                .into_iter()
                 .map(|ingredient| ingredient.unwrap())
                 .reduce(|cookie, ingredient| cookie + ingredient)
-                .map(|cookie| cookie.total_score()).unwrap()
+                .map(|cookie| cookie.total_score())
+                .unwrap()
         })
-        .max().unwrap()
+        .max()
+        .unwrap()
 }
 
 pub fn solve_part_two(input: &String) -> i64 {
-    input.lines().into_iter()
+    input
+        .lines()
+        .into_iter()
         .map(|l| l.parse::<Ingredient>())
-        .combinations_with_replacement(100).into_iter()
+        .combinations_with_replacement(100)
+        .into_iter()
         .map(|combination| {
-            combination.into_iter()
+            combination
+                .into_iter()
                 .map(|ingredient| ingredient.unwrap())
-                .reduce(|cookie, ingredient| cookie + ingredient).unwrap()
+                .reduce(|cookie, ingredient| cookie + ingredient)
+                .unwrap()
         })
         .filter(|cookie| cookie.calories == 500)
         .map(|cookie| cookie.total_score())
-        .max().unwrap()
+        .max()
+        .unwrap()
 }
 
 #[derive(Debug, Clone)]
@@ -79,10 +91,10 @@ impl Add for Ingredient {
 
 impl Ingredient {
     fn total_score(self) -> i64 {
-        self.capacity.max(0) as i64 *
-            self.durability.max(0) as i64 *
-            self.flavor.max(0) as i64 *
-            self.texture.max(0) as i64
+        self.capacity.max(0) as i64
+            * self.durability.max(0) as i64
+            * self.flavor.max(0) as i64
+            * self.texture.max(0) as i64
     }
 }
 

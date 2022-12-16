@@ -1,5 +1,5 @@
-use std::fmt::Display;
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::iter::Sum;
 
 use itertools::Itertools;
@@ -19,10 +19,7 @@ pub struct Grid<T> {
 impl<T> Grid<T> {
     pub fn new(vec: Vec<Vec<T>>) -> Self {
         let height = vec.len();
-        let width = vec
-            .first()
-            .map(|row| row.len())
-            .unwrap_or(0);
+        let width = vec.first().map(|row| row.len()).unwrap_or(0);
         assert!(
             vec.iter().all(|row| row.len() == width),
             "All rows must be of equal length"
@@ -73,10 +70,7 @@ impl<T> Grid<T> {
     /// Returns a tuple of the cells directly above, at, and below the given coordinates.
     /// The cells are obtained by iterating starting from the given coordinates towards the edges of the grid.
     pub fn col_split_at(&self, x: usize, y: usize) -> (Vec<&T>, &T, Vec<&T>) {
-        let above = (0..y)
-            .rev()
-            .map(|y| self.get(x, y))
-            .collect();
+        let above = (0..y).rev().map(|y| self.get(x, y)).collect();
         let below = (y + 1..self.height()).map(|y| self.get(x, y)).collect();
         let this = self.get(x, y);
         (above, this, below)
@@ -85,10 +79,7 @@ impl<T> Grid<T> {
     /// Returns a tuple of the cells directly left, at, and right of the given coordinates.
     /// The cells are obtained by iterating starting from the given coordinates towards the edges of the grid.
     pub fn row_split_at(&self, x: usize, y: usize) -> (Vec<&T>, &T, Vec<&T>) {
-        let left = (0..x)
-            .rev()
-            .map(|x| self.get(x, y))
-            .collect();
+        let left = (0..x).rev().map(|x| self.get(x, y)).collect();
         let right = (x + 1..self.width()).map(|x| self.get(x, y)).collect();
         let this = self.get(x, y);
         (left, this, right)
@@ -106,11 +97,16 @@ impl<T> Grid<T> {
 
     /// Returns an iterator over the coordinates of this grid in row-major order.
     pub fn coords(&self) -> impl Iterator<Item = Coordinates<usize>> {
-        (0..self.height()).cartesian_product(0..self.width()).map(|(y, x)| Coordinates::new(x, y))
+        (0..self.height())
+            .cartesian_product(0..self.width())
+            .map(|(y, x)| Coordinates::new(x, y))
     }
 }
 
-impl<T> Grid<T> where T: Eq {
+impl<T> Grid<T>
+where
+    T: Eq,
+{
     pub fn find(&self, query: T) -> Option<Coordinates<usize>> {
         for (y, row) in self.vec.iter().enumerate() {
             for (x, cell) in row.into_iter().enumerate() {
@@ -135,15 +131,27 @@ impl<T> Grid<T> where T: Eq {
     }
 }
 
-impl<T> Grid<T> where T: Copy {
+impl<T> Grid<T>
+where
+    T: Copy,
+{
     pub fn from_value(rows: usize, columns: usize, value: T) -> Self {
-        Self { vec: vec![vec![value; columns]; rows], height: rows, width: columns }
+        Self {
+            vec: vec![vec![value; columns]; rows],
+            height: rows,
+            width: columns,
+        }
     }
 
     pub fn from_generator<F>(rows: usize, columns: usize, generator: F, default: T) -> Self
-        where F: Fn(Coordinates<usize>) -> Option<T>
+    where
+        F: Fn(Coordinates<usize>) -> Option<T>,
     {
-        let mut res = Self { vec: vec![Vec::new(); rows], height: rows, width: columns };
+        let mut res = Self {
+            vec: vec![Vec::new(); rows],
+            height: rows,
+            width: columns,
+        };
         for y in 0..rows {
             let row = &mut res.vec[y];
             for x in 0..columns {
@@ -156,38 +164,41 @@ impl<T> Grid<T> where T: Copy {
     }
 
     /// Maps the given function over the cells of this grid.
-    pub fn map<F, U>(self, f: F) -> Grid<U> where F: Fn(T) -> U, U: Copy {
+    pub fn map<F, U>(self, f: F) -> Grid<U>
+    where
+        F: Fn(T) -> U,
+        U: Copy,
+    {
         self.vec
             .into_iter()
-            .map(|row|
-                row
-                    .into_iter()
-                    .map(|cell| f(cell))
-                    .collect()
-            )
+            .map(|row| row.into_iter().map(|cell| f(cell)).collect())
             .collect()
     }
 
     /// Maps the given function over the cells of this grid, given the coordinates of their coordinates in addition to their values.
     pub fn enumerated_map<F, U>(self, f: F) -> Grid<U>
-        where F: Fn(Coordinates<usize>, T) -> U, U: Copy
+    where
+        F: Fn(Coordinates<usize>, T) -> U,
+        U: Copy,
     {
         self.vec
             .into_iter()
             .enumerate()
-            .map(|(y, row)|
-                row
-                    .into_iter()
+            .map(|(y, row)| {
+                row.into_iter()
                     .enumerate()
                     .map(|(x, cell)| f(Coordinates::new(x, y), cell))
                     .collect()
-            )
+            })
             .collect()
     }
 
     /// Filters the cells of this grid by the given predicate.
     /// The cells become `Some<T>` if they match the predicate, and `None` otherwise.
-    pub fn filter<F>(self, f: F) -> Grid<Option<T>> where F: Fn(&T) -> bool {
+    pub fn filter<F>(self, f: F) -> Grid<Option<T>>
+    where
+        F: Fn(&T) -> bool,
+    {
         self.map(|cell| if f(&cell) { Some(cell) } else { None })
     }
 
@@ -196,7 +207,7 @@ impl<T> Grid<T> where T: Copy {
     /// The grid must have at least 2 rows and 2 columns.
     pub fn shrink(self) -> Self {
         if self.height() < 2 || self.width() < 2 {
-            return Self::new(Vec::new())
+            return Self::new(Vec::new());
         }
         let mut vec = self.vec;
         vec.pop();
@@ -226,7 +237,11 @@ impl<T> IntoIterator for Grid<T> {
     type IntoIter = std::vec::IntoIter<T>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.vec.into_iter().flatten().collect::<Vec<_>>().into_iter()
+        self.vec
+            .into_iter()
+            .flatten()
+            .collect::<Vec<_>>()
+            .into_iter()
     }
 }
 
@@ -239,7 +254,10 @@ impl<'a, T> IntoIterator for &'a Grid<T> {
     }
 }
 
-impl<T> Display for Grid<T> where T: Display {
+impl<T> Display for Grid<T>
+where
+    T: Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if self.vec.is_empty() {
             writeln!(f, "[empty grid]")?;

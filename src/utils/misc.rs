@@ -2,7 +2,11 @@ use std::ops::{Bound, RangeBounds};
 
 use num::Num;
 
-pub fn get_range_min_max<T, R>(range: R) -> (T, T) where T: Num + Copy, R: RangeBounds<T> {
+pub fn get_range_min_max<T, R>(range: R) -> (T, T)
+where
+    T: Num + Copy,
+    R: RangeBounds<T>,
+{
     let min = match range.start_bound() {
         Bound::Included(min) => *min,
         Bound::Excluded(min) => *min + num::one(),
