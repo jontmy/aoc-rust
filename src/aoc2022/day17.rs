@@ -1,14 +1,12 @@
 use itertools::Itertools;
+use petgraph::visit::Walker;
+use regex::internal::Input;
 
 use crate::aoc2022::day17::Shape::{Cross, Horizontal, Perpendicular, Square, Vertical};
 use crate::utils::directions::Direction;
 use crate::utils::{advent, coords::Coordinates, grid::Grid};
 
 pub struct Solver;
-
-const WIDTH: usize = 7;
-const ROCKS: usize = 2022;
-const HEIGHT: usize = ROCKS * 4 + 8;
 
 #[derive(Debug)]
 enum Shape {
@@ -119,7 +117,7 @@ impl Rock {
         }
 
         if let Direction::Right = d {
-            if self.position.x() + self.shape.width() == WIDTH as i32 {
+            if self.position.x() + self.shape.width() == Solver::WIDTH as i32 {
                 return false;
             }
             for c in self.shape.fill_coords(self.position.right()) {
@@ -156,9 +154,18 @@ impl Rock {
     }
 }
 
+impl Solver {
+    const WIDTH: usize = 7;
+
+    fn grid(rocks: usize) -> Grid<bool> {
+        let height = rocks * 4 + 8;
+        Grid::from_value(height, Solver::WIDTH, false)
+    }
+}
+
 impl advent::Solver<2022, 17> for Solver {
     type Part1 = i32;
-    type Part2 = usize;
+    type Part2 = String;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
         let jets = input
@@ -171,7 +178,8 @@ impl advent::Solver<2022, 17> for Solver {
             })
             .collect_vec();
 
-        let mut grid = Grid::from_value(HEIGHT, WIDTH, false);
+        const ROCKS: usize = 2022;
+        let mut grid = Solver::grid(ROCKS);
         let mut height = 0;
         let mut jet_ptr = 0;
 
@@ -203,6 +211,6 @@ impl advent::Solver<2022, 17> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        0
+        "[not done programmatically - find the cycle delta manually]".to_owned()
     }
 }
