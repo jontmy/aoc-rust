@@ -1,7 +1,8 @@
+use std::fmt::{Display, Formatter};
 use super::coords::Coordinates;
 use num::{Integer, Num, Signed};
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub enum Direction {
     Up,
     Down,
@@ -24,6 +25,18 @@ impl Direction {
         } else {
             panic!("Unknown direction: {}", s);
         }
+    }
+}
+
+impl Display for Direction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            Direction::Up => "up",
+            Direction::Down => "down",
+            Direction::Left => "left",
+            Direction::Right => "right",
+        };
+        write!(f, "{s}")
     }
 }
 
