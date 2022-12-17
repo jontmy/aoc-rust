@@ -219,6 +219,33 @@ where
         Self::new(vec)
     }
 
+    /// Returns this grid flipped vertically.
+    ///
+    /// Note: a mirror flip is a horizontal flip. See `mirror` instead.
+    pub fn flip(self) -> Grid<T> {
+        let grid = self.clone();
+        self.enumerated_map(|c, v| *grid.get(c.x(), grid.height - c.y() - 1))
+    }
+
+    /// Returns this grid flipped horizontally.
+    pub fn mirror(self) -> Grid<T> {
+        let grid = self.clone();
+        self.enumerated_map(|c, v| *grid.get(grid.width - c.x() - 1, c.y()))
+    }
+
+    /// Retains only thw rows in this grid specified by the predicate.
+    ///
+    /// In other words, remove all rows `r` for which `f(&r)` returns false.
+    /// This method operates in place, visiting each element exactly once starting from y = 0,
+    /// and preserves the order of the retained rows.
+    pub fn retain_rows<F>(mut self, f: F) -> Self
+    where
+        F: Fn(&[T]) -> bool,
+    {
+        self.vec.retain(|row| f(row));
+        self
+    }
+
     /// Converts this grid into an two-dimensional ndarray which can be used for further processing.
     pub fn into_ndarray(self) -> Array2<T> {
         Array2::from_shape_vec((self.height(), self.width()), self.into_iter().collect()).unwrap()
