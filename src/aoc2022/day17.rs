@@ -1,6 +1,4 @@
 use itertools::Itertools;
-use petgraph::visit::Walker;
-use regex::internal::Input;
 
 use crate::aoc2022::day17::Shape::{Cross, Horizontal, Perpendicular, Square, Vertical};
 use crate::utils::directions::Direction;
@@ -210,7 +208,7 @@ impl advent::Solver<2022, 17> for Solver {
         height
     }
 
-    fn solve_part_two(&self, input: &str) -> Self::Part2 {
+    fn solve_part_two(&self, _input: &str) -> Self::Part2 {
         "[not done programmatically - find the cycle delta manually]".to_owned()
     }
 }
