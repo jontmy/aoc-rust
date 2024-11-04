@@ -1,3 +1,5 @@
+.env
+
 # Exclude puzzle inputs and outputs
 input/
 output/

@@ -24,6 +24,10 @@ once-cell-regex = "0.2.1"
 scan_fmt = "0.2.6"
 num = "0.4.0"
 map-macro = "0.2.4"
+dotenv = "0.15.0"
+clap = { version = "4.5.20", features = ["derive"] }
+reqwest = { version = "0.12.9", features = ["blocking"] }
+chrono = "0.4.38"
 
 [dev-dependencies]
 rstest = "0.15.0"

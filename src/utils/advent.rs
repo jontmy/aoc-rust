@@ -1,13 +1,58 @@
 use std::{
     error::Error,
     fmt::Display,
-    fs,
-    fs::{File, OpenOptions},
+    fs::{self, File, OpenOptions},
     io::Write,
+    os,
     path::Path,
 };
 
 use ansi_term::Style;
+use dotenv;
+
+pub fn fetch_input(day: u32, year: u32) -> String {
+    dotenv::dotenv().ok();
+    let session_token =
+        dotenv::var("SESSION_TOKEN").expect("environment variable SESSION_TOKEN should be set");
+
+    let filename = format!("input/{year}/{day:02}.txt");
+    let url = format!("https://adventofcode.com/{year}/day/{day}/input");
+    let path = Path::new(&filename);
+
+    if path.exists() {
+        return fs::read_to_string(path)
+            .expect("file should be readable")
+            .trim()
+            .into();
+    }
+
+    let client = reqwest::blocking::Client::new();
+    let response = client
+        .get(&url)
+        .header("Cookie", format!("session={}", session_token))
+        .header(
+            "User-Agent",
+            "https://github.com/jontmy/aoc-rust/blob/master/src/utils/advent.py by jontmy",
+        )
+        .build()
+        .unwrap();
+
+    let input = client
+        .execute(response)
+        .and_then(|res| res.text())
+        .expect("response should be text");
+
+    if input.starts_with("Please don't repeatedly request this endpoint before it unlocks!") {
+        eprintln!("Please wait until the puzzle unlocks before fetching the input.");
+        std::process::exit(1);
+    }
+
+    let input = input.trim();
+    fs::create_dir_all(path.parent().unwrap()).expect("parent directory should be creatable");
+    fs::write(path, input).expect("file should be writable");
+
+    input.trim().into()
+}
 
 pub trait Solver<const YEAR: u32, const DAY: u32> {
     type Part1: Display;
