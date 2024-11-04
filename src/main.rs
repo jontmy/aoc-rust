@@ -52,11 +52,18 @@ fn main() {
     );
 
     let mut spinner = Spinner::new(Spinners::Dots, "Fetching input...".into());
-    let (_, source) = advent::fetch_input(day, year, args.refetch);
-    match source {
-        advent::InputSource::File => spinner.stop_and_persist("✔", "Input read from cache".into()),
-        advent::InputSource::Web => {
-            spinner.stop_and_persist("✔", "Input fetched successfully".into())
+    match advent::fetch_input(day, year, args.refetch) {
+        Ok((_, source)) => match source {
+            advent::InputSource::File => {
+                (&mut spinner).stop_and_persist("✔", "Input read from cache".into())
+            }
+            advent::InputSource::Web => {
+                spinner.stop_and_persist("✔", "Input downloaded successfully".into())
+            }
+        },
+        Err(e) => {
+            spinner.stop_and_persist("✘", format!("Failed to download input: {e}"));
+            std::process::exit(1);
         }
     }
 
