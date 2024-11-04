@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use crate::utils::{advent, coords::Coordinates, directions::Direction};
 
-use map_macro::{hash_set};
+use map_macro::hash_set;
 use num_integer::Roots;
 use scan_fmt::scan_fmt;
 

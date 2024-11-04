@@ -1,6 +1,6 @@
-use std::fmt::{Display, Formatter};
 use super::coords::Coordinates;
 use num::{Integer, Num, Signed};
+use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Copy, Clone)]
 pub enum Direction {

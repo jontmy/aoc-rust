@@ -122,7 +122,8 @@ impl advent::Solver<2022, 18> for Solver {
             }
         }
 
-        cubes.into_iter()
+        cubes
+            .into_iter()
             .flat_map(Solver::faces)
             .counts()
             .into_iter()
