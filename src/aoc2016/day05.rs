@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use itertools::Itertools;
 
-#[allow(dead_code)] // solver takes > 60s
+#[allow(dead_code)] // OldSolver takes > 60s
 pub fn solve_part_one(input: String) -> String {
     let input = input.trim();
     (0..)
@@ -14,7 +14,7 @@ pub fn solve_part_one(input: String) -> String {
         .collect()
 }
 
-#[allow(dead_code)] // solver takes > 60s
+#[allow(dead_code)] // OldSolver takes > 60s
 pub fn solve_part_two(input: String) -> String {
     let input = input.trim();
     let mut password = HashMap::new();

@@ -2,9 +2,9 @@ use std::iter;
 
 use crate::utils::{self, advent, grid::Grid};
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     pub fn signal_strengths(input: &str) -> Vec<i32> {
         ("noop\nnoop\n".to_owned() + input)
             .trim()
@@ -19,12 +19,12 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2022, 10> for Solver {
+impl advent::OldSolver<2022, 10> for OldSolver {
     type Part1 = i32;
     type Part2 = String;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        Solver::signal_strengths(input)
+        OldSolver::signal_strengths(input)
             .into_iter()
             .enumerate()
             .skip(20)
@@ -34,7 +34,7 @@ impl advent::Solver<2022, 10> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let xs = Solver::signal_strengths(input);
+        let xs = OldSolver::signal_strengths(input);
         let grid = Grid::from_generator(
             6,
             40,

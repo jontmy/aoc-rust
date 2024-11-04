@@ -1,4 +1,4 @@
-use crate::utils::advent::Solver;
+use crate::utils::advent::OldSolver;
 
 mod day01;
 mod day02;
@@ -17,19 +17,19 @@ mod day17;
 mod day18;
 
 pub fn run() {
-    day01::Solver.solve();
-    day02::Solver.solve();
-    day03::Solver.solve();
-    day04::Solver.solve();
-    day05::Solver.solve();
-    day06::Solver.solve();
-    day07::Solver.solve();
-    day08::Solver.solve();
-    day09::Solver.solve();
-    day10::Solver.solve();
-    day11::Solver.solve();
-    day12::Solver.solve();
-    day13::Solver.solve();
-    day17::Solver.solve();
-    day18::Solver.solve();
+    day01::OldSolver.solve();
+    day02::OldSolver.solve();
+    day03::OldSolver.solve();
+    day04::OldSolver.solve();
+    day05::OldSolver.solve();
+    day06::OldSolver.solve();
+    day07::OldSolver.solve();
+    day08::OldSolver.solve();
+    day09::OldSolver.solve();
+    day10::OldSolver.solve();
+    day11::OldSolver.solve();
+    day12::OldSolver.solve();
+    day13::OldSolver.solve();
+    day17::OldSolver.solve();
+    day18::OldSolver.solve();
 }

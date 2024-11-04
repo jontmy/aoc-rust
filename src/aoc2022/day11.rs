@@ -36,9 +36,9 @@ impl FromStr for Monkey {
     }
 }
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     fn monkeys(input: &str) -> Vec<Monkey> {
         input
             .trim()
@@ -82,25 +82,25 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2022, 11> for Solver {
+impl advent::OldSolver<2022, 11> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let mut monkeys = Solver::monkeys(input);
+        let mut monkeys = OldSolver::monkeys(input);
         let mut counts = vec![0; monkeys.len()];
         for _ in 0..20 {
-            monkeys = Solver::round(&mut monkeys, &mut counts, |worry| worry / 3);
+            monkeys = OldSolver::round(&mut monkeys, &mut counts, |worry| worry / 3);
         }
         counts.into_iter().sorted().rev().take(2).product()
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let mut monkeys = Solver::monkeys(input);
+        let mut monkeys = OldSolver::monkeys(input);
         let mut counts = vec![0; monkeys.len()];
-        let lcm = Solver::lcm(&monkeys);
+        let lcm = OldSolver::lcm(&monkeys);
         for _ in 0..10000 {
-            monkeys = Solver::round(&mut monkeys, &mut counts, |worry| worry % lcm);
+            monkeys = OldSolver::round(&mut monkeys, &mut counts, |worry| worry % lcm);
         }
         counts.into_iter().sorted().rev().take(2).product()
     }

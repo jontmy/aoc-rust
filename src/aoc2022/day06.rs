@@ -2,9 +2,9 @@ use crate::utils::advent;
 
 use itertools::Itertools;
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     fn find_marker(input: &str, n: usize) -> usize {
         let input = input.trim().chars().collect_vec();
         input
@@ -17,15 +17,15 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2022, 6> for Solver {
+impl advent::OldSolver<2022, 6> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        Solver::find_marker(input, 4)
+        OldSolver::find_marker(input, 4)
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        Solver::find_marker(input, 14)
+        OldSolver::find_marker(input, 14)
     }
 }

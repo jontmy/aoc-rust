@@ -2,9 +2,9 @@ use itertools::Itertools;
 
 use crate::utils::advent;
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     fn cmp(i: usize, a_str: &str, b_str: &str) -> usize {
         let mut ad = 0;
         let mut bd = 0;
@@ -111,7 +111,7 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2022, 13> for Solver {
+impl advent::OldSolver<2022, 13> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 
@@ -122,8 +122,8 @@ impl advent::Solver<2022, 13> for Solver {
         for (i, inn) in pairs.enumerate() {
             let j = inn.split("\n").collect_tuple();
             let (a, b) = j.unwrap();
-            println!("{}", Solver::cmp(i + 1, a, b) != 0);
-            ans += Solver::cmp(i + 1, a, b);
+            println!("{}", OldSolver::cmp(i + 1, a, b) != 0);
+            ans += OldSolver::cmp(i + 1, a, b);
         }
 
         ans

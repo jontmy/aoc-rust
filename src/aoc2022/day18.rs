@@ -5,12 +5,12 @@ use scan_fmt::scan_fmt;
 
 use crate::utils::advent;
 
-pub struct Solver;
+pub struct OldSolver;
 
 type Coordinates = (i32, i32, i32);
 type Face = (Coordinates, Coordinates, Coordinates, Coordinates);
 
-impl Solver {
+impl OldSolver {
     fn faces(cx: Coordinates) -> impl Iterator<Item = Face> {
         let a = vec![(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)]; // xy = 1
         let b = vec![(0, 0, 0), (1, 0, 0), (0, 0, 1), (1, 0, 1)]; // xz = 1
@@ -70,7 +70,7 @@ impl Solver {
         while let Some(current) = queue.pop_front() {
             assert!(!cubes.contains(&current));
             visited.insert(cx);
-            for neighbor in Solver::neighbors(current, 0, x_max, 0, y_max, 0, z_max) {
+            for neighbor in OldSolver::neighbors(current, 0, x_max, 0, y_max, 0, z_max) {
                 if !cubes.contains(&neighbor) && !visited.contains(&neighbor) {
                     queue.push_back(neighbor);
                     visited.insert(neighbor);
@@ -81,7 +81,7 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2022, 18> for Solver {
+impl advent::OldSolver<2022, 18> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 
@@ -90,7 +90,7 @@ impl advent::Solver<2022, 18> for Solver {
             .trim()
             .lines()
             .filter_map(|l| scan_fmt!(l, "{d}, {d}, {d}", i32, i32, i32).ok())
-            .flat_map(Solver::faces)
+            .flat_map(OldSolver::faces)
             .counts()
             .into_iter()
             .filter(|(_, count)| *count == 1)
@@ -108,7 +108,7 @@ impl advent::Solver<2022, 18> for Solver {
         let y_max = cubes.iter().map(|c| c.1).max().unwrap() + 1;
         let z_max = cubes.iter().map(|c| c.2).max().unwrap() + 1;
 
-        let visited = Solver::bfs((0, 0, 0), cubes);
+        let visited = OldSolver::bfs((0, 0, 0), cubes);
         let mut cubes = Vec::new();
 
         for x in 0..x_max {
@@ -124,7 +124,7 @@ impl advent::Solver<2022, 18> for Solver {
 
         cubes
             .into_iter()
-            .flat_map(Solver::faces)
+            .flat_map(OldSolver::faces)
             .counts()
             .into_iter()
             .filter(|(_, count)| *count == 1)

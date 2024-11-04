@@ -2,9 +2,9 @@ use crate::utils::advent;
 
 use scan_fmt::scan_fmt;
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl advent::Solver<2022, 4> for Solver {
+impl advent::OldSolver<2022, 4> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 

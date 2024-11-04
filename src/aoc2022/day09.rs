@@ -24,9 +24,9 @@ impl FromStr for Vector {
     }
 }
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl advent::Solver<2022, 9> for Solver {
+impl advent::OldSolver<2022, 9> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 

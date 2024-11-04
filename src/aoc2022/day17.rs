@@ -4,7 +4,7 @@ use crate::aoc2022::day17::Shape::{Cross, Horizontal, Perpendicular, Square, Ver
 use crate::utils::directions::Direction;
 use crate::utils::{advent, coords::Coordinates, grid::Grid};
 
-pub struct Solver;
+pub struct OldSolver;
 
 #[derive(Debug)]
 enum Shape {
@@ -115,7 +115,7 @@ impl Rock {
         }
 
         if let Direction::Right = d {
-            if self.position.x() + self.shape.width() == Solver::WIDTH as i32 {
+            if self.position.x() + self.shape.width() == OldSolver::WIDTH as i32 {
                 return false;
             }
             for c in self.shape.fill_coords(self.position.right()) {
@@ -152,16 +152,16 @@ impl Rock {
     }
 }
 
-impl Solver {
+impl OldSolver {
     const WIDTH: usize = 7;
 
     fn grid(rocks: usize) -> Grid<bool> {
         let height = rocks * 4 + 8;
-        Grid::from_value(height, Solver::WIDTH, false)
+        Grid::from_value(height, OldSolver::WIDTH, false)
     }
 }
 
-impl advent::Solver<2022, 17> for Solver {
+impl advent::OldSolver<2022, 17> for OldSolver {
     type Part1 = i32;
     type Part2 = String;
 
@@ -177,7 +177,7 @@ impl advent::Solver<2022, 17> for Solver {
             .collect_vec();
 
         const ROCKS: usize = 2022;
-        let mut grid = Solver::grid(ROCKS);
+        let mut grid = OldSolver::grid(ROCKS);
         let mut height = 0;
         let mut jet_ptr = 0;
 

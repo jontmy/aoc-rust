@@ -11,9 +11,9 @@ struct Instruction {
     to: usize,
 }
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     fn parse(input: &str) -> (Vec<VecDeque<char>>, impl Iterator<Item = Instruction> + '_) {
         let (crates, instructions) = input.split("\n\n").into_iter().collect_tuple().unwrap();
 
@@ -48,12 +48,12 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2022, 5> for Solver {
+impl advent::OldSolver<2022, 5> for OldSolver {
     type Part1 = String;
     type Part2 = String;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let (mut stacks, instructions) = Solver::parse(input);
+        let (mut stacks, instructions) = OldSolver::parse(input);
         for ins in instructions {
             for _ in 0..ins.qty {
                 let item = stacks[ins.from].pop_front().unwrap();
@@ -67,7 +67,7 @@ impl advent::Solver<2022, 5> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let (mut stacks, instructions) = Solver::parse(input);
+        let (mut stacks, instructions) = OldSolver::parse(input);
         let mut holding = VecDeque::new();
         for ins in instructions {
             for _ in 0..ins.qty {

@@ -53,7 +53,12 @@ pub fn fetch_input(day: u32, year: u32, refetch: bool) -> Result<(String, InputS
     Ok((input.trim().into(), InputSource::Web))
 }
 
-pub trait Solver<const YEAR: u32, const DAY: u32> {
+pub trait Solver {
+    fn solve_part_one(&self, input: &str) -> String;
+    fn solve_part_two(&self, input: &str) -> String;
+}
+
+pub trait OldSolver<const YEAR: u32, const DAY: u32> {
     type Part1: Display;
     type Part2: Display;
 

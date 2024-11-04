@@ -2,9 +2,9 @@ use crate::utils::{advent, grid::Grid};
 
 use itertools::Itertools;
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     fn parse(input: &str) -> Grid<u32> {
         input
             .trim()
@@ -15,12 +15,12 @@ impl Solver {
 }
 
 // perf: brute forced
-impl advent::Solver<2022, 8> for Solver {
+impl advent::OldSolver<2022, 8> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let input = Solver::parse(input);
+        let input = OldSolver::parse(input);
         let grid = input.clone().shrink();
 
         let visible_count = grid
@@ -44,7 +44,7 @@ impl advent::Solver<2022, 8> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let input = Solver::parse(input);
+        let input = OldSolver::parse(input);
         let grid = input.clone().shrink();
 
         grid.clone()

@@ -1,5 +1,5 @@
 #![allow(dead_code, unused_variables, unused_imports)]
-use crate::utils::{advent::Solver, io};
+use crate::utils::{advent::OldSolver, io};
 
 mod day03;
 mod day04;
@@ -43,9 +43,9 @@ pub fn run() {
         day07::solve_part_one(io::read(7, 2016)),
         day07::solve_part_two(io::read(7, 2016)),
     );
-    day08::Solver.solve();
-    day09::Solver.solve();
-    day10::Solver.solve();
-    day11::Solver.solve();
-    day12::Solver.solve();
+    day08::OldSolver.solve();
+    day09::OldSolver.solve();
+    day10::OldSolver.solve();
+    day11::OldSolver.solve();
+    day12::OldSolver.solve();
 }

@@ -47,9 +47,9 @@ impl FromStr for Instruction {
     }
 }
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     fn exec(instructions: Vec<Instruction>, mut registers: HashMap<char, i32>) -> i32 {
         let mut pc = 0;
         while pc < (instructions.len() as i32) {
@@ -89,7 +89,7 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2016, 12> for Solver {
+impl advent::OldSolver<2016, 12> for OldSolver {
     type Part1 = i32;
     type Part2 = i32;
 
@@ -103,7 +103,7 @@ impl advent::Solver<2016, 12> for Solver {
         for reg in "abcd".chars() {
             registers.insert(reg, 0);
         }
-        Solver::exec(instructions, registers)
+        OldSolver::exec(instructions, registers)
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
@@ -117,6 +117,6 @@ impl advent::Solver<2016, 12> for Solver {
             registers.insert(reg, 0);
         }
         registers.insert('c', 1);
-        Solver::exec(instructions, registers)
+        OldSolver::exec(instructions, registers)
     }
 }

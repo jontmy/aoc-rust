@@ -22,9 +22,9 @@ impl FromStr for Elf {
     }
 }
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl advent::Solver<2022, 1> for Solver {
+impl advent::OldSolver<2022, 1> for OldSolver {
     type Part1 = i32;
     type Part2 = i32;
 

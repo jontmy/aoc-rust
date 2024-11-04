@@ -4,14 +4,14 @@ use itertools::Itertools;
 
 use crate::utils::advent;
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     const PRIORITIES: &'static str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     fn get_priority(c: char) -> usize {
         // O(n), but pretty self-explanatory and avoids ASCII manipulation.
-        Solver::PRIORITIES.find(c).unwrap() + 1
+        OldSolver::PRIORITIES.find(c).unwrap() + 1
     }
 
     fn intersect(sets: (HashSet<char>, HashSet<char>, HashSet<char>)) -> char {
@@ -26,7 +26,7 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2022, 3> for Solver {
+impl advent::OldSolver<2022, 3> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 
@@ -41,7 +41,7 @@ impl advent::Solver<2022, 3> for Solver {
                 )
             })
             .map(|(a, b)| a.intersection(&b).next().unwrap().clone())
-            .map(|intersection| Solver::get_priority(intersection))
+            .map(|intersection| OldSolver::get_priority(intersection))
             .sum()
     }
 
@@ -55,8 +55,8 @@ impl advent::Solver<2022, 3> for Solver {
                     .collect_tuple::<(_, _, _)>()
                     .unwrap()
             })
-            .map(|elves| Solver::intersect(elves))
-            .map(|intersection| Solver::get_priority(intersection))
+            .map(|elves| OldSolver::intersect(elves))
+            .map(|intersection| OldSolver::get_priority(intersection))
             .sum()
     }
 }

@@ -247,9 +247,9 @@ impl State {
     }
 }
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl advent::Solver<2016, 11> for Solver {
+impl advent::OldSolver<2016, 11> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 

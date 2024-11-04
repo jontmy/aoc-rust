@@ -51,9 +51,9 @@ impl Target {
     }
 }
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl Solver {
+impl OldSolver {
     fn get_instructions(input: &str) -> HashMap<i32, Instruction> {
         input
             .lines()
@@ -73,13 +73,13 @@ impl Solver {
     }
 }
 
-impl advent::Solver<2016, 10> for Solver {
+impl advent::OldSolver<2016, 10> for OldSolver {
     type Part1 = i32;
     type Part2 = i32;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let instructions = Solver::get_instructions(input);
-        let mut state = Solver::get_initial_state(input);
+        let instructions = OldSolver::get_instructions(input);
+        let mut state = OldSolver::get_initial_state(input);
         loop {
             let current = state.clone();
             // For every bot with 2 microchips, give it to the bot next in line based on its instruction.
@@ -105,8 +105,8 @@ impl advent::Solver<2016, 10> for Solver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let instructions = Solver::get_instructions(input);
-        let mut state = Solver::get_initial_state(input);
+        let instructions = OldSolver::get_instructions(input);
+        let mut state = OldSolver::get_initial_state(input);
         let mut bins = HashMap::new();
         while !bins.contains_key(&0) || !bins.contains_key(&1) || !bins.contains_key(&2) {
             let current = state.clone();

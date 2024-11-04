@@ -83,9 +83,9 @@ fn length_recursive_descent(
     children_len + intermarker_len + trailing_len
 }
 
-pub struct Solver;
+pub struct OldSolver;
 
-impl advent::Solver<2016, 9> for Solver {
+impl advent::OldSolver<2016, 9> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 
@@ -137,7 +137,7 @@ mod tests {
     #[case("X(8x2)(3x3)ABCY".to_string(), 18)]
     fn test_solve_part_one(#[case] input: String, #[case] expected: usize) {
         assert_eq!(
-            advent::Solver::solve_part_one(&super::Solver, &input),
+            advent::OldSolver::solve_part_one(&super::OldSolver, &input),
             expected
         )
     }
@@ -158,7 +158,7 @@ mod tests {
     )]
     fn test_solve_part_two(#[case] input: String, #[case] expected: usize) {
         assert_eq!(
-            advent::Solver::solve_part_two(&super::Solver, &input),
+            advent::OldSolver::solve_part_two(&super::OldSolver, &input),
             expected
         )
     }
