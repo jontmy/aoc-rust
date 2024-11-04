@@ -1,5 +1,6 @@
 mod aoc2015;
 mod aoc2016;
+mod aoc2017;
 mod aoc2021;
 mod aoc2022;
 mod utils;
@@ -7,7 +8,7 @@ mod utils;
 use chrono::{Datelike, Utc};
 use clap::Parser;
 use spinners::{Spinner, Spinners};
-use utils::advent;
+use utils::advent::{self, Solver};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -69,13 +70,19 @@ fn main() {
 
     let mut spinner = Spinner::new(Spinners::Dots, "Solving part 1...".into());
     let tick = std::time::Instant::now();
-    std::thread::sleep(std::time::Duration::from_secs(3));
+    let answer = aoc2017::day03::Solver.solve_part_one("");
     let elapsed = tick.elapsed().as_secs_f64() * 1000.0;
-    spinner.stop_and_persist("✔", format!("Part 1 solved in {elapsed:.1}ms"));
+    spinner.stop_and_persist(
+        "✔",
+        format!("Part 1 solved in {elapsed:.1}ms (answer: {answer})"),
+    );
 
     let mut spinner = Spinner::new(Spinners::Dots, "Solving part 2...".into());
     let tick = std::time::Instant::now();
-    std::thread::sleep(std::time::Duration::from_secs(3));
+    let answer = aoc2017::day03::Solver.solve_part_two("");
     let elapsed = tick.elapsed().as_secs_f64() * 1000.0;
-    spinner.stop_and_persist("✔", format!("Part 2 solved in {elapsed:.1}ms"));
+    spinner.stop_and_persist(
+        "✔",
+        format!("Part 2 solved in {elapsed:.1}ms (answer: {answer})"),
+    );
 }
