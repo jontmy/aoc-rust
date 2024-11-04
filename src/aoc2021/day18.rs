@@ -84,7 +84,7 @@ impl Add for SnailfishNumbers {
         self.numbers
             .iter_mut()
             .chain(rhs.numbers.iter_mut())
-            .for_each(|mut sn| sn.depth += 1);
+            .for_each(|sn| sn.depth += 1);
 
         let mut snailfishes = SnailfishNumbers {
             numbers: self
@@ -119,7 +119,7 @@ impl SnailfishNumbers {
         if let Some(i) = self.numbers.iter().position(|sn| sn.value > 9) {
             let sn = self.numbers.get(i).unwrap();
             let lv = sn.value.div_floor(&2);
-            let rv = sn.value.div_ceil(&2);
+            let rv = sn.value.div_ceil(2);
             let l = SnailfishNumber::new(lv, sn.depth + 1);
             let r = SnailfishNumber::new(rv, sn.depth + 1);
             self.numbers.insert(i, l);
