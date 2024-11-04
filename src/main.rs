@@ -6,6 +6,8 @@ mod utils;
 
 use chrono::{Datelike, Utc};
 use clap::Parser;
+use spinners::{Spinner, Spinners};
+use utils::advent;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -16,6 +18,8 @@ struct Args {
     day: Option<u32>,
     #[arg(short = 'y', long = "year")]
     year: Option<u32>,
+    #[arg(short = 'r', long = "refetch")]
+    refetch: bool,
 }
 
 fn main() {
@@ -39,5 +43,32 @@ fn main() {
         eprintln!("It's not December yet, please specify a day and year with -d and -y.");
         std::process::exit(1);
     }
-    utils::advent::fetch_input(day, year);
+
+    println!(
+        "\n{}",
+        ansi_term::Style::new()
+            .bold()
+            .paint(format!("Advent of Code {year}, Day {day}"))
+    );
+
+    let mut spinner = Spinner::new(Spinners::Dots, "Fetching input...".into());
+    let (_, source) = advent::fetch_input(day, year, args.refetch);
+    match source {
+        advent::InputSource::File => spinner.stop_and_persist("✔", "Input read from cache".into()),
+        advent::InputSource::Web => {
+            spinner.stop_and_persist("✔", "Input fetched successfully".into())
+        }
+    }
+
+    let mut spinner = Spinner::new(Spinners::Dots, "Solving part 1...".into());
+    let tick = std::time::Instant::now();
+    std::thread::sleep(std::time::Duration::from_secs(3));
+    let elapsed = tick.elapsed().as_secs_f64() * 1000.0;
+    spinner.stop_and_persist("✔", format!("Part 1 solved in {elapsed:.1}ms"));
+
+    let mut spinner = Spinner::new(Spinners::Dots, "Solving part 2...".into());
+    let tick = std::time::Instant::now();
+    std::thread::sleep(std::time::Duration::from_secs(3));
+    let elapsed = tick.elapsed().as_secs_f64() * 1000.0;
+    spinner.stop_and_persist("✔", format!("Part 2 solved in {elapsed:.1}ms"));
 }

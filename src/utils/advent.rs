@@ -10,7 +10,12 @@ use std::{
 use ansi_term::Style;
 use dotenv;
 
-pub fn fetch_input(day: u32, year: u32) -> String {
+pub enum InputSource {
+    File,
+    Web,
+}
+
+pub fn fetch_input(day: u32, year: u32, refetch: bool) -> (String, InputSource) {
     dotenv::dotenv().ok();
     let session_token =
         dotenv::var("SESSION_TOKEN").expect("environment variable SESSION_TOKEN should be set");
@@ -19,11 +24,12 @@ pub fn fetch_input(day: u32, year: u32) -> String {
     let url = format!("https://adventofcode.com/{year}/day/{day}/input");
     let path = Path::new(&filename);
 
-    if path.exists() {
-        return fs::read_to_string(path)
+    if path.exists() && !refetch {
+        let input = fs::read_to_string(path)
             .expect("file should be readable")
             .trim()
             .into();
+        return (input, InputSource::File);
     }
 
     let client = reqwest::blocking::Client::new();
@@ -51,7 +57,7 @@ pub fn fetch_input(day: u32, year: u32) -> String {
     fs::create_dir_all(path.parent().unwrap()).expect("parent directory should be creatable");
     fs::write(path, input).expect("file should be writable");
 
-    input.trim().into()
+    (input.trim().into(), InputSource::Web)
 }
 
 pub trait Solver<const YEAR: u32, const DAY: u32> {
