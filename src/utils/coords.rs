@@ -1,5 +1,5 @@
 use super::{directions::Direction, misc};
-use map_macro::set;
+use map_macro::hash_set;
 use num::{
     iter::Range,
     traits::{Euclid, WrappingAdd, WrappingSub},
@@ -714,7 +714,7 @@ where
     where
         R: RangeBounds<T> + Clone,
     {
-        let mut neighbors = set!(
+        let mut neighbors = hash_set!(
             self.wrapping_up(y_range.clone()),
             self.wrapping_down(y_range),
             self.wrapping_left(x_range.clone()),
@@ -787,7 +787,7 @@ where
     where
         R: RangeBounds<T> + Clone,
     {
-        let mut neighbors = set!(
+        let mut neighbors = hash_set!(
             self.wrapping_up(y_range.clone())
                 .wrapping_left(x_range.clone()),
             self.wrapping_up(y_range.clone())

@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use crate::utils::{advent, coords::Coordinates, directions::Direction};
 
-use map_macro::set;
+use map_macro::{hash_set};
 use num_integer::Roots;
 use scan_fmt::scan_fmt;
 
@@ -34,7 +34,7 @@ impl advent::Solver<2022, 9> for Solver {
         let vectors = input.lines().filter_map(|l| l.parse::<Vector>().ok());
         let mut head = Coordinates::origin();
         let mut tail = Coordinates::origin();
-        let mut visited = set![tail];
+        let mut visited = hash_set![tail];
 
         for Vector {
             direction,
@@ -57,7 +57,7 @@ impl advent::Solver<2022, 9> for Solver {
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
         let vectors = input.lines().filter_map(|l| l.parse::<Vector>().ok());
         let mut rope = vec![Coordinates::origin(); 10];
-        let mut visited = set![Coordinates::origin()];
+        let mut visited = hash_set![Coordinates::origin()];
 
         for Vector {
             direction,

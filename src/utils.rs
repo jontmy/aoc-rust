@@ -2,7 +2,7 @@
 
 use std::str::FromStr;
 
-use map_macro::map;
+use map_macro::hash_map;
 use num::Integer;
 use once_cell_regex::regex;
 
@@ -28,7 +28,7 @@ where
 
 // source: https://gist.github.com/codyphobe/67a68b0a85c8653e2c0e8e5eaf73b2d6
 pub fn ocr(grid: &Grid<char>) -> String {
-    let map = map! {
+    let map = hash_map! {
         " ##  #  # #  # #### #  # #  # " => 'A',
         "###  #  # ###  #  # #  # ###  " => 'B',
         " ##  #  # #    #    #  #  ##  " => 'C',
