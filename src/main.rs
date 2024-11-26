@@ -35,8 +35,6 @@ macro_rules! solve_and_print {
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    #[arg(short = 'a', long = "all")]
-    all: bool,
     #[arg(short = 'd', long = "day")]
     day: Option<u32>,
     #[arg(short = 'y', long = "year")]
@@ -47,14 +45,6 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    if args.all {
-        aoc2015::run();
-        aoc2016::run();
-        aoc2021::run();
-        aoc2022::run();
-        return;
-    }
-
     let now = Utc::now();
     let day = args.day.unwrap_or(now.day());
     let month = now.month();
