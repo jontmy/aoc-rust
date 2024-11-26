@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 use scan_fmt::scan_fmt;
 
@@ -53,7 +53,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2022, 7> for OldSolver {
+impl aoc::OldSolver<2022, 7> for OldSolver {
     type Part1 = i32;
     type Part2 = i32;
 

@@ -1,4 +1,4 @@
-use crate::utils::advent;
+use crate::utils::aoc;
 
 use itertools::Itertools;
 
@@ -17,7 +17,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2022, 6> for OldSolver {
+impl aoc::OldSolver<2022, 6> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 

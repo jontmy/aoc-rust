@@ -1,8 +1,8 @@
-use crate::utils::advent;
+use crate::utils::aoc;
 
 pub struct Solver;
 
-impl advent::Solver for Solver {
+impl aoc::Solver for Solver {
     fn solve_part_one(&self, input: &str) -> String {
         String::new()
     }

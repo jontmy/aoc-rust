@@ -2,7 +2,7 @@ use std::{fmt::Display, str::FromStr};
 
 use once_cell_regex::regex;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 struct Rectangle {
     width: usize,
@@ -113,7 +113,7 @@ impl Display for Screen {
 
 pub struct OldSolver;
 
-impl advent::OldSolver<2016, 8> for OldSolver {
+impl aoc::OldSolver<2016, 8> for OldSolver {
     type Part1 = usize;
     type Part2 = String;
 

@@ -1,5 +1,5 @@
 #![allow(dead_code, unused_variables, unused_imports)]
-use crate::utils::{advent::OldSolver, io};
+use crate::utils::{aoc::OldSolver, io};
 
 mod day03;
 mod day04;

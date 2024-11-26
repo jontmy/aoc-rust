@@ -2,7 +2,7 @@ use itertools::Itertools;
 
 use crate::aoc2022::day17::Shape::{Cross, Horizontal, Perpendicular, Square, Vertical};
 use crate::utils::directions::Direction;
-use crate::utils::{advent, coords::Coordinates, grid::Grid};
+use crate::utils::{aoc, coords::Coordinates, grid::Grid};
 
 pub struct OldSolver;
 
@@ -161,7 +161,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2022, 17> for OldSolver {
+impl aoc::OldSolver<2022, 17> for OldSolver {
     type Part1 = i32;
     type Part2 = String;
 

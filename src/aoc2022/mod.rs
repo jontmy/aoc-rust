@@ -1,5 +1,3 @@
-use crate::utils::advent::OldSolver;
-
 mod day01;
 mod day02;
 mod day03;

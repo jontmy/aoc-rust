@@ -8,7 +8,7 @@ use std::{
 use itertools::Itertools;
 use once_cell_regex::regex;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 #[derive(Clone, Hash, PartialEq, Eq)]
 enum Item {
@@ -249,7 +249,7 @@ impl State {
 
 pub struct OldSolver;
 
-impl advent::OldSolver<2016, 11> for OldSolver {
+impl aoc::OldSolver<2016, 11> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 

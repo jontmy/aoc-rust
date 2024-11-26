@@ -8,7 +8,7 @@ use once_cell_regex::regex;
 
 use self::grid::Grid;
 
-pub mod advent;
+pub mod aoc;
 pub mod coordinates;
 pub mod coords;
 pub mod directions;

@@ -1,6 +1,6 @@
 use std::iter;
 
-use crate::utils::{self, advent, grid::Grid};
+use crate::utils::{self, aoc, grid::Grid};
 
 pub struct OldSolver;
 
@@ -19,7 +19,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2022, 10> for OldSolver {
+impl aoc::OldSolver<2022, 10> for OldSolver {
     type Part1 = i32;
     type Part2 = String;
 

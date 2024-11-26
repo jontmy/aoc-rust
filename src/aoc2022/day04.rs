@@ -1,10 +1,10 @@
-use crate::utils::advent;
+use crate::utils::aoc;
 
 use scan_fmt::scan_fmt;
 
 pub struct OldSolver;
 
-impl advent::OldSolver<2022, 4> for OldSolver {
+impl aoc::OldSolver<2022, 4> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 

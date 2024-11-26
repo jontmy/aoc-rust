@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 use itertools::Itertools;
 use scan_fmt::scan_fmt;
@@ -48,7 +48,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2022, 5> for OldSolver {
+impl aoc::OldSolver<2022, 5> for OldSolver {
     type Part1 = String;
     type Part2 = String;
 

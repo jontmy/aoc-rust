@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use itertools::Itertools;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 enum Shape {
     Rock,
@@ -92,7 +92,7 @@ impl Outcome {
 
 pub struct OldSolver;
 
-impl advent::OldSolver<2022, 2> for OldSolver {
+impl aoc::OldSolver<2022, 2> for OldSolver {
     type Part1 = i32;
     type Part2 = i32;
 

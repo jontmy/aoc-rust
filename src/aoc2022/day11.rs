@@ -4,7 +4,7 @@ use itertools::Itertools;
 use num::Integer;
 use scan_fmt::scan_fmt;
 
-use crate::utils::{self, advent};
+use crate::utils::{self, aoc};
 
 #[derive(Debug, Clone)]
 struct Monkey {
@@ -82,7 +82,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2022, 11> for OldSolver {
+impl aoc::OldSolver<2022, 11> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 

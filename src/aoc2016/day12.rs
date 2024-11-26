@@ -2,7 +2,7 @@ use std::{collections::HashMap, str::FromStr};
 
 use itertools::Itertools;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 type Register = char;
 
@@ -89,7 +89,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2016, 12> for OldSolver {
+impl aoc::OldSolver<2016, 12> for OldSolver {
     type Part1 = i32;
     type Part2 = i32;
 

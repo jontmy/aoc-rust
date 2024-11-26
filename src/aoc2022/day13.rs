@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 pub struct OldSolver;
 
@@ -111,7 +111,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2022, 13> for OldSolver {
+impl aoc::OldSolver<2022, 13> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 

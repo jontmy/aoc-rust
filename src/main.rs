@@ -10,7 +10,7 @@ use clap::Parser;
 use spinners::{Spinner, Spinners};
 use std::collections::HashMap;
 use std::sync::Arc;
-use utils::advent::{self, Solver};
+use utils::aoc::{self, Solver};
 
 macro_rules! solve_and_print {
     ($part:expr, $solver:expr, $input:expr, $day:expr, $year:expr) => {
@@ -65,13 +65,13 @@ fn main() {
     );
 
     let mut spinner = Spinner::new(Spinners::Dots, "Fetching input...".into());
-    match advent::fetch_input(day, year, args.refetch) {
+    match aoc::fetch_input(day, year, args.refetch) {
         Ok((input, source)) => {
             match source {
-                advent::InputSource::File => {
+                aoc::InputSource::File => {
                     (&mut spinner).stop_and_persist("✔", "Input read from cache".into())
                 }
-                advent::InputSource::Web => {
+                aoc::InputSource::Web => {
                     spinner.stop_and_persist("✔", "Input downloaded successfully".into())
                 }
             }

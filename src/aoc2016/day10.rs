@@ -3,7 +3,7 @@ use std::{collections::HashMap, str::FromStr};
 use itertools::Itertools;
 use scan_fmt::scan_fmt;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 #[derive(Debug)]
 struct Instruction {
@@ -73,7 +73,7 @@ impl OldSolver {
     }
 }
 
-impl advent::OldSolver<2016, 10> for OldSolver {
+impl aoc::OldSolver<2016, 10> for OldSolver {
     type Part1 = i32;
     type Part2 = i32;
 

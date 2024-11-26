@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, vec};
 use itertools::Itertools;
 use once_cell_regex::regex;
 
-use crate::utils::advent;
+use crate::utils::aoc;
 
 struct Marker {
     // in the format (<grab>x<repeat>)
@@ -85,7 +85,7 @@ fn length_recursive_descent(
 
 pub struct OldSolver;
 
-impl advent::OldSolver<2016, 9> for OldSolver {
+impl aoc::OldSolver<2016, 9> for OldSolver {
     type Part1 = usize;
     type Part2 = usize;
 
@@ -125,7 +125,7 @@ impl advent::OldSolver<2016, 9> for OldSolver {
 
 #[cfg(test)]
 mod tests {
-    use crate::utils::advent;
+    use crate::utils::aoc;
     use rstest::rstest;
 
     #[rstest]
@@ -137,7 +137,7 @@ mod tests {
     #[case("X(8x2)(3x3)ABCY".to_string(), 18)]
     fn test_solve_part_one(#[case] input: String, #[case] expected: usize) {
         assert_eq!(
-            advent::OldSolver::solve_part_one(&super::OldSolver, &input),
+            aoc::OldSolver::solve_part_one(&super::OldSolver, &input),
             expected
         )
     }
@@ -158,7 +158,7 @@ mod tests {
     )]
     fn test_solve_part_two(#[case] input: String, #[case] expected: usize) {
         assert_eq!(
-            advent::OldSolver::solve_part_two(&super::OldSolver, &input),
+            aoc::OldSolver::solve_part_two(&super::OldSolver, &input),
             expected
         )
     }
