@@ -7,7 +7,7 @@ mod utils;
 
 use chrono::{Datelike, Utc};
 use clap::Parser;
-use utils::v2::aoc::Solver;
+use utils::v2::solver::Solver;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]

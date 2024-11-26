@@ -1,2 +1,2 @@
-pub mod aoc;
+pub mod solver;
 pub mod sparse_grid;
