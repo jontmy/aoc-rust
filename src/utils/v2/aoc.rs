@@ -17,26 +17,6 @@ pub enum InputSource {
     Web,
 }
 
-macro_rules! solve_and_print {
-    ($part:expr, $solver:expr, $input:expr, $day:expr, $year:expr) => {
-        let mut spinner = Spinner::new(Spinners::Dots, format!("Solving part {}...", $part));
-        let tick = std::time::Instant::now();
-        let answer = match $part {
-            1 => $solver.solve_part_one($input),
-            2 => $solver.solve_part_two($input),
-            _ => unreachable!(),
-        };
-        let elapsed = tick.elapsed().as_secs_f64() * 1000.0;
-        spinner.stop_and_persist(
-            "✔",
-            format!(
-                "Part {} solved in {:.1}ms (answer: {})",
-                $part, elapsed, answer
-            ),
-        );
-    };
-}
-
 pub trait Solver<const YEAR: u32, const DAY: u32> {
     fn solve_part_one(&self, input: &str) -> String;
     fn solve_part_two(&self, input: &str) -> String;
@@ -78,6 +58,27 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         Ok((input.trim().into(), InputSource::Web))
     }
 
+    fn solve_part(&self, part: u8, input: &str) -> Result<()> {
+        let mut spinner = Spinner::new(Spinners::Dots, format!("Solving part {}...", part));
+        let tick = std::time::Instant::now();
+
+        let answer = match part {
+            1 => self.solve_part_one(input),
+            2 => self.solve_part_two(input),
+            _ => unreachable!(),
+        };
+
+        let elapsed = tick.elapsed().as_secs_f64() * 1000.0;
+        spinner.stop_and_persist(
+            "✔",
+            format!(
+                "Part {} solved in {:.1}ms (answer: {})",
+                part, elapsed, answer
+            ),
+        );
+        Ok(())
+    }
+
     fn solve(&self, refetch: bool) -> Result<()> {
         let mut spinner = Spinner::new(Spinners::Dots, "Fetching input...".into());
         match self.fetch_input(refetch) {
@@ -90,14 +91,14 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
                         spinner.stop_and_persist("✔", "Input downloaded successfully".into())
                     }
                 }
-                solve_and_print!(1, self, &input, DAY, YEAR);
-                solve_and_print!(2, self, &input, DAY, YEAR);
+                self.solve_part(1, &input)?;
+                self.solve_part(2, &input)?;
+                Ok(())
             }
             Err(e) => {
-                spinner.stop_and_persist("✘", format!("Failed to download input: {e}"));
-                std::process::exit(1);
+                spinner.stop_and_persist("✖", format!("Failed to fetch input: {}", e));
+                Err(e.into())
             }
         }
-        Ok(())
     }
 }
