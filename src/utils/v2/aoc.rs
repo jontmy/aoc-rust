@@ -18,8 +18,11 @@ pub enum InputSource {
 }
 
 pub trait Solver<const YEAR: u32, const DAY: u32> {
-    fn solve_part_one(&self, input: &str) -> String;
-    fn solve_part_two(&self, input: &str) -> String;
+    type Part1: Display;
+    type Part2: Display;
+
+    fn solve_part_one(&self, input: &str) -> Self::Part1;
+    fn solve_part_two(&self, input: &str) -> Self::Part2;
 
     fn fetch_input(&self, refetch: bool) -> Result<(String, InputSource)> {
         dotenv::dotenv().ok();
@@ -63,8 +66,8 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         let tick = std::time::Instant::now();
 
         let answer = match part {
-            1 => self.solve_part_one(input),
-            2 => self.solve_part_two(input),
+            1 => self.solve_part_one(input).to_string(),
+            2 => self.solve_part_two(input).to_string(),
             _ => unreachable!(),
         };
 
@@ -80,6 +83,13 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
     }
 
     fn solve(&self, refetch: bool) -> Result<()> {
+        println!(
+            "\n{}",
+            ansi_term::Style::new()
+                .bold()
+                .paint(format!("Advent of Code {YEAR}, Day {DAY}"))
+        );
+
         let mut spinner = Spinner::new(Spinners::Dots, "Fetching input...".into());
         match self.fetch_input(refetch) {
             Ok((input, source)) => {

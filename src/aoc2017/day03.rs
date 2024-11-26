@@ -6,7 +6,10 @@ use crate::utils::v2::{
 pub struct Solver;
 
 impl aoc::Solver<2017, 3> for Solver {
-    fn solve_part_one(&self, input: &str) -> String {
+    type Part1 = u32;
+    type Part2 = u32;
+
+    fn solve_part_one(&self, input: &str) -> Self::Part1 {
         let input = input.parse::<u32>().unwrap();
         let mut ring_diameter = (input as f64).sqrt().ceil() as u32;
         if (ring_diameter % 2) == 0 {
@@ -22,13 +25,12 @@ impl aoc::Solver<2017, 3> for Solver {
                 continue;
             }
             let edge_mid = edge_max - ring_num;
-            let result = edge_mid.abs_diff(input) + ring_num;
-            return result.to_string();
+            return edge_mid.abs_diff(input) + ring_num;
         }
         unreachable!();
     }
 
-    fn solve_part_two(&self, input: &str) -> String {
+    fn solve_part_two(&self, input: &str) -> Self::Part2 {
         let input = input.parse::<u32>().unwrap();
         let mut ring_diameter = (input as f64).sqrt().ceil() as u32;
         if (ring_diameter % 2) == 0 {
@@ -46,28 +48,28 @@ impl aoc::Solver<2017, 3> for Solver {
                 x += 1;
                 let value = grid.get_and_set_next_value(x, y);
                 if value > input {
-                    return value.to_string();
+                    return value;
                 }
             }
             for _ in 0..(2 * d - 1) {
                 y += 1;
                 let value = grid.get_and_set_next_value(x, y);
                 if value > input {
-                    return value.to_string();
+                    return value;
                 }
             }
             for _ in 0..(2 * d) {
                 x -= 1;
                 let value = grid.get_and_set_next_value(x, y);
                 if value > input {
-                    return value.to_string();
+                    return value;
                 }
             }
             for _ in 0..(2 * d) {
                 y -= 1;
                 let value = grid.get_and_set_next_value(x, y);
                 if value > input {
-                    return value.to_string();
+                    return value;
                 }
             }
         }

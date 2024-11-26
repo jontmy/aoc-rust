@@ -34,13 +34,6 @@ fn main() {
         std::process::exit(1);
     }
 
-    println!(
-        "\n{}",
-        ansi_term::Style::new()
-            .bold()
-            .paint(format!("Advent of Code {year}, Day {day}"))
-    );
-
     let solver = match year {
         2017 => match day {
             3 => Some(aoc2017::day03::Solver),
