@@ -5,7 +5,7 @@ use crate::utils::v2::{
 
 pub struct Solver;
 
-impl aoc::Solver for Solver {
+impl aoc::Solver<2017, 3> for Solver {
     fn solve_part_one(&self, input: &str) -> String {
         let input = input.parse::<u32>().unwrap();
         let mut ring_diameter = (input as f64).sqrt().ceil() as u32;

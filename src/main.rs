@@ -7,30 +7,7 @@ mod utils;
 
 use chrono::{Datelike, Utc};
 use clap::Parser;
-use spinners::{Spinner, Spinners};
-use std::collections::HashMap;
-use std::sync::Arc;
-use utils::v2::aoc::{self, Solver};
-
-macro_rules! solve_and_print {
-    ($part:expr, $solver:expr, $input:expr, $day:expr, $year:expr) => {
-        let mut spinner = Spinner::new(Spinners::Dots, format!("Solving part {}...", $part));
-        let tick = std::time::Instant::now();
-        let answer = match $part {
-            1 => $solver.solve_part_one($input),
-            2 => $solver.solve_part_two($input),
-            _ => unreachable!(),
-        };
-        let elapsed = tick.elapsed().as_secs_f64() * 1000.0;
-        spinner.stop_and_persist(
-            "✔",
-            format!(
-                "Part {} solved in {:.1}ms (answer: {})",
-                $part, elapsed, answer
-            ),
-        );
-    };
-}
+use utils::v2::aoc::Solver;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -64,34 +41,21 @@ fn main() {
             .paint(format!("Advent of Code {year}, Day {day}"))
     );
 
-    let mut spinner = Spinner::new(Spinners::Dots, "Fetching input...".into());
-    match aoc::fetch_input(day, year, args.refetch) {
-        Ok((input, source)) => {
-            match source {
-                aoc::InputSource::File => {
-                    (&mut spinner).stop_and_persist("✔", "Input read from cache".into())
-                }
-                aoc::InputSource::Web => {
-                    spinner.stop_and_persist("✔", "Input downloaded successfully".into())
-                }
-            }
-            if let Some(solver) = get_solver(year, day) {
-                solve_and_print!(1, solver.as_ref(), &input, day, year);
-                solve_and_print!(2, solver.as_ref(), &input, day, year);
-            } else {
-                eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
-                std::process::exit(1);
-            }
-        }
-        Err(e) => {
-            spinner.stop_and_persist("✘", format!("Failed to download input: {e}"));
+    let solver = match year {
+        2017 => match day {
+            3 => Some(aoc2017::day03::Solver),
+            _ => None,
+        },
+        _ => None,
+    };
+
+    if let Some(solver) = solver {
+        if let Err(e) = solver.solve(args.refetch) {
+            eprintln!("✘ Failed to solve: {}", e);
             std::process::exit(1);
         }
+    } else {
+        eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
+        std::process::exit(1);
     }
-}
-
-fn get_solver(year: u32, day: u32) -> Option<Arc<dyn Solver>> {
-    let mut solvers: HashMap<(u32, u32), Arc<dyn Solver>> = HashMap::new();
-    solvers.insert((2017, 3), Arc::new(aoc2017::day03::Solver));
-    solvers.get(&(year, day)).cloned()
 }
