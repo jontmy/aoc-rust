@@ -1,10 +1,10 @@
-use crate::utils::{aoc, grid::Grid};
+use crate::utils::{v2::solver, grid::Grid};
 
 use itertools::Itertools;
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl OldSolver {
+impl Solver {
     fn parse(input: &str) -> Grid<u32> {
         input
             .trim()
@@ -15,12 +15,12 @@ impl OldSolver {
 }
 
 // perf: brute forced
-impl aoc::OldSolver<2022, 8> for OldSolver {
+impl solver::Solver<2022, 8> for Solver {
     type Part1 = usize;
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let input = OldSolver::parse(input);
+        let input = Solver::parse(input);
         let grid = input.clone().shrink();
 
         let visible_count = grid
@@ -44,7 +44,7 @@ impl aoc::OldSolver<2022, 8> for OldSolver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let input = OldSolver::parse(input);
+        let input = Solver::parse(input);
         let grid = input.clone().shrink();
 
         grid.clone()

@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use crate::utils::{aoc, coords::Coordinates, directions::Direction};
+use crate::utils::{v2::solver, coords::Coordinates, directions::Direction};
 
 use map_macro::hash_set;
 use num_integer::Roots;
@@ -24,9 +24,9 @@ impl FromStr for Vector {
     }
 }
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl aoc::OldSolver<2022, 9> for OldSolver {
+impl solver::Solver<2022, 9> for Solver {
     type Part1 = usize;
     type Part2 = usize;
 

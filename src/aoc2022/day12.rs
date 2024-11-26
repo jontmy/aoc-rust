@@ -1,10 +1,10 @@
 use itertools::Itertools;
 
-use crate::utils::{aoc, coords::Coordinates, grid::Grid};
+use crate::utils::{v2::solver, coords::Coordinates, grid::Grid};
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl OldSolver {
+impl Solver {
     pub fn elevation(c: char) -> usize {
         match c {
             'S' => 0,
@@ -25,7 +25,7 @@ impl OldSolver {
         input
             .trim()
             .lines()
-            .map(|l| l.chars().map(|c| OldSolver::elevation(c)).collect_vec())
+            .map(|l| l.chars().map(|c| Solver::elevation(c)).collect_vec())
             .collect()
     }
 
@@ -51,27 +51,27 @@ impl OldSolver {
     }
 }
 
-impl aoc::OldSolver<2022, 12> for OldSolver {
+impl solver::Solver<2022, 12> for Solver {
     type Part1 = usize;
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let grid = OldSolver::grid(input);
-        let elevations = OldSolver::elevations(input);
+        let grid = Solver::grid(input);
+        let elevations = Solver::elevations(input);
         let start = grid.find('S').unwrap();
         let end = grid.find('E').unwrap();
-        OldSolver::bfs(&elevations, start, end).unwrap()
+        Solver::bfs(&elevations, start, end).unwrap()
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let grid = OldSolver::grid(input);
-        let elevations = OldSolver::elevations(input);
+        let grid = Solver::grid(input);
+        let elevations = Solver::elevations(input);
         let starts = elevations.find_all(0);
         let end = grid.find('E').unwrap();
 
         starts
             .into_iter()
-            .filter_map(|start| OldSolver::bfs(&elevations, start, end))
+            .filter_map(|start| Solver::bfs(&elevations, start, end))
             .min()
             .unwrap()
     }

@@ -1,10 +1,10 @@
-use crate::utils::aoc;
+use crate::utils::v2::solver;
 
 use itertools::Itertools;
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl OldSolver {
+impl Solver {
     fn find_marker(input: &str, n: usize) -> usize {
         let input = input.trim().chars().collect_vec();
         input
@@ -17,15 +17,15 @@ impl OldSolver {
     }
 }
 
-impl aoc::OldSolver<2022, 6> for OldSolver {
+impl solver::Solver<2022, 6> for Solver {
     type Part1 = usize;
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        OldSolver::find_marker(input, 4)
+        Solver::find_marker(input, 4)
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        OldSolver::find_marker(input, 14)
+        Solver::find_marker(input, 14)
     }
 }

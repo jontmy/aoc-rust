@@ -1,10 +1,10 @@
 use itertools::Itertools;
 
-use crate::utils::aoc;
+use crate::utils::v2::solver;
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl OldSolver {
+impl Solver {
     fn cmp(i: usize, a_str: &str, b_str: &str) -> usize {
         let mut ad = 0;
         let mut bd = 0;
@@ -82,9 +82,6 @@ impl OldSolver {
                 .copied()
                 .collect_vec();
 
-            println!("{:?}", a_list);
-            println!("{:?}", b_list);
-
             a_ptr += a_list.len();
             b_ptr += b_list.len();
 
@@ -111,7 +108,7 @@ impl OldSolver {
     }
 }
 
-impl aoc::OldSolver<2022, 13> for OldSolver {
+impl solver::Solver<2022, 13> for Solver {
     type Part1 = usize;
     type Part2 = usize;
 
@@ -122,8 +119,7 @@ impl aoc::OldSolver<2022, 13> for OldSolver {
         for (i, inn) in pairs.enumerate() {
             let j = inn.split("\n").collect_tuple();
             let (a, b) = j.unwrap();
-            println!("{}", OldSolver::cmp(i + 1, a, b) != 0);
-            ans += OldSolver::cmp(i + 1, a, b);
+            ans += Solver::cmp(i + 1, a, b);
         }
 
         ans

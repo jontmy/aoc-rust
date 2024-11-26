@@ -4,7 +4,7 @@ use itertools::Itertools;
 use num::Integer;
 use scan_fmt::scan_fmt;
 
-use crate::utils::{self, aoc};
+use crate::utils::{self, v2::solver};
 
 #[derive(Debug, Clone)]
 struct Monkey {
@@ -36,9 +36,9 @@ impl FromStr for Monkey {
     }
 }
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl OldSolver {
+impl Solver {
     fn monkeys(input: &str) -> Vec<Monkey> {
         input
             .trim()
@@ -82,25 +82,25 @@ impl OldSolver {
     }
 }
 
-impl aoc::OldSolver<2022, 11> for OldSolver {
+impl solver::Solver<2022, 11> for Solver {
     type Part1 = usize;
     type Part2 = usize;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let mut monkeys = OldSolver::monkeys(input);
+        let mut monkeys = Solver::monkeys(input);
         let mut counts = vec![0; monkeys.len()];
         for _ in 0..20 {
-            monkeys = OldSolver::round(&mut monkeys, &mut counts, |worry| worry / 3);
+            monkeys = Solver::round(&mut monkeys, &mut counts, |worry| worry / 3);
         }
         counts.into_iter().sorted().rev().take(2).product()
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let mut monkeys = OldSolver::monkeys(input);
+        let mut monkeys = Solver::monkeys(input);
         let mut counts = vec![0; monkeys.len()];
-        let lcm = OldSolver::lcm(&monkeys);
+        let lcm = Solver::lcm(&monkeys);
         for _ in 0..10000 {
-            monkeys = OldSolver::round(&mut monkeys, &mut counts, |worry| worry % lcm);
+            monkeys = Solver::round(&mut monkeys, &mut counts, |worry| worry % lcm);
         }
         counts.into_iter().sorted().rev().take(2).product()
     }

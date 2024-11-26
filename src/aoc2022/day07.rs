@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
-use crate::utils::aoc;
+use crate::utils::v2::solver;
 
 use scan_fmt::scan_fmt;
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl OldSolver {
+impl Solver {
     fn size(pwd: &str, dirs: &HashMap<String, (Vec<String>, HashMap<String, i32>)>) -> i32 {
         let (subdirs, files) = dirs.get(pwd).unwrap();
         let files_size = files.values().sum();
@@ -15,7 +15,7 @@ impl OldSolver {
         }
         let subdirs_size = subdirs
             .into_iter()
-            .map(|subdir| OldSolver::size(&subdir, dirs))
+            .map(|subdir| Solver::size(&subdir, dirs))
             .sum::<i32>();
         subdirs_size + files_size
     }
@@ -53,25 +53,25 @@ impl OldSolver {
     }
 }
 
-impl aoc::OldSolver<2022, 7> for OldSolver {
+impl solver::Solver<2022, 7> for Solver {
     type Part1 = i32;
     type Part2 = i32;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let dirs = OldSolver::dirs(input);
+        let dirs = Solver::dirs(input);
         dirs.keys()
-            .map(|dir| OldSolver::size(dir, &dirs)) // perf: memoize this
+            .map(|dir| Solver::size(dir, &dirs)) // perf: memoize this
             .filter(|sz| *sz < 100000)
             .sum()
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let dirs = OldSolver::dirs(input);
-        let unused = 70000000 - OldSolver::size("/", &dirs);
+        let dirs = Solver::dirs(input);
+        let unused = 70000000 - Solver::size("/", &dirs);
         let min = 30000000 - unused;
 
         dirs.keys()
-            .map(|dir| OldSolver::size(dir, &dirs))
+            .map(|dir| Solver::size(dir, &dirs))
             .filter(|sz| *sz > min)
             .min()
             .unwrap()

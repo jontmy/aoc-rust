@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use crate::utils::aoc;
+use crate::utils::v2::solver;
 
 use itertools::Itertools;
 use scan_fmt::scan_fmt;
@@ -11,9 +11,9 @@ struct Instruction {
     to: usize,
 }
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl OldSolver {
+impl Solver {
     fn parse(input: &str) -> (Vec<VecDeque<char>>, impl Iterator<Item = Instruction> + '_) {
         let (crates, instructions) = input.split("\n\n").into_iter().collect_tuple().unwrap();
 
@@ -48,12 +48,12 @@ impl OldSolver {
     }
 }
 
-impl aoc::OldSolver<2022, 5> for OldSolver {
+impl solver::Solver<2022, 5> for Solver {
     type Part1 = String;
     type Part2 = String;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1 {
-        let (mut stacks, instructions) = OldSolver::parse(input);
+        let (mut stacks, instructions) = Solver::parse(input);
         for ins in instructions {
             for _ in 0..ins.qty {
                 let item = stacks[ins.from].pop_front().unwrap();
@@ -67,7 +67,7 @@ impl aoc::OldSolver<2022, 5> for OldSolver {
     }
 
     fn solve_part_two(&self, input: &str) -> Self::Part2 {
-        let (mut stacks, instructions) = OldSolver::parse(input);
+        let (mut stacks, instructions) = Solver::parse(input);
         let mut holding = VecDeque::new();
         for ins in instructions {
             for _ in 0..ins.qty {

@@ -34,21 +34,38 @@ fn main() {
         std::process::exit(1);
     }
 
-    let solver = match year {
+    let _ = match year {
         2017 => match day {
-            3 => Some(aoc2017::day03::Solver),
-            _ => None,
+            3 => aoc2017::day03::Solver.solve(args.refetch),
+            _ => {
+                eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
+                std::process::exit(1);
+            }
         },
-        _ => None,
-    };
-
-    if let Some(solver) = solver {
-        if let Err(e) = solver.solve(args.refetch) {
-            eprintln!("✘ Failed to solve: {}", e);
+        2022 => match day {
+            1 => aoc2022::day01::Solver.solve(args.refetch),
+            2 => aoc2022::day02::Solver.solve(args.refetch),
+            3 => aoc2022::day03::Solver.solve(args.refetch),
+            4 => aoc2022::day04::Solver.solve(args.refetch),
+            5 => aoc2022::day05::Solver.solve(args.refetch),
+            6 => aoc2022::day06::Solver.solve(args.refetch),
+            7 => aoc2022::day07::Solver.solve(args.refetch),
+            8 => aoc2022::day08::Solver.solve(args.refetch),
+            9 => aoc2022::day09::Solver.solve(args.refetch),
+            10 => aoc2022::day10::Solver.solve(args.refetch),
+            11 => aoc2022::day11::Solver.solve(args.refetch),
+            12 => aoc2022::day12::Solver.solve(args.refetch),
+            13 => aoc2022::day13::Solver.solve(args.refetch),
+            17 => aoc2022::day17::Solver.solve(args.refetch),
+            18 => aoc2022::day18::Solver.solve(args.refetch),
+            _ => {
+                eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
+                std::process::exit(1);
+            }
+        },
+        _ => {
+            eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
             std::process::exit(1);
         }
-    } else {
-        eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
-        std::process::exit(1);
-    }
+    };
 }

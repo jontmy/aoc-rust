@@ -1,10 +1,10 @@
-use crate::utils::aoc;
+use crate::utils::v2::solver;
 
 use scan_fmt::scan_fmt;
 
-pub struct OldSolver;
+pub struct Solver;
 
-impl aoc::OldSolver<2022, 4> for OldSolver {
+impl solver::Solver<2022, 4> for Solver {
     type Part1 = usize;
     type Part2 = usize;
 
