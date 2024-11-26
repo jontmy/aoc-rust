@@ -30,7 +30,7 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
             .with_context(|| "environment variable SESSION_TOKEN should be set")?;
 
         let filename = format!("input/{YEAR}/{DAY:02}.txt");
-        let url = format!("https://adventofcode.com/{YEAR}/DAY/{DAY}/input");
+        let url = format!("https://adventofcode.com/{YEAR}/day/{DAY}/input");
         let path = Path::new(&filename);
 
         if path.exists() && !refetch {
