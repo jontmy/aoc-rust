@@ -15,6 +15,7 @@ pub mod directions;
 pub mod grid;
 pub mod io;
 pub mod misc;
+pub mod v2;
 
 pub fn get_all_nums<T>(s: &str) -> Vec<T>
 where
