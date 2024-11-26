@@ -1,6 +1,6 @@
-use crate::utils::{
+use crate::utils::v2::{
     aoc,
-    v2::sparse_grid::{Grid, SparseGrid},
+    sparse_grid::{Grid, SparseGrid},
 };
 
 pub struct Solver;
@@ -85,7 +85,7 @@ impl SparseGrid<u32> {
 
 #[cfg(test)]
 mod tests {
-    use crate::utils::aoc::Solver;
+    use crate::utils::v2::aoc::Solver;
     use rstest::rstest;
 
     #[rstest]

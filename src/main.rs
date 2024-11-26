@@ -10,7 +10,7 @@ use clap::Parser;
 use spinners::{Spinner, Spinners};
 use std::collections::HashMap;
 use std::sync::Arc;
-use utils::aoc::{self, Solver};
+use utils::v2::aoc::{self, Solver};
 
 macro_rules! solve_and_print {
     ($part:expr, $solver:expr, $input:expr, $day:expr, $year:expr) => {
