@@ -91,25 +91,25 @@ mod tests {
     use rstest::rstest;
 
     #[rstest]
-    #[case("1", "0")]
-    #[case("12", "3")]
-    #[case("23", "2")]
-    #[case("1024", "31")]
-    fn test_part_one(#[case] input: String, #[case] expected: &str) {
+    #[case("1", 0)]
+    #[case("12", 3)]
+    #[case("23", 2)]
+    #[case("1024", 31)]
+    fn test_part_one(#[case] input: String, #[case] expected: u32) {
         let result = super::Solver.solve_part_one(&input);
         assert_eq!(result, expected);
     }
 
     #[rstest]
-    #[case("1", "2")]
-    #[case("2", "4")]
-    #[case("4", "5")]
-    #[case("5", "10")]
-    #[case("10", "11")]
-    #[case("11", "23")]
-    #[case("23", "25")]
-    #[case("747", "806")]
-    fn test_part_two(#[case] input: &str, #[case] expected: &str) {
+    #[case("1", 2)]
+    #[case("2", 4)]
+    #[case("4", 5)]
+    #[case("5", 10)]
+    #[case("10", 11)]
+    #[case("11", 23)]
+    #[case("23", 25)]
+    #[case("747", 806)]
+    fn test_part_two(#[case] input: &str, #[case] expected: u32) {
         let solver = super::Solver;
         let result = solver.solve_part_two(input);
         assert_eq!(result, expected);
