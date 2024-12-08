@@ -1,3 +1,3 @@
 pub mod parser;
 pub mod solver;
-pub mod sparse_grid;
+pub mod grid;

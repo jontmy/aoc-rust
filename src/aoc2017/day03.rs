@@ -1,6 +1,6 @@
 use crate::utils::v2::{
     solver,
-    sparse_grid::{Grid, SparseGrid},
+    grid::{Grid, SparseGrid},
 };
 
 pub struct Solver;
