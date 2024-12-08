@@ -2,7 +2,7 @@ use itertools::Itertools;
 
 use crate::aoc2022::day17::Shape::{Cross, Horizontal, Perpendicular, Square, Vertical};
 use crate::utils::directions::Direction;
-use crate::utils::{v2::solver, coords::Coordinates, grid::Grid};
+use crate::utils::{coords::Coordinates, grid::Grid, v2::solver};
 
 pub struct Solver;
 

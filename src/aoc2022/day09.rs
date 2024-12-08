@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use crate::utils::{v2::solver, coords::Coordinates, directions::Direction};
+use crate::utils::{coords::Coordinates, directions::Direction, v2::solver};
 
 use map_macro::hash_set;
 use num_integer::Roots;

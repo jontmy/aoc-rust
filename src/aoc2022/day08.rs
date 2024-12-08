@@ -1,4 +1,4 @@
-use crate::utils::{v2::solver, grid::Grid};
+use crate::utils::{grid::Grid, v2::solver};
 
 use itertools::Itertools;
 

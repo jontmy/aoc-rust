@@ -1,6 +1,6 @@
 use std::iter;
 
-use crate::utils::{self, v2::solver, grid::Grid};
+use crate::utils::{self, grid::Grid, v2::solver};
 
 pub struct Solver;
 

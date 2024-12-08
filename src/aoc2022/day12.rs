@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::utils::{v2::solver, coords::Coordinates, grid::Grid};
+use crate::utils::{coords::Coordinates, grid::Grid, v2::solver};
 
 pub struct Solver;
 
