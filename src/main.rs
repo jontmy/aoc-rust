@@ -3,6 +3,7 @@ mod aoc2016;
 mod aoc2017;
 mod aoc2021;
 mod aoc2022;
+mod aoc2024;
 mod utils;
 
 use chrono::{Datelike, Utc};
@@ -58,6 +59,13 @@ fn main() {
             13 => aoc2022::day13::Solver.solve(args.refetch),
             17 => aoc2022::day17::Solver.solve(args.refetch),
             18 => aoc2022::day18::Solver.solve(args.refetch),
+            _ => {
+                eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
+                std::process::exit(1);
+            }
+        },
+        2024 => match day {
+            1 => aoc2024::day01::Solver.solve(args.refetch),
             _ => {
                 eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
                 std::process::exit(1);
