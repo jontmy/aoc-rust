@@ -4,7 +4,7 @@ pub trait Grid<T> {
     fn new() -> Self;
     fn get(&self, x: i32, y: i32) -> Option<&T>;
     fn get_mut(&mut self, x: i32, y: i32) -> Option<&mut T>;
-    fn insert(&mut self, x: i32, y: i32, value: T);
+    fn set(&mut self, x: i32, y: i32, value: T);
     fn remove(&mut self, x: i32, y: i32) -> Option<T>;
 
     fn adjacent_neighbors(&self, x: i32, y: i32) -> Vec<&T>;
@@ -36,7 +36,7 @@ impl<T> Grid<T> for SparseGrid<T> {
         self.grid.get_mut(&(x, y))
     }
 
-    fn insert(&mut self, x: i32, y: i32, value: T) {
+    fn set(&mut self, x: i32, y: i32, value: T) {
         self.grid.insert((x, y), value);
     }
 

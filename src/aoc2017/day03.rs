@@ -39,7 +39,7 @@ impl solver::Solver<2017, 3> for Solver {
         assert!(ring_diameter % 2 == 1);
 
         let mut grid: SparseGrid<u32> = SparseGrid::new();
-        grid.insert(0, 0, 1);
+        grid.set(0, 0, 1);
 
         let mut x = 0;
         let mut y = 0;
@@ -80,7 +80,7 @@ impl solver::Solver<2017, 3> for Solver {
 impl SparseGrid<u32> {
     fn get_and_set_next_value(&mut self, x: i32, y: i32) -> u32 {
         let value = self.all_neighbors(x, y).into_iter().sum();
-        self.insert(x, y, value);
+        self.set(x, y, value);
         value
     }
 }
