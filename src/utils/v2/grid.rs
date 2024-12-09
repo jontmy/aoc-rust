@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::hash::Hash;
+use std::rc::Rc;
 
 use anyhow::anyhow;
 use itertools::Itertools;
@@ -112,6 +113,13 @@ where
     }
 }
 
+pub trait GridFind<T, I>: Grid<T, I>
+where
+    I: PrimInt,
+{
+    fn find(&self, value: &T) -> Option<(I, I)>;
+}
+
 #[derive(Debug)]
 pub struct DenseGrid<T> {
     grid: Array2<T>,
@@ -149,6 +157,19 @@ where
             y.to_usize()
                 .expect("should have been able to convert `y` to usize"),
         ]] = value;
+    }
+}
+
+impl<T, I> GridFind<T, I> for DenseGrid<T>
+where
+    T: PartialEq,
+    I: PrimInt,
+{
+    fn find(&self, value: &T) -> Option<(I, I)> {
+        self.grid
+            .indexed_iter()
+            .find(|(_, v)| *v == value)
+            .map(|((x, y), _)| (I::from(x).unwrap(), I::from(y).unwrap()))
     }
 }
 
