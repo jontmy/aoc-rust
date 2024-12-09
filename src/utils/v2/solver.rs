@@ -1,7 +1,7 @@
 use spinners::{Spinner, Spinners};
 use std::{
     error::Error,
-    fmt::Display,
+    fmt::Debug,
     fs::{self, File, OpenOptions},
     io::Write,
     os,
@@ -18,8 +18,8 @@ pub enum InputSource {
 }
 
 pub trait Solver<const YEAR: u32, const DAY: u32> {
-    type Part1: Display;
-    type Part2: Display;
+    type Part1: Debug;
+    type Part2: Debug;
 
     fn solve_part_one(&self, input: &str) -> Self::Part1;
     fn solve_part_two(&self, input: &str) -> Self::Part2;
@@ -65,11 +65,25 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         let mut spinner = Spinner::new(Spinners::Dots, format!("Solving part {}...", part));
         let tick = std::time::Instant::now();
 
-        let answer = match part {
-            1 => self.solve_part_one(input).to_string(),
-            2 => self.solve_part_two(input).to_string(),
+        let mut answer = match part {
+            1 => format!("{:?}", self.solve_part_one(input)),
+            2 => format!("{:?}", self.solve_part_two(input)),
             _ => unreachable!(),
         };
+
+        // Hack to allow Result types to be printed without the Ok/Err prefix
+        if answer.starts_with("Ok(") {
+            answer = answer
+                .trim_start_matches("Ok(")
+                .trim_end_matches(")")
+                .to_owned();
+        }
+        if answer.starts_with("Err(") {
+            answer = answer
+                .trim_start_matches("Err(")
+                .trim_end_matches(")")
+                .to_owned();
+        }
 
         let elapsed = tick.elapsed().as_secs_f64() * 1000.0;
         spinner.stop_and_persist(
