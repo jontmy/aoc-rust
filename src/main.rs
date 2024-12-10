@@ -73,6 +73,7 @@ fn main() {
             6 => aoc2024::day06::Solver.solve(args.refetch),
             7 => aoc2024::day07::Solver.solve(args.refetch),
             8 => aoc2024::day08::Solver.solve(args.refetch),
+            9 => aoc2024::day09::Solver.solve(args.refetch),
             _ => {
                 eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
                 std::process::exit(1);
