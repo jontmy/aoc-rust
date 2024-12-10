@@ -6,10 +6,7 @@ use crate::utils::v2::solver;
 pub struct Solver;
 
 impl Solver {
-    fn parse_input(
-        &self,
-        input: &str,
-    ) -> (DenseGrid<char>, HashSet<(usize, usize)>, (usize, usize)) {
+    fn parse_input(&self, input: &str) -> (DenseGrid<char, i32>, HashSet<(i32, i32)>, (i32, i32)) {
         let mut grid = DenseGrid::try_from(input).unwrap();
         let mut visited = HashSet::new();
 
@@ -24,8 +21,8 @@ impl Solver {
                 (dx, dy) = (dy, -dx);
             } else {
                 visited.insert((x, y));
-                x = (x as i32 + dx) as usize;
-                y = (y as i32 + dy) as usize;
+                x = x + dx;
+                y = y + dy;
             }
         }
 
@@ -64,8 +61,8 @@ impl solver::Solver<2024, 6> for Solver {
                     (dx, dy) = (dy, -dx);
                 } else {
                     visited_pool.insert((x, y));
-                    x = (x as i32 + dx) as usize;
-                    y = (y as i32 + dy) as usize;
+                    x = x + dx;
+                    y = y + dy;
                 }
                 if step_count > abort_threshold {
                     result += 1;

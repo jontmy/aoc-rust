@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use std::fmt::Display;
 use std::hash::Hash;
+use std::marker::PhantomData;
 use std::rc::Rc;
 
 use anyhow::anyhow;
@@ -7,13 +9,34 @@ use itertools::Itertools;
 use ndarray::Array2;
 use num::PrimInt;
 
+use crate::utils::v2::coords::Coordinates;
+
+type DefaultIndexType = usize;
+
 pub trait Grid<T, I>
 where
     I: PrimInt,
 {
     fn get(&self, x: I, y: I) -> Option<&T>;
     fn get_mut(&mut self, x: I, y: I) -> Option<&mut T>;
-    fn set(&mut self, x: I, y: I, value: T);
+
+    fn get_from_coords(&self, coords: Coordinates<I>) -> Option<&T> {
+        self.get(coords.x(), coords.y())
+    }
+
+    fn get_mut_from_coords(&mut self, coords: Coordinates<I>) -> Option<&mut T> {
+        self.get_mut(coords.x(), coords.y())
+    }
+
+    fn set(&mut self, x: I, y: I, value: T) {
+        if let Some(cell) = self.get_mut(x, y) {
+            *cell = value;
+        }
+    }
+
+    fn set_from_coords(&mut self, coords: Coordinates<I>, value: T) {
+        self.set(coords.x(), coords.y(), value);
+    }
 
     fn adjacent_neighbor_coords(&self, x: I, y: I) -> [(I, I); 4] {
         [
@@ -118,14 +141,23 @@ where
     I: PrimInt,
 {
     fn find(&self, value: &T) -> Option<(I, I)>;
+    fn find_by<F>(&self, f: F) -> Option<(I, I)>
+    where
+        F: Fn(&T) -> bool;
+
+    fn find_all(&self, value: &T) -> Vec<(I, I)>;
+    fn find_all_by<F>(&self, f: F) -> Vec<(I, I)>
+    where
+        F: Fn(&T) -> bool;
 }
 
 #[derive(Debug)]
-pub struct DenseGrid<T> {
+pub struct DenseGrid<T, I = DefaultIndexType> {
     grid: Array2<T>,
+    index_type: PhantomData<I>,
 }
 
-impl<T, I> Grid<T, I> for DenseGrid<T>
+impl<T, I> Grid<T, I> for DenseGrid<T, I>
 where
     I: PrimInt,
 {
@@ -149,18 +181,9 @@ where
                 .expect("should have been able to convert `y` to usize"),
         ))
     }
-
-    fn set(&mut self, x: I, y: I, value: T) {
-        self.grid[[
-            x.to_usize()
-                .expect("should have been able to convert `x` to usize"),
-            y.to_usize()
-                .expect("should have been able to convert `y` to usize"),
-        ]] = value;
-    }
 }
 
-impl<T, I> GridFind<T, I> for DenseGrid<T>
+impl<T, I> GridFind<T, I> for DenseGrid<T, I>
 where
     T: PartialEq,
     I: PrimInt,
@@ -171,9 +194,38 @@ where
             .find(|(_, v)| *v == value)
             .map(|((x, y), _)| (I::from(x).unwrap(), I::from(y).unwrap()))
     }
+
+    fn find_by<F>(&self, f: F) -> Option<(I, I)>
+    where
+        F: Fn(&T) -> bool,
+    {
+        self.grid
+            .indexed_iter()
+            .find(|(_, v)| f(v))
+            .map(|((x, y), _)| (I::from(x).unwrap(), I::from(y).unwrap()))
+    }
+
+    fn find_all(&self, value: &T) -> Vec<(I, I)> {
+        self.grid
+            .indexed_iter()
+            .filter(|(_, v)| *v == value)
+            .map(|((x, y), _)| (I::from(x).unwrap(), I::from(y).unwrap()))
+            .collect()
+    }
+
+    fn find_all_by<F>(&self, f: F) -> Vec<(I, I)>
+    where
+        F: Fn(&T) -> bool,
+    {
+        self.grid
+            .indexed_iter()
+            .filter(|(_, v)| f(v))
+            .map(|((x, y), _)| (I::from(x).unwrap(), I::from(y).unwrap()))
+            .collect()
+    }
 }
 
-impl TryFrom<&str> for DenseGrid<char> {
+impl<I> TryFrom<&str> for DenseGrid<char, I> {
     type Error = anyhow::Error;
 
     fn try_from(s: &str) -> Result<Self, Self::Error> {
@@ -190,14 +242,49 @@ impl TryFrom<&str> for DenseGrid<char> {
         } else {
             Ok(Self {
                 grid: Array2::from_shape_fn((rows, cols), |(i, j)| grid[i][j]),
+                index_type: PhantomData,
             })
         }
     }
 }
 
-impl<T> DenseGrid<T> {
+impl<I> Display for DenseGrid<char, I> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for row in self.grid.rows() {
+            for c in row {
+                write!(f, "{}", c)?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
+}
+
+impl<T, I> DenseGrid<T, I>
+where
+    I: PrimInt,
+{
     pub fn as_ndarray(&self) -> &Array2<T> {
         &self.grid
+    }
+
+    pub fn nrows(&self) -> usize {
+        self.grid.nrows()
+    }
+
+    pub fn ncols(&self) -> usize {
+        self.grid.ncols()
+    }
+
+    pub fn is_in_bounds(&self, x: I, y: I) -> bool {
+        x >= I::zero()
+            && y >= I::zero()
+            && x < I::from(self.nrows()).unwrap()
+            && y < I::from(self.ncols()).unwrap()
+    }
+
+    pub fn is_coords_in_bounds(&self, coords: Coordinates<I>) -> bool {
+        self.is_in_bounds(coords.x(), coords.y())
     }
 }
 
