@@ -38,13 +38,22 @@ where
         self.set(coords.x(), coords.y(), value);
     }
 
-    fn adjacent_neighbor_coords(&self, x: I, y: I) -> [(I, I); 4] {
+    fn is_in_bounds(&self, x: I, y: I) -> bool;
+    fn is_coords_in_bounds(&self, coords: Coordinates<I>) -> bool;
+
+    fn adjacent_neighbor_coords_iter(&self, x: I, y: I) -> impl Iterator<Item = (I, I)> {
         [
             (x - I::from(1).unwrap(), y),
             (x + I::from(1).unwrap(), y),
             (x, y - I::from(1).unwrap()),
             (x, y + I::from(1).unwrap()),
         ]
+        .into_iter()
+        .filter(|(x, y)| self.is_in_bounds(*x, *y))
+    }
+
+    fn adjacent_neighbor_coords(&self, x: I, y: I) -> Vec<(I, I)> {
+        self.adjacent_neighbor_coords_iter(x, y).collect()
     }
 
     fn adjacent_neighbors_iter<'a>(&'a self, x: I, y: I) -> impl Iterator<Item = &'a T>
@@ -68,26 +77,30 @@ where
     where
         T: 'a,
     {
-        self.adjacent_neighbor_coords(x, y)
-            .into_iter()
+        self.adjacent_neighbor_coords_iter(x, y)
             .filter_map(|(x, y)| self.get(x, y).map(|v| ((x, y), v)))
     }
 
-    fn diagonal_neighbor_coords(&self, x: I, y: I) -> [(I, I); 4] {
+    fn diagonal_neighbor_coords_iter(&self, x: I, y: I) -> impl Iterator<Item = (I, I)> {
         [
             (x - I::from(1).unwrap(), y - I::from(1).unwrap()),
             (x - I::from(1).unwrap(), y + I::from(1).unwrap()),
             (x + I::from(1).unwrap(), y - I::from(1).unwrap()),
             (x + I::from(1).unwrap(), y + I::from(1).unwrap()),
         ]
+        .into_iter()
+        .filter(|(x, y)| self.is_in_bounds(*x, *y))
+    }
+
+    fn diagonal_neighbor_coords(&self, x: I, y: I) -> Vec<(I, I)> {
+        self.diagonal_neighbor_coords_iter(x, y).collect()
     }
 
     fn diagonal_neighbors_iter<'a>(&'a self, x: I, y: I) -> impl Iterator<Item = &'a T>
     where
         T: 'a,
     {
-        self.diagonal_neighbor_coords(x, y)
-            .into_iter()
+        self.diagonal_neighbor_coords_iter(x, y)
             .filter_map(|(x, y)| self.get(x, y))
     }
 
@@ -108,11 +121,13 @@ where
             .filter_map(|(x, y)| self.get(x, y).map(|v| ((x, y), v)))
     }
 
+    fn all_neighbor_coords_iter(&self, x: I, y: I) -> impl Iterator<Item = (I, I)> {
+        self.adjacent_neighbor_coords_iter(x, y)
+            .chain(self.diagonal_neighbor_coords_iter(x, y))
+    }
+
     fn all_neighbor_coords(&self, x: I, y: I) -> Vec<(I, I)> {
-        self.adjacent_neighbor_coords(x, y)
-            .into_iter()
-            .chain(self.diagonal_neighbor_coords(x, y).into_iter())
-            .collect_vec()
+        self.all_neighbor_coords_iter(x, y).collect()
     }
 
     fn all_neighbors_iter<'a>(&'a self, x: I, y: I) -> impl Iterator<Item = &'a T>
@@ -145,10 +160,34 @@ where
     where
         F: Fn(&T) -> bool;
 
-    fn find_all(&self, value: &T) -> Vec<(I, I)>;
-    fn find_all_by<F>(&self, f: F) -> Vec<(I, I)>
+    fn find_all_iter(&self, value: &T) -> impl Iterator<Item = (I, I)>;
+    fn find_all_by_iter<F>(&self, f: F) -> impl Iterator<Item = (I, I)>
     where
         F: Fn(&T) -> bool;
+
+    fn find_all(&self, value: &T) -> Vec<(I, I)> {
+        self.find_all_iter(value).collect()
+    }
+    fn find_all_by<F>(&self, f: F) -> Vec<(I, I)>
+    where
+        F: Fn(&T) -> bool,
+    {
+        self.find_all_by_iter(f).collect()
+    }
+}
+
+pub trait GridSearch<T, I>: Grid<T, I>
+where
+    T: PartialEq,
+    I: PrimInt + Hash,
+{
+    fn dfs_find_all<F>(&self, value: T, start: (I, I), neighbors_fn: F) -> Vec<(I, I)>
+    where
+        F: Fn((I, I), &T) -> Vec<(I, I)>;
+
+    fn dfs_find_all_with_repeats<F>(&self, value: T, start: (I, I), neighbors_fn: F) -> Vec<(I, I)>
+    where
+        F: Fn((I, I), &T) -> Vec<(I, I)>;
 }
 
 #[derive(Debug)]
@@ -181,6 +220,17 @@ where
                 .expect("should have been able to convert `y` to usize"),
         ))
     }
+
+    fn is_in_bounds(&self, x: I, y: I) -> bool {
+        x >= I::zero()
+            && y >= I::zero()
+            && x < I::from(self.nrows()).unwrap()
+            && y < I::from(self.ncols()).unwrap()
+    }
+
+    fn is_coords_in_bounds(&self, coords: Coordinates<I>) -> bool {
+        self.is_in_bounds(coords.x(), coords.y())
+    }
 }
 
 impl<T, I> GridFind<T, I> for DenseGrid<T, I>
@@ -205,23 +255,85 @@ where
             .map(|((x, y), _)| (I::from(x).unwrap(), I::from(y).unwrap()))
     }
 
-    fn find_all(&self, value: &T) -> Vec<(I, I)> {
+    fn find_all_iter(&self, value: &T) -> impl Iterator<Item = (I, I)> {
         self.grid
             .indexed_iter()
-            .filter(|(_, v)| *v == value)
+            .filter(move |(_, v)| *v == value)
             .map(|((x, y), _)| (I::from(x).unwrap(), I::from(y).unwrap()))
-            .collect()
     }
 
-    fn find_all_by<F>(&self, f: F) -> Vec<(I, I)>
+    fn find_all_by_iter<F>(&self, f: F) -> impl Iterator<Item = (I, I)>
     where
         F: Fn(&T) -> bool,
     {
         self.grid
             .indexed_iter()
-            .filter(|(_, v)| f(v))
+            .filter(move |(_, v)| f(v))
             .map(|((x, y), _)| (I::from(x).unwrap(), I::from(y).unwrap()))
-            .collect()
+    }
+}
+
+impl<T, I> GridSearch<T, I> for DenseGrid<T, I>
+where
+    T: PartialEq,
+    I: PrimInt + Hash,
+{
+    fn dfs_find_all<F>(&self, value: T, start: (I, I), neighbors_fn: F) -> Vec<(I, I)>
+    where
+        F: Fn((I, I), &T) -> Vec<(I, I)>,
+    {
+        {
+            let mut visited = HashMap::new();
+            let mut stack = vec![start];
+            let mut result = Vec::new();
+
+            while let Some(coords) = stack.pop() {
+                if visited.contains_key(&coords) {
+                    continue;
+                }
+                if let Some(cell) = self.get(coords.0, coords.1) {
+                    visited.insert(coords, true);
+                    for neighbor_coords in neighbors_fn(coords, &cell) {
+                        if let Some(neighbor) = self.get(neighbor_coords.0, neighbor_coords.1) {
+                            if visited.contains_key(&neighbor_coords) {
+                                continue;
+                            }
+                            stack.push(neighbor_coords);
+                            if *neighbor == value {
+                                result.push(neighbor_coords);
+                            }
+                        }
+                    }
+                }
+            }
+            result
+        }
+    }
+
+    fn dfs_find_all_with_repeats<F>(&self, value: T, start: (I, I), neighbors_fn: F) -> Vec<(I, I)>
+    where
+        F: Fn((I, I), &T) -> Vec<(I, I)>,
+    {
+        {
+            let mut visited = HashMap::new();
+            let mut stack = vec![start];
+            let mut result = Vec::new();
+
+            while let Some(coords) = stack.pop() {
+                if let Some(cell) = self.get(coords.0, coords.1) {
+                    visited.insert(coords, true);
+                    for neighbor_coords in neighbors_fn(coords, &cell) {
+                        if let Some(neighbor) = self.get(neighbor_coords.0, neighbor_coords.1) {
+                            stack.push(neighbor_coords);
+                            if *neighbor == value {
+                                result.push(neighbor_coords);
+                            }
+                        }
+                    }
+                }
+            }
+            result
+        }
     }
 }
 
@@ -276,15 +388,15 @@ where
         self.grid.ncols()
     }
 
-    pub fn is_in_bounds(&self, x: I, y: I) -> bool {
-        x >= I::zero()
-            && y >= I::zero()
-            && x < I::from(self.nrows()).unwrap()
-            && y < I::from(self.ncols()).unwrap()
-    }
-
-    pub fn is_coords_in_bounds(&self, coords: Coordinates<I>) -> bool {
-        self.is_in_bounds(coords.x(), coords.y())
+    pub fn map_into<U, F>(self, f: F) -> DenseGrid<U, I>
+    where
+        T: Clone,
+        F: FnMut(T) -> U,
+    {
+        DenseGrid {
+            grid: self.grid.mapv(f),
+            index_type: PhantomData,
+        }
     }
 }
 
@@ -325,5 +437,13 @@ where
 
     fn set(&mut self, x: I, y: I, value: T) {
         self.grid.insert((x, y), value);
+    }
+
+    fn is_in_bounds(&self, x: I, y: I) -> bool {
+        true
+    }
+
+    fn is_coords_in_bounds(&self, coords: Coordinates<I>) -> bool {
+        true
     }
 }

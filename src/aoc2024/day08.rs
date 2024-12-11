@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use crate::utils::v2::{
     coords::Coordinates,
-    grid::{DenseGrid, GridFind},
+    grid::{DenseGrid, Grid, GridFind},
     solver,
 };
 
