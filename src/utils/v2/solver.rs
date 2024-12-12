@@ -24,12 +24,20 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
     fn solve_part_one(&self, input: &str) -> Self::Part1;
     fn solve_part_two(&self, input: &str) -> Self::Part2;
 
-    fn fetch_input(&self, refetch: bool) -> Result<(String, InputSource)> {
+    fn fetch_input(
+        &self,
+        refetch: bool,
+        file_extension: Option<&str>,
+    ) -> Result<(String, InputSource)> {
         dotenv::dotenv().ok();
         let session_token = dotenv::var("SESSION_TOKEN")
             .with_context(|| "environment variable SESSION_TOKEN should be set")?;
 
-        let filename = format!("input/{YEAR}/{DAY:02}.txt");
+        let filename = if let Some(ext) = file_extension {
+            format!("input/{YEAR}/{DAY:02}.{ext}")
+        } else {
+            format!("input/{YEAR}/{DAY:02}.txt")
+        };
         let url = format!("https://adventofcode.com/{YEAR}/day/{DAY}/input");
         let path = Path::new(&filename);
 
@@ -96,7 +104,7 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         Ok(())
     }
 
-    fn solve(&self, refetch: bool) -> Result<()> {
+    fn solve(&self, refetch: bool, file_extension: Option<&str>) -> Result<()> {
         println!(
             "\n{}",
             ansi_term::Style::new()
@@ -105,7 +113,7 @@ pub trait Solver<const YEAR: u32, const DAY: u32> {
         );
 
         let mut spinner = Spinner::new(Spinners::Dots, "Fetching input...".into());
-        match self.fetch_input(refetch) {
+        match self.fetch_input(refetch, file_extension) {
             Ok((input, source)) => {
                 match source {
                     InputSource::File => {

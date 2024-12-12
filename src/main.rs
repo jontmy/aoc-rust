@@ -19,6 +19,8 @@ struct Args {
     year: Option<u32>,
     #[arg(short = 'r', long = "refetch")]
     refetch: bool,
+    #[arg(short = 'i', long = "input")]
+    input_file_extension: Option<String>,
 }
 
 fn main() {
@@ -37,45 +39,46 @@ fn main() {
 
     let _ = match year {
         2017 => match day {
-            3 => aoc2017::day03::Solver.solve(args.refetch),
+            3 => aoc2017::day03::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
             _ => {
                 eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
                 std::process::exit(1);
             }
         },
         2022 => match day {
-            1 => aoc2022::day01::Solver.solve(args.refetch),
-            2 => aoc2022::day02::Solver.solve(args.refetch),
-            3 => aoc2022::day03::Solver.solve(args.refetch),
-            4 => aoc2022::day04::Solver.solve(args.refetch),
-            5 => aoc2022::day05::Solver.solve(args.refetch),
-            6 => aoc2022::day06::Solver.solve(args.refetch),
-            7 => aoc2022::day07::Solver.solve(args.refetch),
-            8 => aoc2022::day08::Solver.solve(args.refetch),
-            9 => aoc2022::day09::Solver.solve(args.refetch),
-            10 => aoc2022::day10::Solver.solve(args.refetch),
-            11 => aoc2022::day11::Solver.solve(args.refetch),
-            12 => aoc2022::day12::Solver.solve(args.refetch),
-            13 => aoc2022::day13::Solver.solve(args.refetch),
-            17 => aoc2022::day17::Solver.solve(args.refetch),
-            18 => aoc2022::day18::Solver.solve(args.refetch),
+            1 => aoc2022::day01::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            2 => aoc2022::day02::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            3 => aoc2022::day03::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            4 => aoc2022::day04::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            5 => aoc2022::day05::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            6 => aoc2022::day06::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            7 => aoc2022::day07::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            8 => aoc2022::day08::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            9 => aoc2022::day09::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            10 => aoc2022::day10::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            11 => aoc2022::day11::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            12 => aoc2022::day12::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            13 => aoc2022::day13::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            17 => aoc2022::day17::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            18 => aoc2022::day18::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
             _ => {
                 eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
                 std::process::exit(1);
             }
         },
         2024 => match day {
-            1 => aoc2024::day01::Solver.solve(args.refetch),
-            2 => aoc2024::day02::Solver.solve(args.refetch),
-            3 => aoc2024::day03::Solver.solve(args.refetch),
-            4 => aoc2024::day04::Solver.solve(args.refetch),
-            5 => aoc2024::day05::Solver.solve(args.refetch),
-            6 => aoc2024::day06::Solver.solve(args.refetch),
-            7 => aoc2024::day07::Solver.solve(args.refetch),
-            8 => aoc2024::day08::Solver.solve(args.refetch),
-            9 => aoc2024::day09::Solver.solve(args.refetch),
-            10 => aoc2024::day10::Solver.solve(args.refetch),
-            11 => aoc2024::day11::Solver.solve(args.refetch),
+            1 => aoc2024::day01::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            2 => aoc2024::day02::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            3 => aoc2024::day03::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            4 => aoc2024::day04::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            5 => aoc2024::day05::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            6 => aoc2024::day06::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            7 => aoc2024::day07::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            8 => aoc2024::day08::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            9 => aoc2024::day09::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            10 => aoc2024::day10::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            11 => aoc2024::day11::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
+            12 => aoc2024::day12::Solver.solve(args.refetch, args.input_file_extension.as_deref()),
             _ => {
                 eprintln!("✘ No solver available for day {day} of Advent of Code {year}");
                 std::process::exit(1);

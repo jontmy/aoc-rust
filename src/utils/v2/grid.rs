@@ -6,7 +6,7 @@ use std::rc::Rc;
 
 use anyhow::anyhow;
 use itertools::Itertools;
-use ndarray::Array2;
+use ndarray::{s, Array2};
 use num::PrimInt;
 
 use crate::utils::v2::coords::Coordinates;
@@ -423,13 +423,81 @@ where
 
     pub fn map_into<U, F>(self, f: F) -> DenseGrid<U, I>
     where
-        T: Clone,
         F: FnMut(T) -> U,
+        T: Clone,
     {
+        let grid = self.grid.mapv(f);
         DenseGrid {
-            grid: self.grid.mapv(f),
+            grid,
             index_type: PhantomData,
         }
+    }
+
+    pub fn indexed_map_into<U, F>(self, mut f: F) -> DenseGrid<U, I>
+    where
+        T: Clone,
+        F: FnMut((I, I), T) -> U,
+    {
+        let grid = self
+            .grid
+            .indexed_iter()
+            .map(|((x, y), v)| f((I::from(x).unwrap(), I::from(y).unwrap()), v.clone()))
+            .collect_vec();
+        let rows = self.nrows();
+        let cols = self.ncols();
+        let grid = Array2::from_shape_vec((rows, cols), grid).unwrap();
+        DenseGrid {
+            grid,
+            index_type: PhantomData,
+        }
+    }
+
+    pub fn pad_into(self, amount: usize, value: T) -> DenseGrid<T, I>
+    where
+        T: Clone,
+    {
+        let (rows, cols) = (self.nrows(), self.ncols());
+        let mut new_grid = Array2::from_elem((rows + 2 * amount, cols + 2 * amount), value);
+        new_grid
+            .slice_mut(s![amount..amount + rows, amount..amount + cols])
+            .assign(&self.grid);
+        DenseGrid {
+            grid: new_grid,
+            index_type: PhantomData,
+        }
+    }
+
+    pub fn to_subgrid(&self, (x1, y1): (I, I), (x2, y2): (I, I)) -> DenseGrid<T, I>
+    where
+        T: Clone,
+    {
+        let (x1, y1, x2, y2) = (
+            x1.to_usize().unwrap(),
+            y1.to_usize().unwrap(),
+            x2.to_usize().unwrap(),
+            y2.to_usize().unwrap(),
+        );
+        let (x1, x2) = (x1.min(x2), x1.max(x2));
+        let (y1, y2) = (y1.min(y2), y1.max(y2));
+        DenseGrid {
+            grid: self.grid.slice(s![x1..=x2, y1..=y2]).to_owned(),
+            index_type: PhantomData,
+        }
+    }
+
+    pub fn to_minimum_spanning_subgrid(&self, points: &[(I, I)]) -> DenseGrid<T, I>
+    where
+        T: Clone,
+    {
+        let (min_x, min_y) = points.iter().fold(
+            (I::max_value(), I::max_value()),
+            |(min_x, min_y), (x, y)| (min_x.min(*x), min_y.min(*y)),
+        );
+        let (max_x, max_y) = points.iter().fold(
+            (I::min_value(), I::min_value()),
+            |(max_x, max_y), (x, y)| (max_x.max(*x), max_y.max(*y)),
+        );
+        self.to_subgrid((min_x, min_y), (max_x, max_y))
     }
 }
 
