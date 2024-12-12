@@ -1,6 +1,35 @@
 # Advent of Code
 
-Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in Rust.
+Solutions for [Advent of Code](https://adventofcode.com) puzzles, written in Rust.
+
+## Getting Started
+
+1. Clone the repository.
+
+```sh
+git clone https://github.com/jontmy/aoc-rust
+cd aoc-rust
+```
+
+2. Get your `SESSION_TOKEN` from the session cookie on [adventofcode.com](https://adventofcode.com) and save it in `.env`.
+
+```sh
+vim .env  # add SESSION_TOKEN=...
+```
+
+3. Run the solver for a specific puzzle. The solver will automatically download the puzzle input and cache it.
+
+```sh
+cargo run --release -- -d <day> -y <year>
+```
+
+>[!TIP]
+> If Advent of Code is currently ongoing, the `-d` and `-y` flags can be omitted. The current system date will be used instead.
+
+#### Other tips
+- The `-i` flag lets you specify a custom file extension for the file which the input will be read from. Useful for example inputs.
+- For example, `-d 1 -y 2024 -i ex1` will read from `input/2024/01.ex1` (note the leading zero).
+- Setting the `-r` flag will re-download the input.
 
 ## Progress
 
