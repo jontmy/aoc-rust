@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Display;
 use std::hash::Hash;
 use std::marker::PhantomData;
@@ -181,6 +181,10 @@ where
     T: PartialEq,
     I: PrimInt + Hash,
 {
+    fn bfs_flood_fill<F>(&self, start: (I, I), neighbors_fn: F) -> HashSet<(I, I)>
+    where
+        F: Fn((I, I), &T) -> Vec<(I, I)>;
+
     fn dfs_find_all<F>(&self, value: T, start: (I, I), neighbors_fn: F) -> Vec<(I, I)>
     where
         F: Fn((I, I), &T) -> Vec<(I, I)>;
@@ -278,24 +282,53 @@ where
     T: PartialEq,
     I: PrimInt + Hash,
 {
+    fn bfs_flood_fill<F>(&self, start: (I, I), neighbors_fn: F) -> HashSet<(I, I)>
+    where
+        F: Fn((I, I), &T) -> Vec<(I, I)>,
+    {
+        {
+            let mut visited = HashSet::new();
+            let mut queue = VecDeque::new();
+            queue.push_back(start);
+
+            while let Some(coords) = queue.pop_front() {
+                if visited.contains(&coords) {
+                    continue;
+                }
+                if let Some(cell) = self.get(coords.0, coords.1) {
+                    visited.insert(coords);
+                    for neighbor_coords in neighbors_fn(coords, cell) {
+                        if let Some(neighbor) = self.get(neighbor_coords.0, neighbor_coords.1) {
+                            if visited.contains(&neighbor_coords) {
+                                continue;
+                            }
+                            queue.push_back(neighbor_coords);
+                        }
+                    }
+                }
+            }
+            visited
+        }
+    }
+
     fn dfs_find_all<F>(&self, value: T, start: (I, I), neighbors_fn: F) -> Vec<(I, I)>
     where
         F: Fn((I, I), &T) -> Vec<(I, I)>,
     {
         {
-            let mut visited = HashMap::new();
+            let mut visited = HashSet::new();
             let mut stack = vec![start];
             let mut result = Vec::new();
 
             while let Some(coords) = stack.pop() {
-                if visited.contains_key(&coords) {
+                if visited.contains(&coords) {
                     continue;
                 }
                 if let Some(cell) = self.get(coords.0, coords.1) {
-                    visited.insert(coords, true);
+                    visited.insert(coords);
                     for neighbor_coords in neighbors_fn(coords, &cell) {
                         if let Some(neighbor) = self.get(neighbor_coords.0, neighbor_coords.1) {
-                            if visited.contains_key(&neighbor_coords) {
+                            if visited.contains(&neighbor_coords) {
                                 continue;
                             }
                             stack.push(neighbor_coords);
@@ -315,13 +348,13 @@ where
         F: Fn((I, I), &T) -> Vec<(I, I)>,
     {
         {
-            let mut visited = HashMap::new();
+            let mut visited = HashSet::new();
             let mut stack = vec![start];
             let mut result = Vec::new();
 
             while let Some(coords) = stack.pop() {
                 if let Some(cell) = self.get(coords.0, coords.1) {
-                    visited.insert(coords, true);
+                    visited.insert(coords);
                     for neighbor_coords in neighbors_fn(coords, &cell) {
                         if let Some(neighbor) = self.get(neighbor_coords.0, neighbor_coords.1) {
                             stack.push(neighbor_coords);
