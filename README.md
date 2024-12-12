@@ -4,13 +4,23 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 
 ## Progress
 
-|   Year   | 2022  | 2021  | 2020 | 2019 | 2018 | 2017 | 2016  | 2015  |
-|:--------:|:-----:|:-----:|:----:|:----:|:----:|:----:|:-----:|:-----:|
-| Progress | `28*` | `41*` | `×`  | `×`  | `×`  | `×`  | `20*` | `38*` |
+|   Year   | 2024  | 2023  | 2022  | 2021  | 2020 | 2019 | 2018 | 2017 | 2016  | 2015  |
+|:--------:|:-----:|:-----:|:-----:|:-----:|:----:|:----:|:----:|:----:|:-----:|:-----:|
+| Progress | `24*` |  `×`  | `28*` | `41*` | `×`  | `×`  | `×`  | `2*` | `20*` | `38*` |
 
-> Progress indicated only for solutions in Rust, as some were written in other languages—2019's iteration is
-> written in [Haskell](https://github.com/jontmy/aoc-haskell), 2018's and 2020's
-> in [Java](https://github.com/jontmy/aoc-java).
+> Progress indicated only for solutions in Rust. Solutions in other languages:
+> - [Haskell](https://github.com/jontmy/aoc-haskell)
+> - [Java](https://github.com/jontmy/aoc-java)
+> - [Python](https://github.com/jontmy/aoc-python)
+
+### 2024
+
+| S | M | T | W | T | F | S |
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| [1](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day01.rs) | [2](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day02.rs) | [3](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day03.rs) | [4](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day04.rs) | [5](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day05.rs) | [6](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day06.rs) | [7](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day07.rs) |
+| [8](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day08.rs) | [9](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day09.rs) | [10](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day10.rs) | [11](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day11.rs) | [12](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2024/day12.rs) | 13 | 14 |
+| 15 | 16 | 17 | 18 | 19 | 20 | 21 |
+| 22 | 23 | 24 | 25 |
 
 ### 2022
 
@@ -18,11 +28,9 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 |:-------------------------------------------------------------------------:|:-------------------------------------------------------------------------:|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|:-------------------------------------------------------------------------:|
 |                                                                           |                                                                           |                                                                          |                                                                          | [1](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day01.rs) | [2](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day02.rs) | [3](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day03.rs)  |
 | [4](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day04.rs)  | [5](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day05.rs)  | [6](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day06.rs) | [7](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day07.rs) | [8](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day08.rs) | [9](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day09.rs) | [10](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day10.rs) |
-| [11](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day11.rs) | [12](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day12.rs) |                                   13*                                    |                                   14*                                    |                                   15*                                    |                                   16*                                    | [17](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day17.rs) |
+| [11](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day11.rs) | [12](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day12.rs) |                                   13                                    |                                   14                                    |                                   15                                    |                                   16                                    | [17](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day17.rs) |
 | [18](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2022/day18.rs) |                                    19                                     |                                    20                                    |                                    21                                    |                                    22                                    |                                    23                                    |                                    24                                     |
 |                                    25                                     |                                                                           |                                                                          |                                                                          |                                                                          |                                                                          |                                                                           |
-
-&ast; took a break from AoC, will get to them soon
 
 ### 2021
 
@@ -51,14 +59,3 @@ Solutions for [Advent of Code](<https://adventofcode.com/>) puzzles, written in 
 | [6](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day06.rs)  | [7](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day07.rs)  | [8](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day08.rs)  | [9](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day09.rs)  | [10](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day10.rs) | [11](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day11.rs) | [12](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day12.rs) |
 | [13](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day13.rs) | [14](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day14.rs) | [15](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day15.rs) | [16](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day16.rs) | [17](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day17.rs) | [18](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day18.rs) | [19](https://github.com/jontmy/aoc-rust/blob/master/src/aoc2015/day19.rs) |
 |                                    20                                     |                                    21                                     |                                    22                                     |                                    23                                     |                                    24                                     |                                    25                                     |                                                                           |
-
-## Useful Links
-
-[**Advent of Code**](<https://adventofcode.com/>)
-
-200 puzzles across 8 years, created by Eric Wastl.
-
-[**cargo-aoc**](<https://github.com/gobanos/cargo-aoc>)
-
-CLI tools and Rust proc macros for Advent of Code (not used in this project, but worth a mention).
-
